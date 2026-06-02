@@ -1,3 +1,4 @@
+import json
 from pathlib import Path
 from uuid import UUID
 
@@ -21,8 +22,10 @@ class MainController:
         base_dir: str | Path = ".runtime/gui",
         *,
         deterministic_mode: bool = False,
+        bootstrap_tokens_file: str | Path = "config/default_tokens_20.json",
     ) -> None:
         self._base_dir = Path(base_dir)
+        self._bootstrap_tokens_file = Path(bootstrap_tokens_file)
         self._deterministic_mode = deterministic_mode
         self._seed_counter = 0
         self._token_repo = JsonTokenRepository(self._base_dir / "tokens.json")
@@ -41,10 +44,17 @@ class MainController:
         self._ensure_runtime_assets()
 
         tokens = self._token_service.list_tokens()
+        bootstrap_tokens = self._load_tokens_from_bootstrap_file()
         if not tokens:
-            for token in self._build_default_tokens():
+            for token in bootstrap_tokens:
                 self._token_service.create_token(token)
-            tokens = self._token_service.list_tokens()
+        else:
+            existing_names = {token.name for token in tokens}
+            missing_tokens = [token for token in bootstrap_tokens if token.name not in existing_names]
+            for token in missing_tokens:
+                self._token_service.create_token(token)
+
+        tokens = self._token_service.list_tokens()
 
         self._tokens = tokens
         self._token_name_by_id = {token.id: token.name for token in tokens}
@@ -163,43 +173,30 @@ class MainController:
         if not back_image.exists():
             back_image.write_bytes(b"fake-image")
 
-    def _build_default_tokens(self) -> list[Token]:
+    def _load_tokens_from_bootstrap_file(self) -> list[Token]:
+        if not self._bootstrap_tokens_file.exists():
+            raise FileNotFoundError(
+                f"Bootstrap token file not found: {self._bootstrap_tokens_file}"
+            )
+
+        data = json.loads(self._bootstrap_tokens_file.read_text(encoding="utf-8"))
+        if not isinstance(data, list):
+            raise ValueError("Bootstrap token JSON must contain a list")
+
         back_image = self._base_dir / "assets" / "back.png"
-        return [
-            Token(
-                name="Blessing",
-                shape=TokenShape.CIRCLE,
-                front_type=TokenFrontType.TEXT,
-                front_value="Blessing",
-                back_value=str(back_image),
-                categories=["holy"],
-                tags=["light"],
-                weight=2.0,
-                rarity="common",
-            ),
-            Token(
-                name="Curse",
-                shape=TokenShape.HEXAGON,
-                front_type=TokenFrontType.TEXT,
-                front_value="Curse",
-                back_value=str(back_image),
-                categories=["shadow"],
-                tags=["dark"],
-                weight=1.0,
-                rarity="rare",
-            ),
-            Token(
-                name="Shield",
-                shape=TokenShape.CIRCLE,
-                front_type=TokenFrontType.TEXT,
-                front_value="Shield",
-                back_value=str(back_image),
-                categories=["holy"],
-                tags=["defense"],
-                weight=3.0,
-                rarity="common",
-            ),
-        ]
+        tokens: list[Token] = []
+        for item in data:
+            payload = dict(item)
+            if payload.get("back_value") == "__RUNTIME_BACK_IMAGE__":
+                payload["back_value"] = str(back_image)
+            tokens.append(Token.model_validate(payload))
+
+        if len(tokens) < 20:
+            raise ValueError(
+                "Bootstrap token file must contain at least 20 tokens"
+            )
+
+        return tokens
 
     def _ensure_services_ready(self) -> None:
         if self._session_service is None or self._draw_service is None:

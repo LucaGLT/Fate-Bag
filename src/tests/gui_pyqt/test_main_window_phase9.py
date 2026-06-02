@@ -121,7 +121,7 @@ def test_gui_flow_load_create_draw_reveal_hide_reset(window):
             "create_selected_ok": True,
             "deselected_visible": True,
             "session_created": True,
-            "rows_count": 3,
+            "rows_count": 20,
             "shuffle_ok": True,
             "reveal_has_face_up": True,
             "hide_has_face_down": True,
@@ -149,7 +149,7 @@ def test_gui_flow_load_create_draw_reveal_hide_reset(window):
     assert "Draw 1" in after_draw_one_status
     assert "Draw N" in after_draw_n_status
     assert after_shuffle_status.startswith("Shuffle")
-    assert len(session_rows_after_create) == 3
+    assert len(session_rows_after_create) == 20
     assert any("FACE_UP" in row for row in rows_after_reveal)
     assert all("FACE_DOWN" in row for row in rows_after_hide)
     assert all("FACE_DOWN" in row for row in rows_after_reset)
@@ -184,7 +184,7 @@ def test_draw_n_handles_invalid_request(window):
 
     _debug_case(
         "GUI handles draw N invalid request",
-        {"requested_count": 99, "available_tokens": 3},
+        {"requested_count": 99, "available_tokens": 20},
         {"status_starts_with": "Errore draw N"},
         {"status": status},
     )
