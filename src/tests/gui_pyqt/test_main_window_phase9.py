@@ -39,19 +39,18 @@ def test_main_window_has_required_controls(window):
     controls = {
         "load_tokens_btn": window.load_tokens_btn.text(),
         "create_selected_session_btn": window.create_selected_session_btn.text(),
+        "reinsert_bag_btn": window.reinsert_bag_btn.text(),
         "select_all_btn": window.select_all_btn.text(),
         "deselect_all_btn": window.deselect_all_btn.text(),
         "draw_one_btn": window.draw_one_btn.text(),
+        "draw_all_btn": window.draw_all_btn.text(),
         "draw_n_btn": window.draw_n_btn.text(),
         "shuffle_btn": window.shuffle_btn.text(),
         "sort_btn": window.sort_btn.text(),
         "front_img_upload_btn": window.front_img_upload_btn.text(),
         "front_img_delete_btn": window.front_img_delete_btn.text(),
-        "front_text_edit_btn": window.front_text_edit_btn.text(),
         "back_img_upload_btn": window.back_img_upload_btn.text(),
         "back_img_delete_btn": window.back_img_delete_btn.text(),
-        "reveal_all_btn": window.reveal_all_btn.text(),
-        "hide_all_btn": window.hide_all_btn.text(),
         "reset_btn": window.reset_btn.text(),
     }
 
@@ -60,43 +59,41 @@ def test_main_window_has_required_controls(window):
         {"window_title": window.windowTitle()},
         {
             "required_controls": [
-                "Carica token",
+                "Carica Token",
                 "Inserisci in Bag",
+                "Rimetti in Bag",
                 "Seleziona Tutto",
                 "Deseleziona Tutto",
-                "Draw 1",
-                "Draw N",
+                "Pesca 1",
+                "Pesca Tutte",
+                "Pesca N",
                 "Shuffle",
                 "Sort",
                 "Front-Img Upload",
                 "Front-Img Delete",
-                "Front-Text Edit",
                 "Back-Img Upload",
                 "Back-Img Delete",
-                "Reveal all",
-                "Hide all",
-                "Reset",
+                "Svuota Bag",
             ]
         },
         controls,
     )
 
-    assert controls["load_tokens_btn"] == "Carica token"
+    assert controls["load_tokens_btn"] == "Carica Token"
     assert controls["create_selected_session_btn"] == "Inserisci in Bag"
+    assert controls["reinsert_bag_btn"] == "Rimetti in Bag"
     assert controls["select_all_btn"] == "Seleziona Tutto"
     assert controls["deselect_all_btn"] == "Deseleziona Tutto"
-    assert controls["draw_one_btn"] == "Draw 1"
-    assert controls["draw_n_btn"] == "Draw N"
+    assert controls["draw_one_btn"] == "Pesca 1"
+    assert controls["draw_all_btn"] == "Pesca Tutte"
+    assert controls["draw_n_btn"] == "Pesca N"
     assert controls["shuffle_btn"] == "Shuffle"
     assert controls["sort_btn"] == "Sort"
     assert controls["front_img_upload_btn"] == "Front-Img Upload"
     assert controls["front_img_delete_btn"] == "Front-Img Delete"
-    assert controls["front_text_edit_btn"] == "Front-Text Edit"
     assert controls["back_img_upload_btn"] == "Back-Img Upload"
     assert controls["back_img_delete_btn"] == "Back-Img Delete"
-    assert controls["reveal_all_btn"] == "Reveal all"
-    assert controls["hide_all_btn"] == "Hide all"
-    assert controls["reset_btn"] == "Reset"
+    assert controls["reset_btn"] == "Svuota Bag"
 
 
 def test_gui_flow_load_create_draw_reveal_hide_reset(window):
@@ -122,6 +119,9 @@ def test_gui_flow_load_create_draw_reveal_hide_reset(window):
     window._on_draw_n()
     after_draw_n_status = window.status_label.text()
 
+    window._on_draw_all()
+    after_draw_all_status = window.status_label.text()
+
     window._on_shuffle()
     after_shuffle_status = window.status_label.text()
 
@@ -146,7 +146,7 @@ def test_gui_flow_load_create_draw_reveal_hide_reset(window):
             "shuffle_ok": True,
             "reveal_has_face_up": True,
             "hide_has_face_down": True,
-            "reset_has_face_down": True,
+            "bag_empty_after_clear": True,
         },
         {
             "after_load_status": after_load_status,
@@ -154,6 +154,7 @@ def test_gui_flow_load_create_draw_reveal_hide_reset(window):
             "after_create_selected_status": after_create_selected_status,
             "rows_after_create_selected": rows_after_create_selected,
             "after_draw_one_status": after_draw_one_status,
+            "after_draw_all_status": after_draw_all_status,
             "after_draw_n_status": after_draw_n_status,
             "after_shuffle_status": after_shuffle_status,
             "rows_after_create": session_rows_after_create,
@@ -167,13 +168,14 @@ def test_gui_flow_load_create_draw_reveal_hide_reset(window):
     assert after_select_all_status.startswith("Tutti i token selezionati")
     assert after_create_selected_status.startswith("Inseriti in Bag")
     assert any("Deselezionato" in row for row in rows_after_create_selected)
-    assert "Draw 1" in after_draw_one_status
-    assert "Draw N" in after_draw_n_status
+    assert "Pesca 1" in after_draw_one_status
+    assert "Pesca Tutte" in after_draw_all_status
+    assert "Pesca N" in after_draw_n_status
     assert after_shuffle_status.startswith("Shuffle")
     assert len(session_rows_after_create) == 20
     assert any("FACE_UP" in row for row in rows_after_reveal)
     assert all(("FACE_DOWN" in row) or ("Deselezionato" in row) for row in rows_after_hide)
-    assert all(("FACE_DOWN" in row) or ("Deselezionato" in row) for row in rows_after_reset)
+    assert all("Deselezionato" in row for row in rows_after_reset)
 
 
 def test_create_session_from_selection_requires_at_least_one_token(window):
@@ -192,6 +194,73 @@ def test_create_session_from_selection_requires_at_least_one_token(window):
     )
 
     assert status.startswith("Errore create session da selezione")
+
+
+def test_load_tokens_ignores_clicked_bool_argument(window):
+    window._on_load_tokens(False)
+    status = window.status_label.text()
+
+    _debug_case(
+        "Load tokens ignores clicked(bool) argument",
+        {"slot_argument": False},
+        {"status_starts_with": "Token caricati"},
+        {"status": status},
+    )
+
+    assert status.startswith("Token caricati")
+
+
+def test_reinsert_bag_restores_previous_inserted_selection(window):
+    window._on_load_tokens()
+
+    for index in range(window.token_list.count()):
+        window.token_list.item(index).setCheckState(Qt.CheckState.Unchecked)
+
+    window.token_list.item(0).setCheckState(Qt.CheckState.Checked)
+    window.token_list.item(1).setCheckState(Qt.CheckState.Checked)
+    window.token_list.item(2).setCheckState(Qt.CheckState.Checked)
+
+    window._on_create_session_from_selection()
+    first_inserted_ids = {
+        str(token.id)
+        for token, _ in window.controller.scene_entries()
+    }
+
+    for index in range(window.token_list.count()):
+        window.token_list.item(index).setCheckState(Qt.CheckState.Unchecked)
+    window.token_list.item(5).setCheckState(Qt.CheckState.Checked)
+
+    window._on_reinsert_bag()
+
+    checked_ids = {
+        window.token_list.item(i).data(Qt.ItemDataRole.UserRole)
+        for i in range(window.token_list.count())
+        if window.token_list.item(i).checkState() == Qt.CheckState.Checked
+    }
+    reinserted_ids = {
+        str(token.id)
+        for token, _ in window.controller.scene_entries()
+    }
+
+    _debug_case(
+        "Rimetti in Bag restores previous inserted set",
+        {"initial_inserted_count": 3},
+        {
+            "status_starts_with": "Rimessi in Bag",
+            "checked_ids_equal_first_inserted": True,
+            "session_ids_equal_first_inserted": True,
+        },
+        {
+            "status": window.status_label.text(),
+            "first_inserted_ids": sorted(first_inserted_ids),
+            "checked_ids": sorted(checked_ids),
+            "reinserted_ids": sorted(reinserted_ids),
+        },
+    )
+
+    assert window.status_label.text().startswith("Rimessi in Bag")
+    assert checked_ids == first_inserted_ids
+    assert reinserted_ids == first_inserted_ids
 
 
 def test_draw_n_handles_invalid_request(window):
@@ -530,3 +599,62 @@ def test_select_and_deselect_all_buttons(window):
 
     assert all_checked
     assert all_unchecked
+
+
+def test_checkbox_selection_updates_scene_highlight(window):
+    window._on_load_tokens()
+
+    for index in range(window.token_list.count()):
+        window.token_list.item(index).setCheckState(Qt.CheckState.Unchecked)
+
+    # Create session with first three tokens so they exist on the table scene.
+    window.token_list.item(0).setCheckState(Qt.CheckState.Checked)
+    window.token_list.item(1).setCheckState(Qt.CheckState.Checked)
+    window.token_list.item(2).setCheckState(Qt.CheckState.Checked)
+    window._on_create_session_from_selection()
+
+    token_id_0 = window.token_list.item(0).data(Qt.ItemDataRole.UserRole)
+    token_id_1 = window.token_list.item(1).data(Qt.ItemDataRole.UserRole)
+
+    scene_items = window.table_scene.token_items()
+    item0 = scene_items[token_id_0]
+    item1 = scene_items[token_id_1]
+
+    # Uncheck all, then select one and verify only that one is highlighted.
+    for index in range(window.token_list.count()):
+        window.token_list.item(index).setCheckState(Qt.CheckState.Unchecked)
+
+    row0 = None
+    row1 = None
+    for i in range(window.token_list.count()):
+        row = window.token_list.item(i)
+        if row.data(Qt.ItemDataRole.UserRole) == token_id_0:
+            row0 = row
+        if row.data(Qt.ItemDataRole.UserRole) == token_id_1:
+            row1 = row
+
+    assert row0 is not None
+    assert row1 is not None
+
+    row0.setCheckState(Qt.CheckState.Checked)
+
+    _debug_case(
+        "Checkbox selection controls scene highlight",
+        {"checked_token": token_id_0},
+        {"item0_selected": True, "item1_selected": False},
+        {"item0_selected": item0.isSelected(), "item1_selected": item1.isSelected()},
+    )
+
+    assert item0.isSelected() is True
+    assert item1.isSelected() is False
+
+    row0.setCheckState(Qt.CheckState.Unchecked)
+
+    _debug_case(
+        "Uncheck removes scene highlight",
+        {"unchecked_token": token_id_0},
+        {"item0_selected": False},
+        {"item0_selected": item0.isSelected()},
+    )
+
+    assert item0.isSelected() is False

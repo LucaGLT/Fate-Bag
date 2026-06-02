@@ -3,6 +3,7 @@ from pathlib import Path
 from PyQt6.QtWidgets import (
     QApplication,
     QFileDialog,
+    QGridLayout,
     QGraphicsView,
     QHBoxLayout,
     QInputDialog,
@@ -26,6 +27,8 @@ class MainWindow(QMainWindow):
     def __init__(self, controller: MainController | None = None) -> None:
         super().__init__()
         self.controller = controller or MainController()
+        self._is_refreshing_scene = False
+        self._last_inserted_token_ids: set[str] = set()
 
         self.setWindowTitle("Fate-Bag - GUI Tecnica Minima")
         self.resize(760, 480)
@@ -39,80 +42,76 @@ class MainWindow(QMainWindow):
 
         layout = QVBoxLayout(central)
 
-        button_row = QHBoxLayout()
+        self.controls_grid = QGridLayout()
 
-        self.load_tokens_btn = QPushButton("Carica token")
+        self.load_tokens_btn = QPushButton("Carica Token")
         self.load_tokens_btn.setObjectName("load_tokens_btn")
-        button_row.addWidget(self.load_tokens_btn)
+        self.controls_grid.addWidget(self.load_tokens_btn, 0, 0)
 
         self.create_selected_session_btn = QPushButton("Inserisci in Bag")
         self.create_selected_session_btn.setObjectName("create_selected_session_btn")
-        button_row.addWidget(self.create_selected_session_btn)
+        self.controls_grid.addWidget(self.create_selected_session_btn, 1, 0)
 
         self.select_all_btn = QPushButton("Seleziona Tutto")
         self.select_all_btn.setObjectName("select_all_btn")
-        button_row.addWidget(self.select_all_btn)
+        self.controls_grid.addWidget(self.select_all_btn, 0, 1)
 
         self.deselect_all_btn = QPushButton("Deseleziona Tutto")
         self.deselect_all_btn.setObjectName("deselect_all_btn")
-        button_row.addWidget(self.deselect_all_btn)
+        self.controls_grid.addWidget(self.deselect_all_btn, 1, 1)
 
-        self.draw_one_btn = QPushButton("Draw 1")
-        self.draw_one_btn.setObjectName("draw_one_btn")
-        button_row.addWidget(self.draw_one_btn)
+        self.front_img_upload_btn = QPushButton("Front-Img Upload")
+        self.front_img_upload_btn.setObjectName("front_img_upload_btn")
+        self.controls_grid.addWidget(self.front_img_upload_btn, 0, 2)
+
+        self.front_img_delete_btn = QPushButton("Front-Img Delete")
+        self.front_img_delete_btn.setObjectName("front_img_delete_btn")
+        self.controls_grid.addWidget(self.front_img_delete_btn, 1, 2)
+
+        self.back_img_upload_btn = QPushButton("Back-Img Upload")
+        self.back_img_upload_btn.setObjectName("back_img_upload_btn")
+        self.controls_grid.addWidget(self.back_img_upload_btn, 0, 3)
+
+        self.back_img_delete_btn = QPushButton("Back-Img Delete")
+        self.back_img_delete_btn.setObjectName("back_img_delete_btn")
+        self.controls_grid.addWidget(self.back_img_delete_btn, 1, 3)
+
+        self.shuffle_btn = QPushButton("Shuffle")
+        self.shuffle_btn.setObjectName("shuffle_btn")
+        self.controls_grid.addWidget(self.shuffle_btn, 0, 4)
+
+        self.sort_btn = QPushButton("Sort")
+        self.sort_btn.setObjectName("sort_btn")
+        self.controls_grid.addWidget(self.sort_btn, 1, 4)
 
         self.draw_n_spin = QSpinBox()
         self.draw_n_spin.setObjectName("draw_n_spin")
         self.draw_n_spin.setMinimum(1)
         self.draw_n_spin.setMaximum(99)
         self.draw_n_spin.setValue(2)
-        button_row.addWidget(self.draw_n_spin)
+        self.controls_grid.addWidget(self.draw_n_spin, 0, 5)
 
-        self.draw_n_btn = QPushButton("Draw N")
+        self.draw_n_btn = QPushButton("Pesca N")
         self.draw_n_btn.setObjectName("draw_n_btn")
-        button_row.addWidget(self.draw_n_btn)
+        self.controls_grid.addWidget(self.draw_n_btn, 1, 5)
 
-        self.shuffle_btn = QPushButton("Shuffle")
-        self.shuffle_btn.setObjectName("shuffle_btn")
-        button_row.addWidget(self.shuffle_btn)
+        self.draw_one_btn = QPushButton("Pesca 1")
+        self.draw_one_btn.setObjectName("draw_one_btn")
+        self.controls_grid.addWidget(self.draw_one_btn, 0, 6)
 
-        self.sort_btn = QPushButton("Sort")
-        self.sort_btn.setObjectName("sort_btn")
-        button_row.addWidget(self.sort_btn)
+        self.draw_all_btn = QPushButton("Pesca Tutte")
+        self.draw_all_btn.setObjectName("draw_all_btn")
+        self.controls_grid.addWidget(self.draw_all_btn, 1, 6)
 
-        self.front_img_upload_btn = QPushButton("Front-Img Upload")
-        self.front_img_upload_btn.setObjectName("front_img_upload_btn")
-        button_row.addWidget(self.front_img_upload_btn)
+        self.reinsert_bag_btn = QPushButton("Rimetti in Bag")
+        self.reinsert_bag_btn.setObjectName("reinsert_bag_btn")
+        self.controls_grid.addWidget(self.reinsert_bag_btn, 0, 7)
 
-        self.front_img_delete_btn = QPushButton("Front-Img Delete")
-        self.front_img_delete_btn.setObjectName("front_img_delete_btn")
-        button_row.addWidget(self.front_img_delete_btn)
-
-        self.front_text_edit_btn = QPushButton("Front-Text Edit")
-        self.front_text_edit_btn.setObjectName("front_text_edit_btn")
-        button_row.addWidget(self.front_text_edit_btn)
-
-        self.back_img_upload_btn = QPushButton("Back-Img Upload")
-        self.back_img_upload_btn.setObjectName("back_img_upload_btn")
-        button_row.addWidget(self.back_img_upload_btn)
-
-        self.back_img_delete_btn = QPushButton("Back-Img Delete")
-        self.back_img_delete_btn.setObjectName("back_img_delete_btn")
-        button_row.addWidget(self.back_img_delete_btn)
-
-        self.reveal_all_btn = QPushButton("Reveal all")
-        self.reveal_all_btn.setObjectName("reveal_all_btn")
-        button_row.addWidget(self.reveal_all_btn)
-
-        self.hide_all_btn = QPushButton("Hide all")
-        self.hide_all_btn.setObjectName("hide_all_btn")
-        button_row.addWidget(self.hide_all_btn)
-
-        self.reset_btn = QPushButton("Reset")
+        self.reset_btn = QPushButton("Svuota Bag")
         self.reset_btn.setObjectName("reset_btn")
-        button_row.addWidget(self.reset_btn)
+        self.controls_grid.addWidget(self.reset_btn, 1, 7)
 
-        layout.addLayout(button_row)
+        layout.addLayout(self.controls_grid)
 
         self.status_label = QLabel("Pronto")
         self.status_label.setObjectName("status_label")
@@ -136,26 +135,43 @@ class MainWindow(QMainWindow):
     def _connect_signals(self) -> None:
         self.load_tokens_btn.clicked.connect(self._on_load_tokens)
         self.create_selected_session_btn.clicked.connect(self._on_create_session_from_selection)
+        self.reinsert_bag_btn.clicked.connect(self._on_reinsert_bag)
         self.select_all_btn.clicked.connect(self._on_select_all_tokens)
         self.deselect_all_btn.clicked.connect(self._on_deselect_all_tokens)
         self.draw_one_btn.clicked.connect(self._on_draw_one)
+        self.draw_all_btn.clicked.connect(self._on_draw_all)
         self.draw_n_btn.clicked.connect(self._on_draw_n)
         self.shuffle_btn.clicked.connect(self._on_shuffle)
         self.sort_btn.clicked.connect(self._on_sort)
         self.front_img_upload_btn.clicked.connect(self._on_front_img_upload)
         self.front_img_delete_btn.clicked.connect(self._on_front_img_delete)
-        self.front_text_edit_btn.clicked.connect(self._on_front_text_edit)
         self.back_img_upload_btn.clicked.connect(self._on_back_img_upload)
         self.back_img_delete_btn.clicked.connect(self._on_back_img_delete)
-        self.reveal_all_btn.clicked.connect(self._on_reveal_all)
-        self.hide_all_btn.clicked.connect(self._on_hide_all)
         self.reset_btn.clicked.connect(self._on_reset)
+        self.table_scene.token_selected.connect(self._on_scene_token_selected)
+        self.table_scene.token_selection_changed.connect(self._on_scene_selection_changed)
         self.table_scene.token_flip_requested.connect(self._on_scene_token_flip)
+        self.table_scene.token_dragged.connect(self._on_scene_token_dragged)
         self.token_list.itemDoubleClicked.connect(self._on_token_list_item_double_clicked)
+        self.token_list.itemChanged.connect(self._on_token_list_item_changed)
 
-    def _on_load_tokens(self) -> None:
+    def _on_load_tokens(self, token_file: str | bool | None = None) -> None:
         try:
-            tokens = self.controller.load_tokens()
+            # QPushButton.clicked emits a bool (checked) argument; ignore it here.
+            chosen_file: str | None
+            if isinstance(token_file, bool):
+                chosen_file = None
+            else:
+                chosen_file = token_file
+
+            if chosen_file is None and self.sender() is self.load_tokens_btn:
+                chosen_file = self._pick_token_json_file()
+                if not chosen_file:
+                    self.status_label.setText("Caricamento token annullato")
+                    return
+
+            tokens = self.controller.load_tokens(chosen_file)
+            self._last_inserted_token_ids.clear()
             self.status_label.setText(f"Token caricati: {len(tokens)}")
             self._refresh_list()
         except Exception as exc:
@@ -172,11 +188,21 @@ class MainWindow(QMainWindow):
     def _on_create_session_from_selection(self) -> None:
         try:
             selected_ids = list(self._checked_token_ids_from_ui())
-            session = self.controller.create_session_from_selection(selected_ids)
-            self.status_label.setText(f"Inseriti in Bag: {session.session_id}")
-            self._refresh_list()
+            self._insert_selected_into_bag(selected_ids, status_prefix="Inseriti in Bag")
         except Exception as exc:
             self.status_label.setText(f"Errore create session da selezione: {exc}")
+
+    def _on_reinsert_bag(self) -> None:
+        try:
+            if not self._last_inserted_token_ids:
+                raise ValueError("Nessun inserimento precedente da rimettere")
+
+            self._set_checkboxes_from_token_ids(self._last_inserted_token_ids)
+            self._sync_scene_selection_from_checkboxes()
+            selected_ids = list(self._checked_token_ids_from_ui())
+            self._insert_selected_into_bag(selected_ids, status_prefix="Rimessi in Bag")
+        except Exception as exc:
+            self.status_label.setText(f"Errore rimetti in bag: {exc}")
 
     def _on_select_all_tokens(self) -> None:
         for index in range(self.token_list.count()):
@@ -191,15 +217,23 @@ class MainWindow(QMainWindow):
     def _on_draw_one(self) -> None:
         try:
             drawn = self.controller.draw_one()
-            self.status_label.setText(f"Draw 1: {drawn}")
+            self.status_label.setText(f"Pesca 1: {drawn}")
             self._refresh_list()
         except Exception as exc:
             self.status_label.setText(f"Errore draw 1: {exc}")
 
+    def _on_draw_all(self) -> None:
+        try:
+            drawn = self.controller.draw_all()
+            self.status_label.setText(f"Pesca Tutte: {drawn}")
+            self._refresh_list()
+        except Exception as exc:
+            self.status_label.setText(f"Errore pesca tutte: {exc}")
+
     def _on_draw_n(self) -> None:
         try:
             drawn = self.controller.draw_many(self.draw_n_spin.value())
-            self.status_label.setText(f"Draw N: {drawn}")
+            self.status_label.setText(f"Pesca N: {drawn}")
             self._refresh_list()
         except Exception as exc:
             self.status_label.setText(f"Errore draw N: {exc}")
@@ -339,42 +373,71 @@ class MainWindow(QMainWindow):
 
     def _on_reset(self) -> None:
         try:
-            self.controller.reset()
-            self.status_label.setText("Sessione resettata")
+            self.controller.clear_bag()
+            self.token_list.blockSignals(True)
+            for index in range(self.token_list.count()):
+                self.token_list.item(index).setCheckState(Qt.CheckState.Unchecked)
+            self.token_list.blockSignals(False)
+            self.status_label.setText("Bag svuotato")
             self._refresh_list()
         except Exception as exc:
             self.status_label.setText(f"Errore reset: {exc}")
 
     def _on_scene_token_flip(self, token_id: str) -> None:
         try:
+            self._set_checkbox_checked(token_id)
             new_state = self.controller.flip_token(token_id)
             self.status_label.setText(f"Flip token: {token_id} -> {new_state}")
             self._refresh_list()
         except Exception as exc:
             self.status_label.setText(f"Errore flip: {exc}")
 
+    def _on_scene_token_selected(self, token_id: str) -> None:
+        changed = self._set_checkbox_exclusive(token_id)
+        if changed:
+            self.status_label.setText(f"Token selezionato: {token_id}")
+
+    def _on_scene_selection_changed(self, selected_token_ids: set[str]) -> None:
+        if self._is_refreshing_scene:
+            return
+        self._set_checkboxes_from_token_ids(selected_token_ids)
+
+    def _on_scene_token_dragged(self, token_id: str, x: float, y: float) -> None:
+        try:
+            self._set_checkbox_checked(token_id)
+            self.controller.move_token(token_id, x, y)
+            self.status_label.setText(f"Token spostato: {token_id} -> ({x:.1f}, {y:.1f})")
+            self._refresh_scene_preserve_checkbox_selection()
+        except Exception as exc:
+            self.status_label.setText(f"Errore move token: {exc}")
+
     def _refresh_list(self) -> None:
         selected_ids = self._checked_token_ids_from_ui()
         entries = self.controller.token_status_entries(selected_ids)
 
         self.token_list.clear()
+        self.token_list.blockSignals(True)
         for entry in entries:
             item = QListWidgetItem(f"{entry['name']} | {entry['status']}")
             item.setData(Qt.ItemDataRole.UserRole, str(entry["token_id"]))
             item.setFlags(item.flags() | Qt.ItemFlag.ItemIsUserCheckable)
 
-            if entry["in_session"]:
-                is_checked = True
-            else:
-                is_checked = entry["token_id"] in selected_ids
+            is_checked = entry["token_id"] in selected_ids
 
             item.setCheckState(Qt.CheckState.Checked if is_checked else Qt.CheckState.Unchecked)
             self.token_list.addItem(item)
+        self.token_list.blockSignals(False)
 
-        self._refresh_scene()
+        self._refresh_scene_preserve_checkbox_selection()
 
     def _refresh_scene(self) -> None:
         self.table_scene.load_from_session(self.controller.scene_entries())
+
+    def _refresh_scene_preserve_checkbox_selection(self) -> None:
+        self._is_refreshing_scene = True
+        self._refresh_scene()
+        self._is_refreshing_scene = False
+        self._sync_scene_selection_from_checkboxes()
 
     def _checked_token_ids_from_ui(self) -> set:
         selected = set()
@@ -398,6 +461,84 @@ class MainWindow(QMainWindow):
         if not file_path:
             return None
         return file_path
+
+    def _pick_token_json_file(self) -> str | None:
+        initial_dir = self._default_tokens_directory()
+        file_path, _ = QFileDialog.getOpenFileName(
+            self,
+            "Seleziona file JSON token",
+            initial_dir,
+            "JSON (*.json);;All files (*.*)",
+        )
+        if not file_path:
+            return None
+        return file_path
+
+    def _default_tokens_directory(self) -> str:
+        bootstrap_file = self.controller.bootstrap_tokens_file
+        candidate = bootstrap_file if bootstrap_file.is_absolute() else (Path.cwd() / bootstrap_file)
+        if candidate.exists():
+            return str(candidate.parent)
+
+        if bootstrap_file.parent.exists():
+            return str(bootstrap_file.parent)
+
+        fallback = Path.cwd() / "config"
+        return str(fallback if fallback.exists() else Path.cwd())
+
+    def _set_checkbox_checked(self, token_id: str) -> bool:
+        for index in range(self.token_list.count()):
+            item = self.token_list.item(index)
+            row_token_id = item.data(Qt.ItemDataRole.UserRole)
+            if row_token_id == token_id:
+                if item.checkState() != Qt.CheckState.Checked:
+                    item.setCheckState(Qt.CheckState.Checked)
+                    self._sync_scene_selection_from_checkboxes()
+                    return True
+                return False
+        return False
+
+    def _set_checkbox_exclusive(self, token_id: str) -> bool:
+        changed = False
+        for index in range(self.token_list.count()):
+            item = self.token_list.item(index)
+            row_token_id = item.data(Qt.ItemDataRole.UserRole)
+            should_check = row_token_id == token_id
+            desired = Qt.CheckState.Checked if should_check else Qt.CheckState.Unchecked
+            if item.checkState() != desired:
+                item.setCheckState(desired)
+                changed = True
+        self._sync_scene_selection_from_checkboxes()
+        return changed
+
+    def _on_token_list_item_changed(self, item: QListWidgetItem) -> None:
+        del item
+        self._sync_scene_selection_from_checkboxes()
+
+    def _set_checkboxes_from_token_ids(self, selected_token_ids: set[str]) -> None:
+        self.token_list.blockSignals(True)
+        for index in range(self.token_list.count()):
+            item = self.token_list.item(index)
+            row_token_id = item.data(Qt.ItemDataRole.UserRole)
+            should_check = row_token_id in selected_token_ids
+            item.setCheckState(Qt.CheckState.Checked if should_check else Qt.CheckState.Unchecked)
+        self.token_list.blockSignals(False)
+
+    def _sync_scene_selection_from_checkboxes(self) -> None:
+        selected = {
+            str(token_id)
+            for token_id in self._checked_token_ids_from_ui()
+        }
+        self.table_scene.set_selected_token_ids(selected)
+
+    def _insert_selected_into_bag(self, selected_ids: list, *, status_prefix: str) -> None:
+        session = self.controller.create_session_from_selection(selected_ids)
+        self._last_inserted_token_ids = {
+            str(table_token.token_id)
+            for table_token in session.table_tokens
+        }
+        self.status_label.setText(f"{status_prefix}: {session.session_id}")
+        self._refresh_list()
 
 
 def main(base_dir: str | Path = ".runtime/gui") -> int:

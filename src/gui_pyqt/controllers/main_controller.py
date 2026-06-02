@@ -1,4 +1,5 @@
 import json
+import math
 from pathlib import Path
 from uuid import UUID
 
@@ -42,8 +43,15 @@ class MainController:
         self._draw_service: DrawService | None = None
         self.current_session: Session | None = None
 
-    def load_tokens(self) -> list[Token]:
+    @property
+    def bootstrap_tokens_file(self) -> Path:
+        return self._bootstrap_tokens_file
+
+    def load_tokens(self, tokens_file: str | Path | None = None) -> list[Token]:
         self._ensure_runtime_assets()
+
+        if tokens_file is not None:
+            self._bootstrap_tokens_file = Path(tokens_file)
 
         tokens = self._token_service.list_tokens()
         bootstrap_tokens = self._load_tokens_from_bootstrap_file()
@@ -127,6 +135,24 @@ class MainController:
             seed=seed,
         )
 
+    def draw_all(self) -> list[str]:
+        self._ensure_session_ready()
+        remaining = sum(
+            1
+            for table_token in self.current_session.table_tokens
+            if table_token.state == TokenState.FACE_DOWN
+        )
+        if remaining <= 0:
+            return []
+
+        seed = self._next_seed() if self._deterministic_mode else None
+        return self._draw_service.draw_uniform(
+            self.current_session,
+            count=remaining,
+            with_replacement=False,
+            seed=seed,
+        )
+
     def shuffle(self) -> Session:
         self._ensure_session_ready()
         seed = self._next_seed() if self._deterministic_mode else None
@@ -135,11 +161,6 @@ class MainController:
 
     def sort_face_up_first(self) -> Session:
         self._ensure_session_ready()
-
-        original_positions = [
-            (table_token.x, table_token.y, table_token.z, table_token.rotation)
-            for table_token in self.current_session.table_tokens
-        ]
 
         priority = {
             TokenState.FACE_UP: 0,
@@ -152,12 +173,13 @@ class MainController:
             )
         )
 
+        positions = self._generate_grid_positions(len(self.current_session.table_tokens))
         for index, table_token in enumerate(self.current_session.table_tokens):
-            x, y, z, rotation = original_positions[index]
+            x, y = positions[index]
             table_token.x = x
             table_token.y = y
-            table_token.z = z
-            table_token.rotation = rotation
+            table_token.z = 0.0
+            table_token.rotation = 0.0
 
         self._session_repo.save(self.current_session)
         return self.current_session
@@ -174,6 +196,14 @@ class MainController:
         self._ensure_session_ready()
         self.current_session = self._session_service.reset_session(self.current_session)
         return self.current_session
+
+    def clear_bag(self) -> None:
+        self._ensure_services_ready()
+        if self.current_session is None:
+            return
+
+        self._session_service.close_session(self.current_session.session_id)
+        self.current_session = None
 
     def table_rows(self) -> list[str]:
         entries = self.token_status_entries()
@@ -249,6 +279,21 @@ class MainController:
             self._draw_service.hide_tokens(self.current_session, [str(parsed_id)])
 
         return table_token.state.value
+
+    def move_token(self, token_id: str | UUID, x: float, y: float) -> None:
+        self._ensure_session_ready()
+        parsed_id = token_id if isinstance(token_id, UUID) else UUID(str(token_id))
+
+        table_token = next(
+            (item for item in self.current_session.table_tokens if item.token_id == parsed_id),
+            None,
+        )
+        if table_token is None:
+            raise ValueError(f"Token non trovato in sessione: {parsed_id}")
+
+        table_token.x = max(0.0, min(100.0, float(x)))
+        table_token.y = max(0.0, min(100.0, float(y)))
+        self._session_repo.save(self.current_session)
 
     def apply_front_image_to_tokens(self, token_ids: list[UUID], image_path: str | Path) -> int:
         selected_ids = self._normalize_selected_token_ids(token_ids)
@@ -460,3 +505,33 @@ class MainController:
     def _next_seed(self) -> int:
         self._seed_counter += 1
         return self._seed_counter
+
+    @staticmethod
+    def _generate_grid_positions(count: int) -> list[tuple[float, float]]:
+        if count <= 0:
+            return []
+
+        cols = max(1, math.ceil(math.sqrt(count)))
+        rows = max(1, math.ceil(count / cols))
+
+        x_min, x_max = 10.0, 90.0
+        y_min, y_max = 10.0, 90.0
+
+        if cols == 1:
+            x_values = [50.0]
+        else:
+            x_values = [x_min + i * ((x_max - x_min) / (cols - 1)) for i in range(cols)]
+
+        if rows == 1:
+            y_values = [50.0]
+        else:
+            y_values = [y_min + i * ((y_max - y_min) / (rows - 1)) for i in range(rows)]
+
+        positions: list[tuple[float, float]] = []
+        for row in range(rows):
+            for col in range(cols):
+                positions.append((round(x_values[col], 3), round(y_values[row], 3)))
+                if len(positions) == count:
+                    return positions
+
+        return positions
