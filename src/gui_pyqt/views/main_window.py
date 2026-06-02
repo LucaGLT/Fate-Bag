@@ -5,6 +5,7 @@ from PyQt6.QtWidgets import (
     QFileDialog,
     QGraphicsView,
     QHBoxLayout,
+    QInputDialog,
     QLabel,
     QListWidget,
     QListWidgetItem,
@@ -44,13 +45,17 @@ class MainWindow(QMainWindow):
         self.load_tokens_btn.setObjectName("load_tokens_btn")
         button_row.addWidget(self.load_tokens_btn)
 
-        self.create_session_btn = QPushButton("Crea sessione")
-        self.create_session_btn.setObjectName("create_session_btn")
-        button_row.addWidget(self.create_session_btn)
-
-        self.create_selected_session_btn = QPushButton("Crea sessione da selezione")
+        self.create_selected_session_btn = QPushButton("Inserisci in Bag")
         self.create_selected_session_btn.setObjectName("create_selected_session_btn")
         button_row.addWidget(self.create_selected_session_btn)
+
+        self.select_all_btn = QPushButton("Seleziona Tutto")
+        self.select_all_btn.setObjectName("select_all_btn")
+        button_row.addWidget(self.select_all_btn)
+
+        self.deselect_all_btn = QPushButton("Deseleziona Tutto")
+        self.deselect_all_btn.setObjectName("deselect_all_btn")
+        button_row.addWidget(self.deselect_all_btn)
 
         self.draw_one_btn = QPushButton("Draw 1")
         self.draw_one_btn.setObjectName("draw_one_btn")
@@ -79,9 +84,21 @@ class MainWindow(QMainWindow):
         self.front_img_upload_btn.setObjectName("front_img_upload_btn")
         button_row.addWidget(self.front_img_upload_btn)
 
+        self.front_img_delete_btn = QPushButton("Front-Img Delete")
+        self.front_img_delete_btn.setObjectName("front_img_delete_btn")
+        button_row.addWidget(self.front_img_delete_btn)
+
+        self.front_text_edit_btn = QPushButton("Front-Text Edit")
+        self.front_text_edit_btn.setObjectName("front_text_edit_btn")
+        button_row.addWidget(self.front_text_edit_btn)
+
         self.back_img_upload_btn = QPushButton("Back-Img Upload")
         self.back_img_upload_btn.setObjectName("back_img_upload_btn")
         button_row.addWidget(self.back_img_upload_btn)
+
+        self.back_img_delete_btn = QPushButton("Back-Img Delete")
+        self.back_img_delete_btn.setObjectName("back_img_delete_btn")
+        button_row.addWidget(self.back_img_delete_btn)
 
         self.reveal_all_btn = QPushButton("Reveal all")
         self.reveal_all_btn.setObjectName("reveal_all_btn")
@@ -118,18 +135,23 @@ class MainWindow(QMainWindow):
 
     def _connect_signals(self) -> None:
         self.load_tokens_btn.clicked.connect(self._on_load_tokens)
-        self.create_session_btn.clicked.connect(self._on_create_session)
         self.create_selected_session_btn.clicked.connect(self._on_create_session_from_selection)
+        self.select_all_btn.clicked.connect(self._on_select_all_tokens)
+        self.deselect_all_btn.clicked.connect(self._on_deselect_all_tokens)
         self.draw_one_btn.clicked.connect(self._on_draw_one)
         self.draw_n_btn.clicked.connect(self._on_draw_n)
         self.shuffle_btn.clicked.connect(self._on_shuffle)
         self.sort_btn.clicked.connect(self._on_sort)
         self.front_img_upload_btn.clicked.connect(self._on_front_img_upload)
+        self.front_img_delete_btn.clicked.connect(self._on_front_img_delete)
+        self.front_text_edit_btn.clicked.connect(self._on_front_text_edit)
         self.back_img_upload_btn.clicked.connect(self._on_back_img_upload)
+        self.back_img_delete_btn.clicked.connect(self._on_back_img_delete)
         self.reveal_all_btn.clicked.connect(self._on_reveal_all)
         self.hide_all_btn.clicked.connect(self._on_hide_all)
         self.reset_btn.clicked.connect(self._on_reset)
         self.table_scene.token_flip_requested.connect(self._on_scene_token_flip)
+        self.token_list.itemDoubleClicked.connect(self._on_token_list_item_double_clicked)
 
     def _on_load_tokens(self) -> None:
         try:
@@ -151,10 +173,20 @@ class MainWindow(QMainWindow):
         try:
             selected_ids = list(self._checked_token_ids_from_ui())
             session = self.controller.create_session_from_selection(selected_ids)
-            self.status_label.setText(f"Sessione da selezione creata: {session.session_id}")
+            self.status_label.setText(f"Inseriti in Bag: {session.session_id}")
             self._refresh_list()
         except Exception as exc:
             self.status_label.setText(f"Errore create session da selezione: {exc}")
+
+    def _on_select_all_tokens(self) -> None:
+        for index in range(self.token_list.count()):
+            self.token_list.item(index).setCheckState(Qt.CheckState.Checked)
+        self.status_label.setText("Tutti i token selezionati")
+
+    def _on_deselect_all_tokens(self) -> None:
+        for index in range(self.token_list.count()):
+            self.token_list.item(index).setCheckState(Qt.CheckState.Unchecked)
+        self.status_label.setText("Tutti i token deselezionati")
 
     def _on_draw_one(self) -> None:
         try:
@@ -215,6 +247,79 @@ class MainWindow(QMainWindow):
             self._refresh_list()
         except Exception as exc:
             self.status_label.setText(f"Errore back upload: {exc}")
+
+    def _on_front_img_delete(self) -> None:
+        try:
+            selected_ids = list(self._checked_token_ids_from_ui())
+            updated_count = self.controller.delete_front_image_from_tokens(selected_ids)
+            self.status_label.setText(f"Front image rimossa da {updated_count} token")
+            self._refresh_list()
+        except Exception as exc:
+            self.status_label.setText(f"Errore front delete: {exc}")
+
+    def _on_back_img_delete(self) -> None:
+        try:
+            selected_ids = list(self._checked_token_ids_from_ui())
+            updated_count = self.controller.delete_back_image_from_tokens(selected_ids)
+            self.status_label.setText(f"Back image rimossa da {updated_count} token")
+            self._refresh_list()
+        except Exception as exc:
+            self.status_label.setText(f"Errore back delete: {exc}")
+
+    def _on_front_text_edit(self, text: str | None = None) -> None:
+        try:
+            selected_ids = list(self._checked_token_ids_from_ui())
+            value = text if isinstance(text, str) else None
+            if value is None:
+                value, ok = QInputDialog.getText(self, "Front Text", "Nuovo testo front:")
+                if not ok:
+                    self.status_label.setText("Edit front text annullato")
+                    return
+
+            updated_count = self.controller.apply_front_text_to_tokens(selected_ids, value)
+            self.status_label.setText(f"Front text aggiornato su {updated_count} token")
+            self._refresh_list()
+        except Exception as exc:
+            self.status_label.setText(f"Errore front text: {exc}")
+
+    def _on_token_list_item_double_clicked(
+        self,
+        item: QListWidgetItem,
+        text: str | None = None,
+    ) -> None:
+        try:
+            clicked_token_id = item.data(Qt.ItemDataRole.UserRole)
+            if not clicked_token_id:
+                raise ValueError("Token non valido")
+
+            from uuid import UUID
+
+            clicked_uuid = UUID(clicked_token_id)
+            if item.checkState() != Qt.CheckState.Checked:
+                item.setCheckState(Qt.CheckState.Checked)
+            selected_ids = list(self._checked_token_ids_from_ui())
+            target_ids = selected_ids if selected_ids else [clicked_uuid]
+
+            value = text
+            if value is None:
+                default_text = self.controller.front_text_for_token(clicked_uuid)
+                value, ok = QInputDialog.getText(
+                    self,
+                    "Front Text (Lista)",
+                    "Nuovo testo front per i token selezionati:",
+                    text=default_text,
+                )
+                if not ok:
+                    self.status_label.setText("Edit front text da lista annullato")
+                    return
+
+            updated_count = self.controller.apply_front_text_to_tokens(target_ids, value)
+            self.status_label.setText(
+                f"Front text aggiornato da lista su {updated_count} token"
+            )
+            self._refresh_list()
+        except Exception as exc:
+            self.status_label.setText(f"Errore edit lista: {exc}")
 
     def _on_reveal_all(self) -> None:
         try:

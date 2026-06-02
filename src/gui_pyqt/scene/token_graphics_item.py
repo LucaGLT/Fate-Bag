@@ -167,7 +167,7 @@ class TokenGraphicsItem(QGraphicsObject):
         painter.drawText(self._bounds, Qt.AlignmentFlag.AlignCenter, "BACK")
 
     def _draw_front(self, painter, clip_path: QPainterPath) -> None:
-        if self.token.front_type == TokenFrontType.IMAGE:
+        if self.token.front_type in (TokenFrontType.IMAGE, TokenFrontType.TEXT_IMAGE):
             front_path = Path(self.token.front_value)
             if front_path.is_file():
                 pixmap = QPixmap(str(front_path))
@@ -176,11 +176,34 @@ class TokenGraphicsItem(QGraphicsObject):
                     painter.setClipPath(clip_path)
                     painter.drawPixmap(self._bounds.toRect(), pixmap)
                     painter.restore()
-                    return
+                    if self.token.front_type == TokenFrontType.IMAGE:
+                        return
 
-        painter.setPen(QPen(QColor("#1f2a36"), 1))
+        front_label = self._front_label_text()
+        if not front_label:
+            return
+
+        if self.token.front_type == TokenFrontType.TEXT_IMAGE:
+            # Improve legibility of overlay text over front images.
+            painter.save()
+            overlay = QColor(0, 0, 0, 120)
+            painter.setBrush(QBrush(overlay))
+            painter.setPen(Qt.PenStyle.NoPen)
+            painter.drawRect(self._bounds.adjusted(6, self._bounds.height() * 0.25, -6, -6))
+            painter.restore()
+            painter.setPen(QPen(QColor("#ffffff"), 1))
+        else:
+            painter.setPen(QPen(QColor("#1f2a36"), 1))
+
         painter.setFont(QFont("Segoe UI", 8, QFont.Weight.DemiBold))
-        painter.drawText(self._bounds.adjusted(6, 6, -6, -6), Qt.AlignmentFlag.AlignCenter, self.token.front_value)
+        painter.drawText(self._bounds.adjusted(6, 6, -6, -6), Qt.AlignmentFlag.AlignCenter, front_label)
+
+    def _front_label_text(self) -> str:
+        if self.token.front_type == TokenFrontType.TEXT:
+            return self.token.front_value
+        if self.token.front_type == TokenFrontType.TEXT_IMAGE:
+            return str(self.token.metadata.get("front_text", "")).strip()
+        return ""
 
     @property
     def token_id(self) -> UUID:

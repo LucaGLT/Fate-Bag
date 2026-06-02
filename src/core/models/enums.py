@@ -18,6 +18,7 @@ class TokenShape(str, Enum):
 class TokenFrontType(str, Enum):
     TEXT = "TEXT"
     IMAGE = "IMAGE"
+    TEXT_IMAGE = "TEXT_IMAGE"
 
 
 class TokenState(str, Enum):

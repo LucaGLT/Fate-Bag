@@ -64,6 +64,7 @@ class MainController:
                 desired_payload["front_type"] = existing_token.front_type.value
                 desired_payload["front_value"] = existing_token.front_value
                 desired_payload["back_value"] = existing_token.back_value
+                desired_payload["metadata"] = dict(existing_token.metadata)
                 desired_token = Token.model_validate(desired_payload)
 
                 if existing_token.model_dump(mode="json") != desired_token.model_dump(mode="json"):
@@ -260,8 +261,11 @@ class MainController:
                 raise ValueError(f"Token non trovato: {token_id}")
 
             payload = token.model_dump(mode="json")
-            payload["front_type"] = TokenFrontType.IMAGE.value
+            payload["front_type"] = TokenFrontType.TEXT_IMAGE.value
             payload["front_value"] = str(image_file)
+            metadata = dict(payload.get("metadata", {}))
+            metadata["front_text"] = self._current_front_text(token)
+            payload["metadata"] = metadata
 
             updated = Token.model_validate(payload)
             self._token_service.update_token(updated)
@@ -290,6 +294,87 @@ class MainController:
 
         return updated_count
 
+    def delete_front_image_from_tokens(self, token_ids: list[UUID]) -> int:
+        selected_ids = self._normalize_selected_token_ids(token_ids)
+
+        updated_count = 0
+        for token_id in selected_ids:
+            token = self._tokens_by_id.get(token_id)
+            if token is None:
+                raise ValueError(f"Token non trovato: {token_id}")
+
+            payload = token.model_dump(mode="json")
+            payload["front_type"] = TokenFrontType.TEXT.value
+            payload["front_value"] = self._current_front_text(token)
+            metadata = dict(payload.get("metadata", {}))
+            metadata.pop("front_text", None)
+            payload["metadata"] = metadata
+
+            updated = Token.model_validate(payload)
+            self._token_service.update_token(updated)
+            self._update_token_cache(updated)
+            updated_count += 1
+
+        return updated_count
+
+    def delete_back_image_from_tokens(self, token_ids: list[UUID]) -> int:
+        selected_ids = self._normalize_selected_token_ids(token_ids)
+        default_back = self._default_back_image_path()
+
+        updated_count = 0
+        for token_id in selected_ids:
+            token = self._tokens_by_id.get(token_id)
+            if token is None:
+                raise ValueError(f"Token non trovato: {token_id}")
+
+            payload = token.model_dump(mode="json")
+            payload["back_value"] = str(default_back)
+
+            updated = Token.model_validate(payload)
+            self._token_service.update_token(updated)
+            self._update_token_cache(updated)
+            updated_count += 1
+
+        return updated_count
+
+    def apply_front_text_to_tokens(self, token_ids: list[UUID], text: str) -> int:
+        selected_ids = self._normalize_selected_token_ids(token_ids)
+        normalized_text = text.strip()
+        if not normalized_text:
+            raise ValueError("Il testo front deve essere non vuoto")
+
+        updated_count = 0
+        for token_id in selected_ids:
+            token = self._tokens_by_id.get(token_id)
+            if token is None:
+                raise ValueError(f"Token non trovato: {token_id}")
+
+            payload = token.model_dump(mode="json")
+            if token.front_type == TokenFrontType.TEXT:
+                payload["front_value"] = normalized_text
+            elif token.front_type in (TokenFrontType.IMAGE, TokenFrontType.TEXT_IMAGE):
+                payload["front_type"] = TokenFrontType.TEXT_IMAGE.value
+                metadata = dict(payload.get("metadata", {}))
+                metadata["front_text"] = normalized_text
+                payload["metadata"] = metadata
+            else:
+                payload["front_value"] = normalized_text
+
+            payload["name"] = normalized_text
+
+            updated = Token.model_validate(payload)
+            self._token_service.update_token(updated)
+            self._update_token_cache(updated)
+            updated_count += 1
+
+        return updated_count
+
+    def front_text_for_token(self, token_id: UUID) -> str:
+        token = self._tokens_by_id.get(token_id)
+        if token is None:
+            raise ValueError(f"Token non trovato: {token_id}")
+        return self._current_front_text(token)
+
     def _ensure_runtime_assets(self) -> None:
         assets_dir = self._base_dir / "assets"
         assets_dir.mkdir(parents=True, exist_ok=True)
@@ -297,6 +382,10 @@ class MainController:
         back_image = assets_dir / "back.png"
         if not back_image.exists():
             back_image.write_bytes(b"fake-image")
+
+    def _default_back_image_path(self) -> Path:
+        self._ensure_runtime_assets()
+        return self._base_dir / "assets" / "back.png"
 
     def _load_tokens_from_bootstrap_file(self) -> list[Token]:
         if not self._bootstrap_tokens_file.exists():
@@ -343,6 +432,16 @@ class MainController:
         if not path.is_file():
             raise ValueError(f"File immagine non trovato: {path}")
         return path
+
+    @staticmethod
+    def _current_front_text(token: Token) -> str:
+        if token.front_type == TokenFrontType.TEXT:
+            return token.front_value
+        if token.front_type == TokenFrontType.TEXT_IMAGE:
+            text = str(token.metadata.get("front_text", "")).strip()
+            if text:
+                return text
+        return token.name
 
     def _update_token_cache(self, updated: Token) -> None:
         self._tokens_by_id[updated.id] = updated

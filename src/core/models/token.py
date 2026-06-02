@@ -51,9 +51,15 @@ class Token(BaseModel):
         if self.front_type == TokenFrontType.TEXT and not self.front_value.strip():
             raise ValueError("front_value must be non-empty text for TEXT tokens")
 
-        if self.front_type == TokenFrontType.IMAGE:
+        if self.front_type in (TokenFrontType.IMAGE, TokenFrontType.TEXT_IMAGE):
             front_path = Path(self.front_value)
             if not front_path.is_file():
                 raise ValueError("front_value must point to an existing image file for IMAGE tokens")
+
+        if self.front_type == TokenFrontType.TEXT_IMAGE:
+            front_text = str(self.metadata.get("front_text", "")).strip()
+            if not front_text:
+                # Backward-compatibility migration for legacy data created before front_text was mandatory.
+                self.metadata["front_text"] = self.name.strip() or "Token"
 
         return self
