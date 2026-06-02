@@ -98,6 +98,32 @@ def test_release1_scene_click_flip_updates_state(window):
     assert any("FACE_UP" in row_text for row_text in matching_rows)
 
 
+def test_release1_shuffle_moves_tokens_in_scene(window):
+    window._on_load_tokens()
+    window._on_create_session()
+
+    before_map = {
+        str(token.id): (round(table_token.x, 3), round(table_token.y, 3))
+        for token, table_token in window.controller.scene_entries()
+    }
+
+    window._on_shuffle()
+
+    after_map = {
+        str(token.id): (round(table_token.x, 3), round(table_token.y, 3))
+        for token, table_token in window.controller.scene_entries()
+    }
+
+    print("\n[GIVEN] sessione avviata con coordinate core")
+    print("[EXPECTED] shuffle cambia posizione ad almeno un token")
+
+    moved_count = sum(1 for token_id in before_map if before_map[token_id] != after_map[token_id])
+    print(f"[ACTUAL] moved_count={moved_count}")
+
+    assert moved_count > 0
+    assert sorted(before_map.values()) == sorted(after_map.values())
+
+
 def test_release1_graphics_item_supports_shapes_and_front_back(tmp_path):
     back_path = _create_test_image(tmp_path / "back.png", (40, 60, 90))
     front_image_path = _create_test_image(tmp_path / "front.png", (200, 200, 60))

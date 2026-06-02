@@ -73,6 +73,7 @@ class TokenGraphicsItem(QGraphicsObject):
         for x, y in points:
             polygon.append(QPointF(x, y))
         path.addPolygon(polygon)
+        path.closeSubpath()
         return path
 
     def _base_color(self) -> QColor:
