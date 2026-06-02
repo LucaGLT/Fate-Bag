@@ -51,10 +51,19 @@ class MainController:
             for token in bootstrap_tokens:
                 self._token_service.create_token(token)
         else:
-            existing_names = {token.name for token in tokens}
-            missing_tokens = [token for token in bootstrap_tokens if token.name not in existing_names]
-            for token in missing_tokens:
-                self._token_service.create_token(token)
+            existing_by_name = {token.name: token for token in tokens}
+            for bootstrap_token in bootstrap_tokens:
+                existing_token = existing_by_name.get(bootstrap_token.name)
+                if existing_token is None:
+                    self._token_service.create_token(bootstrap_token)
+                    continue
+
+                desired_payload = bootstrap_token.model_dump(mode="json")
+                desired_payload["id"] = str(existing_token.id)
+                desired_token = Token.model_validate(desired_payload)
+
+                if existing_token.model_dump(mode="json") != desired_token.model_dump(mode="json"):
+                    self._token_service.update_token(desired_token)
 
         tokens = self._token_service.list_tokens()
 

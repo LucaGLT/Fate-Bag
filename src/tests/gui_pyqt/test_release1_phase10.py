@@ -157,3 +157,40 @@ def test_release1_graphics_item_supports_shapes_and_front_back(tmp_path):
     assert image_item.flags() & image_item.GraphicsItemFlag.ItemIsSelectable
     assert text_item.boundingRect().width() > 0
     assert image_item.boundingRect().height() > 0
+
+
+def test_release1_graphics_item_supports_all_requested_shapes(tmp_path):
+    back_path = _create_test_image(tmp_path / "back_shapes.png", (20, 30, 40))
+
+    from src.core.models.table_token import TableToken
+
+    shapes = [
+        TokenShape.CIRCLE,
+        TokenShape.SQUARE,
+        TokenShape.PENTAGON,
+        TokenShape.EPTAGON,
+        TokenShape.HEXAGON,
+        TokenShape.OCTAGON,
+        TokenShape.STAR,
+        TokenShape.RECTANGLE_3_4,
+        TokenShape.RECTANGLE_4_3,
+        TokenShape.RECTANGLE_3_5,
+        TokenShape.RECTANGLE_5_3,
+    ]
+
+    print("\n[GIVEN] tutte le shape richieste disponibili nel dominio")
+    print("[EXPECTED] ogni shape produce un path grafico valido non vuoto")
+
+    for shape in shapes:
+        token = Token(
+            name=f"Shape-{shape.value}",
+            shape=shape,
+            front_type=TokenFrontType.TEXT,
+            front_value=shape.value,
+            back_value=back_path,
+        )
+        table = TableToken(token_id=token.id, state=TokenState.FACE_DOWN, x=0.0, y=0.0)
+        item = TokenGraphicsItem(token=token, table_token=table)
+
+        path = item._shape_path()
+        assert not path.isEmpty(), f"Shape path empty for {shape.value}"

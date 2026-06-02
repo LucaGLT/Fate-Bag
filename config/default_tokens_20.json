@@ -25,7 +25,7 @@
   },
   {
     "name": "Shield",
-    "shape": "CIRCLE",
+    "shape": "SQUARE",
     "front_type": "TEXT",
     "front_value": "Shield",
     "back_value": "__RUNTIME_BACK_IMAGE__",
@@ -37,7 +37,7 @@
   },
   {
     "name": "Wrath",
-    "shape": "HEXAGON",
+    "shape": "PENTAGON",
     "front_type": "TEXT",
     "front_value": "Wrath",
     "back_value": "__RUNTIME_BACK_IMAGE__",
@@ -49,7 +49,7 @@
   },
   {
     "name": "Mercy",
-    "shape": "CIRCLE",
+    "shape": "EPTAGON",
     "front_type": "TEXT",
     "front_value": "Mercy",
     "back_value": "__RUNTIME_BACK_IMAGE__",
@@ -61,7 +61,7 @@
   },
   {
     "name": "Ruin",
-    "shape": "HEXAGON",
+    "shape": "OCTAGON",
     "front_type": "TEXT",
     "front_value": "Ruin",
     "back_value": "__RUNTIME_BACK_IMAGE__",
@@ -73,7 +73,7 @@
   },
   {
     "name": "Aegis",
-    "shape": "CIRCLE",
+    "shape": "STAR",
     "front_type": "TEXT",
     "front_value": "Aegis",
     "back_value": "__RUNTIME_BACK_IMAGE__",
@@ -85,7 +85,7 @@
   },
   {
     "name": "Blight",
-    "shape": "HEXAGON",
+    "shape": "RECTANGLE_3:4",
     "front_type": "TEXT",
     "front_value": "Blight",
     "back_value": "__RUNTIME_BACK_IMAGE__",
@@ -97,7 +97,7 @@
   },
   {
     "name": "Beacon",
-    "shape": "CIRCLE",
+    "shape": "RECTANGLE_4:3",
     "front_type": "TEXT",
     "front_value": "Beacon",
     "back_value": "__RUNTIME_BACK_IMAGE__",
@@ -109,7 +109,7 @@
   },
   {
     "name": "Fang",
-    "shape": "HEXAGON",
+    "shape": "RECTANGLE_3:5",
     "front_type": "TEXT",
     "front_value": "Fang",
     "back_value": "__RUNTIME_BACK_IMAGE__",
@@ -121,7 +121,7 @@
   },
   {
     "name": "Ward",
-    "shape": "CIRCLE",
+    "shape": "RECTANGLE_5:3",
     "front_type": "TEXT",
     "front_value": "Ward",
     "back_value": "__RUNTIME_BACK_IMAGE__",
@@ -133,7 +133,7 @@
   },
   {
     "name": "Gloom",
-    "shape": "HEXAGON",
+    "shape": "CIRCLE",
     "front_type": "TEXT",
     "front_value": "Gloom",
     "back_value": "__RUNTIME_BACK_IMAGE__",
@@ -145,7 +145,7 @@
   },
   {
     "name": "Valor",
-    "shape": "CIRCLE",
+    "shape": "HEXAGON",
     "front_type": "TEXT",
     "front_value": "Valor",
     "back_value": "__RUNTIME_BACK_IMAGE__",
@@ -157,7 +157,7 @@
   },
   {
     "name": "Rift",
-    "shape": "HEXAGON",
+    "shape": "STAR",
     "front_type": "TEXT",
     "front_value": "Rift",
     "back_value": "__RUNTIME_BACK_IMAGE__",
@@ -169,7 +169,7 @@
   },
   {
     "name": "Halo",
-    "shape": "CIRCLE",
+    "shape": "SQUARE",
     "front_type": "TEXT",
     "front_value": "Halo",
     "back_value": "__RUNTIME_BACK_IMAGE__",
@@ -181,7 +181,7 @@
   },
   {
     "name": "Dread",
-    "shape": "HEXAGON",
+    "shape": "PENTAGON",
     "front_type": "TEXT",
     "front_value": "Dread",
     "back_value": "__RUNTIME_BACK_IMAGE__",
@@ -193,7 +193,7 @@
   },
   {
     "name": "Grace",
-    "shape": "CIRCLE",
+    "shape": "EPTAGON",
     "front_type": "TEXT",
     "front_value": "Grace",
     "back_value": "__RUNTIME_BACK_IMAGE__",
@@ -205,7 +205,7 @@
   },
   {
     "name": "Thorn",
-    "shape": "HEXAGON",
+    "shape": "OCTAGON",
     "front_type": "TEXT",
     "front_value": "Thorn",
     "back_value": "__RUNTIME_BACK_IMAGE__",
@@ -217,7 +217,7 @@
   },
   {
     "name": "Crown",
-    "shape": "CIRCLE",
+    "shape": "RECTANGLE_3:4",
     "front_type": "TEXT",
     "front_value": "Crown",
     "back_value": "__RUNTIME_BACK_IMAGE__",
@@ -229,7 +229,7 @@
   },
   {
     "name": "Abyss",
-    "shape": "HEXAGON",
+    "shape": "RECTANGLE_4:3",
     "front_type": "TEXT",
     "front_value": "Abyss",
     "back_value": "__RUNTIME_BACK_IMAGE__",

@@ -60,19 +60,83 @@ class TokenGraphicsItem(QGraphicsObject):
             path.addEllipse(self._bounds)
             return path
 
-        radius = self.size / 2
-        points = []
-        for i in range(6):
-            angle_deg = 60 * i - 30
-            angle_rad = math.radians(angle_deg)
-            x = radius * 0.95 * math.cos(angle_rad)
-            y = radius * 0.95 * math.sin(angle_rad)
-            points.append((x, y))
+        if self.token.shape == TokenShape.SQUARE:
+            return self._rectangle_path(1.0, 1.0)
 
+        if self.token.shape == TokenShape.PENTAGON:
+            return self._regular_polygon_path(5)
+
+        if self.token.shape == TokenShape.EPTAGON:
+            return self._regular_polygon_path(7)
+
+        if self.token.shape == TokenShape.HEXAGON:
+            return self._regular_polygon_path(6)
+
+        if self.token.shape == TokenShape.OCTAGON:
+            return self._regular_polygon_path(8)
+
+        if self.token.shape == TokenShape.STAR:
+            return self._star_path()
+
+        if self.token.shape == TokenShape.RECTANGLE_3_4:
+            return self._rectangle_path(3.0, 4.0)
+
+        if self.token.shape == TokenShape.RECTANGLE_4_3:
+            return self._rectangle_path(4.0, 3.0)
+
+        if self.token.shape == TokenShape.RECTANGLE_3_5:
+            return self._rectangle_path(3.0, 5.0)
+
+        if self.token.shape == TokenShape.RECTANGLE_5_3:
+            return self._rectangle_path(5.0, 3.0)
+
+        return self._regular_polygon_path(6)
+
+    def _regular_polygon_path(self, sides: int, rotation_deg: float = -90.0) -> QPainterPath:
+        path = QPainterPath()
+        radius = (self.size / 2) * 0.95
         polygon = QPolygonF()
-        for x, y in points:
-            polygon.append(QPointF(x, y))
+
+        for i in range(sides):
+            angle_deg = (360.0 / sides) * i + rotation_deg
+            angle_rad = math.radians(angle_deg)
+            polygon.append(QPointF(radius * math.cos(angle_rad), radius * math.sin(angle_rad)))
+
         path.addPolygon(polygon)
+        path.closeSubpath()
+        return path
+
+    def _star_path(self) -> QPainterPath:
+        path = QPainterPath()
+        outer_radius = (self.size / 2) * 0.95
+        inner_radius = outer_radius * 0.45
+        polygon = QPolygonF()
+
+        for i in range(10):
+            radius = outer_radius if i % 2 == 0 else inner_radius
+            angle_deg = i * 36.0 - 90.0
+            angle_rad = math.radians(angle_deg)
+            polygon.append(QPointF(radius * math.cos(angle_rad), radius * math.sin(angle_rad)))
+
+        path.addPolygon(polygon)
+        path.closeSubpath()
+        return path
+
+    def _rectangle_path(self, aspect_w: float, aspect_h: float) -> QPainterPath:
+        path = QPainterPath()
+        max_width = self._bounds.width() * 0.95
+        max_height = self._bounds.height() * 0.95
+        ratio = aspect_w / aspect_h
+
+        if max_width / max_height > ratio:
+            height = max_height
+            width = height * ratio
+        else:
+            width = max_width
+            height = width / ratio
+
+        rect = QRectF(-width / 2, -height / 2, width, height)
+        path.addRect(rect)
         path.closeSubpath()
         return path
 
