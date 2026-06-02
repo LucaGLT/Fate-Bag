@@ -1,11 +1,12 @@
 from pathlib import Path
 
+from PyQt6.QtCore import Qt
+from PyQt6.QtGui import QPainter
 from PyQt6.QtWidgets import (
     QApplication,
     QFileDialog,
-    QGridLayout,
     QGraphicsView,
-    QHBoxLayout,
+    QGridLayout,
     QInputDialog,
     QLabel,
     QListWidget,
@@ -13,14 +14,34 @@ from PyQt6.QtWidgets import (
     QMainWindow,
     QPushButton,
     QSpinBox,
+    QSplitter,
+    QSplitterHandle,
     QVBoxLayout,
     QWidget,
 )
-from PyQt6.QtCore import Qt
-from PyQt6.QtGui import QPainter
 
 from src.gui_pyqt.controllers.main_controller import MainController
 from src.gui_pyqt.scene.token_table_scene import TokenTableScene
+
+
+class _TokenPaneSplitterHandle(QSplitterHandle):
+    def mouseDoubleClickEvent(self, event) -> None:
+        splitter = self.splitter()
+        if isinstance(splitter, _TokenPaneSplitter):
+            splitter.toggle_left_panel()
+        super().mouseDoubleClickEvent(event)
+
+
+class _TokenPaneSplitter(QSplitter):
+    def __init__(self, on_toggle, parent: QWidget | None = None) -> None:
+        super().__init__(Qt.Orientation.Horizontal, parent)
+        self._on_toggle = on_toggle
+
+    def createHandle(self) -> QSplitterHandle:
+        return _TokenPaneSplitterHandle(self.orientation(), self)
+
+    def toggle_left_panel(self) -> None:
+        self._on_toggle()
 
 
 class MainWindow(QMainWindow):
@@ -29,6 +50,7 @@ class MainWindow(QMainWindow):
         self.controller = controller or MainController()
         self._is_refreshing_scene = False
         self._last_inserted_token_ids: set[str] = set()
+        self._last_list_panel_size = 260
 
         self.setWindowTitle("Fate-Bag - GUI Tecnica Minima")
         self.resize(760, 480)
@@ -117,20 +139,28 @@ class MainWindow(QMainWindow):
         self.status_label.setObjectName("status_label")
         layout.addWidget(self.status_label)
 
-        content_row = QHBoxLayout()
+        self.content_splitter = _TokenPaneSplitter(self._toggle_token_list_visibility, self)
+        self.content_splitter.setObjectName("content_splitter")
+        self.content_splitter.setChildrenCollapsible(True)
+        self.content_splitter.setHandleWidth(8)
 
         self.token_list = QListWidget()
         self.token_list.setObjectName("token_list")
-        content_row.addWidget(self.token_list, 1)
+        self.content_splitter.addWidget(self.token_list)
 
         self.table_scene = TokenTableScene()
         self.table_view = QGraphicsView(self.table_scene)
         self.table_view.setObjectName("table_view")
         self.table_view.setRenderHint(QPainter.RenderHint.Antialiasing, True)
         self.table_view.setRenderHint(QPainter.RenderHint.SmoothPixmapTransform, True)
-        content_row.addWidget(self.table_view, 2)
+        self.content_splitter.addWidget(self.table_view)
 
-        layout.addLayout(content_row)
+        self.content_splitter.setStretchFactor(0, 1)
+        self.content_splitter.setStretchFactor(1, 2)
+        self.content_splitter.setSizes([self._last_list_panel_size, 500])
+
+        layout.addWidget(self.content_splitter, 1)
+        self._sync_table_scene_to_viewport()
 
     def _connect_signals(self) -> None:
         self.load_tokens_btn.clicked.connect(self._on_load_tokens)
@@ -148,20 +178,17 @@ class MainWindow(QMainWindow):
         self.back_img_upload_btn.clicked.connect(self._on_back_img_upload)
         self.back_img_delete_btn.clicked.connect(self._on_back_img_delete)
         self.reset_btn.clicked.connect(self._on_reset)
-        self.table_scene.token_selected.connect(self._on_scene_token_selected)
-        self.table_scene.token_selection_changed.connect(self._on_scene_selection_changed)
+
         self.table_scene.token_selected.connect(self._on_scene_token_selected)
         self.table_scene.token_selection_changed.connect(self._on_scene_selection_changed)
         self.table_scene.token_flip_requested.connect(self._on_scene_token_flip)
         self.table_scene.token_dragged.connect(self._on_scene_token_dragged)
-        self.table_scene.token_dragged.connect(self._on_scene_token_dragged)
+
         self.token_list.itemDoubleClicked.connect(self._on_token_list_item_double_clicked)
-        self.token_list.itemChanged.connect(self._on_token_list_item_changed)
         self.token_list.itemChanged.connect(self._on_token_list_item_changed)
 
     def _on_load_tokens(self, token_file: str | bool | None = None) -> None:
         try:
-            # QPushButton.clicked emits a bool (checked) argument; ignore it here.
             chosen_file: str | None
             if isinstance(token_file, bool):
                 chosen_file = None
@@ -390,31 +417,11 @@ class MainWindow(QMainWindow):
     def _on_scene_token_flip(self, token_id: str) -> None:
         try:
             self._set_checkbox_checked(token_id)
-            self._set_checkbox_checked(token_id)
             new_state = self.controller.flip_token(token_id)
             self.status_label.setText(f"Flip token: {token_id} -> {new_state}")
             self._refresh_list()
         except Exception as exc:
             self.status_label.setText(f"Errore flip: {exc}")
-
-    def _on_scene_token_selected(self, token_id: str) -> None:
-        changed = self._set_checkbox_exclusive(token_id)
-        if changed:
-            self.status_label.setText(f"Token selezionato: {token_id}")
-
-    def _on_scene_selection_changed(self, selected_token_ids: set[str]) -> None:
-        if self._is_refreshing_scene:
-            return
-        self._set_checkboxes_from_token_ids(selected_token_ids)
-
-    def _on_scene_token_dragged(self, token_id: str, x: float, y: float) -> None:
-        try:
-            self._set_checkbox_checked(token_id)
-            self.controller.move_token(token_id, x, y)
-            self.status_label.setText(f"Token spostato: {token_id} -> ({x:.1f}, {y:.1f})")
-            self._refresh_scene_preserve_checkbox_selection()
-        except Exception as exc:
-            self.status_label.setText(f"Errore move token: {exc}")
 
     def _on_scene_token_selected(self, token_id: str) -> None:
         changed = self._set_checkbox_exclusive(token_id)
@@ -441,31 +448,21 @@ class MainWindow(QMainWindow):
 
         self.token_list.clear()
         self.token_list.blockSignals(True)
-        self.token_list.blockSignals(True)
         for entry in entries:
             item = QListWidgetItem(f"{entry['name']} | {entry['status']}")
             item.setData(Qt.ItemDataRole.UserRole, str(entry["token_id"]))
             item.setFlags(item.flags() | Qt.ItemFlag.ItemIsUserCheckable)
 
             is_checked = entry["token_id"] in selected_ids
-            is_checked = entry["token_id"] in selected_ids
-
             item.setCheckState(Qt.CheckState.Checked if is_checked else Qt.CheckState.Unchecked)
             self.token_list.addItem(item)
         self.token_list.blockSignals(False)
-        self.token_list.blockSignals(False)
 
-        self._refresh_scene_preserve_checkbox_selection()
         self._refresh_scene_preserve_checkbox_selection()
 
     def _refresh_scene(self) -> None:
+        self._sync_table_scene_to_viewport()
         self.table_scene.load_from_session(self.controller.scene_entries())
-
-    def _refresh_scene_preserve_checkbox_selection(self) -> None:
-        self._is_refreshing_scene = True
-        self._refresh_scene()
-        self._is_refreshing_scene = False
-        self._sync_scene_selection_from_checkboxes()
 
     def _refresh_scene_preserve_checkbox_selection(self) -> None:
         self._is_refreshing_scene = True
@@ -564,6 +561,33 @@ class MainWindow(QMainWindow):
             for token_id in self._checked_token_ids_from_ui()
         }
         self.table_scene.set_selected_token_ids(selected)
+
+    def _toggle_token_list_visibility(self) -> None:
+        sizes = self.content_splitter.sizes()
+        if len(sizes) < 2:
+            return
+
+        list_size, table_size = sizes
+        total = max(1, list_size + table_size)
+
+        if list_size > 0:
+            self._last_list_panel_size = max(120, list_size)
+            self.content_splitter.setSizes([0, total])
+            self.status_label.setText("Lista checkbox nascosta")
+        else:
+            restored = min(max(120, self._last_list_panel_size), total - 1)
+            self.content_splitter.setSizes([restored, total - restored])
+            self.status_label.setText("Lista checkbox visibile")
+
+        self._sync_table_scene_to_viewport()
+
+    def resizeEvent(self, event) -> None:
+        super().resizeEvent(event)
+        self._sync_table_scene_to_viewport()
+
+    def _sync_table_scene_to_viewport(self) -> None:
+        viewport = self.table_view.viewport().size()
+        self.table_scene.update_viewport_rect(viewport.width(), viewport.height())
 
     def _insert_selected_into_bag(self, selected_ids: list, *, status_prefix: str) -> None:
         session = self.controller.create_session_from_selection(selected_ids)

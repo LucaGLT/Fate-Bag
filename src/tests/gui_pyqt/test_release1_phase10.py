@@ -204,6 +204,57 @@ def test_release1_scene_drag_drop_moves_token_and_selects_checkbox(window):
     assert entries_after[target_token_id] == (12.5, 33.3)
 
 
+def test_release1_scene_grid_tracks_visible_table_area_on_resize(window):
+    window._on_load_tokens()
+    window._on_create_session()
+
+    initial_rect = window.table_scene.sceneRect()
+    initial_items = window.table_scene.token_items()
+    first_token_id = next(iter(initial_items.keys()))
+    initial_pos = initial_items[first_token_id].pos()
+
+    window.table_scene.update_viewport_rect(
+        initial_rect.width() - 180.0,
+        initial_rect.height() - 120.0,
+    )
+    QApplication.processEvents()
+
+    resized_rect = window.table_scene.sceneRect()
+    resized_items = window.table_scene.token_items()
+    resized_pos = resized_items[first_token_id].pos()
+
+    print("\n[GIVEN] tavolo ridimensionato con finestra più piccola")
+    print("[EXPECTED] sceneRect segue la viewport reale e token si riposizionano")
+
+    assert resized_rect.width() < initial_rect.width()
+    assert resized_rect.height() < initial_rect.height()
+    assert (round(resized_pos.x(), 2), round(resized_pos.y(), 2)) != (
+        round(initial_pos.x(), 2),
+        round(initial_pos.y(), 2),
+    )
+
+
+def test_release1_can_hide_and_show_checkbox_list(window):
+    sizes_before = window.content_splitter.sizes()
+    assert len(sizes_before) == 2
+    assert sizes_before[0] > 0
+
+    window._toggle_token_list_visibility()
+    QApplication.processEvents()
+
+    sizes_hidden = window.content_splitter.sizes()
+    print("\n[GIVEN] toggle lista checkbox")
+    print("[EXPECTED] primo toggle nasconde lista")
+    assert sizes_hidden[0] == 0
+
+    window._toggle_token_list_visibility()
+    QApplication.processEvents()
+
+    sizes_shown = window.content_splitter.sizes()
+    print("[EXPECTED] secondo toggle ripristina lista")
+    assert sizes_shown[0] > 0
+
+
 def test_release1_shuffle_moves_tokens_in_scene(window):
     window._on_load_tokens()
     window._on_create_session()

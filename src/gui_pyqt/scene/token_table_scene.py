@@ -17,6 +17,17 @@ class TokenTableScene(QGraphicsScene):
         self._token_items: dict[str, TokenGraphicsItem] = {}
         self.selectionChanged.connect(self._emit_selection_changed)
 
+    def update_viewport_rect(self, width: float, height: float) -> None:
+        safe_width = max(120.0, float(width))
+        safe_height = max(120.0, float(height))
+
+        current = self.sceneRect()
+        if abs(current.width() - safe_width) < 0.1 and abs(current.height() - safe_height) < 0.1:
+            return
+
+        self.setSceneRect(0.0, 0.0, safe_width, safe_height)
+        self._reposition_items_from_core_coordinates()
+
     def load_from_session(self, entries: list[tuple[Token, TableToken]]) -> None:
         self._token_items.clear()
         self.clear()
@@ -83,3 +94,8 @@ class TokenTableScene(QGraphicsScene):
 
     def _emit_selection_changed(self) -> None:
         self.token_selection_changed.emit(self.selected_token_ids())
+
+    def _reposition_items_from_core_coordinates(self) -> None:
+        for item in self._token_items.values():
+            table_token = item.table_token
+            item.setPos(self._map_core_coordinates(table_token.x, table_token.y))
