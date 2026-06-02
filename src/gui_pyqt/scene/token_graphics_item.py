@@ -1,9 +1,21 @@
 import math
+import html
+import re
 from pathlib import Path
 from uuid import UUID
 
 from PyQt6.QtCore import QPointF, QRectF, Qt, pyqtSignal
-from PyQt6.QtGui import QBrush, QColor, QFont, QPainterPath, QPen, QPixmap, QPolygonF
+from PyQt6.QtGui import (
+    QBrush,
+    QColor,
+    QFont,
+    QPainterPath,
+    QPen,
+    QPixmap,
+    QPolygonF,
+    QTextDocument,
+    QTextOption,
+)
 from PyQt6.QtWidgets import QGraphicsObject, QStyleOptionGraphicsItem, QWidget
 
 from src.core.models.enums import TokenFrontType, TokenShape, TokenState
@@ -24,7 +36,9 @@ class TokenGraphicsItem(QGraphicsObject):
         self._bounds = QRectF(-size / 2, -size / 2, size, size)
         self.setFlag(self.GraphicsItemFlag.ItemIsSelectable, True)
         self.setFlag(self.GraphicsItemFlag.ItemIsMovable, True)
+        self.setAcceptHoverEvents(True)
         self._press_pos = QPointF(0.0, 0.0)
+        self._hover_preview_active = False
 
     def boundingRect(self) -> QRectF:
         return self._bounds
@@ -74,6 +88,21 @@ class TokenGraphicsItem(QGraphicsObject):
         if moved:
             self.selected.emit(str(self.token.id))
             self.drag_finished.emit(str(self.token.id), float(current.x()), float(current.y()))
+
+    def hoverEnterEvent(self, event) -> None:
+        self._set_hover_preview_enabled(True)
+        super().hoverEnterEvent(event)
+
+    def hoverLeaveEvent(self, event) -> None:
+        self._set_hover_preview_enabled(False)
+        super().hoverLeaveEvent(event)
+
+    def _set_hover_preview_enabled(self, enabled: bool) -> None:
+        next_state = bool(enabled)
+        if self._hover_preview_active == next_state:
+            return
+        self._hover_preview_active = next_state
+        self.update()
 
     def _shape_path(self) -> QPainterPath:
         path = QPainterPath()
@@ -188,47 +217,120 @@ class TokenGraphicsItem(QGraphicsObject):
         painter.drawText(self._bounds, Qt.AlignmentFlag.AlignCenter, "BACK")
 
     def _draw_front(self, painter, clip_path: QPainterPath) -> None:
-        if self.token.front_type in (TokenFrontType.IMAGE, TokenFrontType.TEXT_IMAGE):
+        effective_front_type = self._effective_front_type()
+
+        front_pixmap: QPixmap | None = None
+        if effective_front_type in (TokenFrontType.IMAGE, TokenFrontType.TEXT_IMAGE):
             front_path = Path(self.token.front_value)
             if front_path.is_file():
                 pixmap = QPixmap(str(front_path))
                 if not pixmap.isNull():
+                    front_pixmap = pixmap
                     painter.save()
                     painter.setClipPath(clip_path)
                     painter.drawPixmap(self._bounds.toRect(), pixmap)
                     painter.restore()
-                    if self.token.front_type == TokenFrontType.IMAGE:
+                    if effective_front_type == TokenFrontType.IMAGE:
                         return
 
-        front_label = self._front_label_text()
+        front_label = self._front_label_text(effective_front_type)
         if not front_label:
             return
 
-        if self.token.front_type == TokenFrontType.TEXT_IMAGE:
-            # Improve legibility of overlay text over front images.
-            painter.save()
-            overlay = QColor(0, 0, 0, 120)
-            painter.setBrush(QBrush(overlay))
-            painter.setPen(Qt.PenStyle.NoPen)
-            painter.drawRect(self._bounds.adjusted(6, self._bounds.height() * 0.25, -6, -6))
-            painter.restore()
-            painter.setPen(QPen(QColor("#ffffff"), 1))
+        if effective_front_type == TokenFrontType.TEXT_IMAGE:
+            color_mode = str(self.token.metadata.get("front_text_color_mode", "auto")).strip().lower()
+            if color_mode == "black":
+                text_color = "#000000"
+            elif color_mode == "white":
+                text_color = "#ffffff"
+            else:
+                text_color = self._auto_text_color_for_pixmap(front_pixmap)
         else:
-            painter.setPen(QPen(QColor("#1f2a36"), 1))
+            text_color = "#1f2a36"
 
-        painter.setFont(QFont("Segoe UI", 8, QFont.Weight.DemiBold))
-        painter.drawText(
-            self._bounds.adjusted(6, 6, -6, -6),
-            Qt.AlignmentFlag.AlignCenter | Qt.TextFlag.TextWordWrap,
-            front_label,
-        )
+        self._draw_formatted_front_text(painter, front_label, text_color)
 
-    def _front_label_text(self) -> str:
+    def _effective_front_type(self) -> TokenFrontType:
+        if not self._hover_preview_active:
+            return self.token.front_type
+
         if self.token.front_type == TokenFrontType.TEXT:
-            return self.token.front_value.replace("|", "\n")
-        if self.token.front_type == TokenFrontType.TEXT_IMAGE:
+            if self._has_front_image():
+                return TokenFrontType.IMAGE
+            return TokenFrontType.TEXT
+
+        if self.token.front_type == TokenFrontType.IMAGE:
+            return TokenFrontType.TEXT
+
+        return self.token.front_type
+
+    def _front_label_text(self, front_type: TokenFrontType) -> str:
+        if front_type == TokenFrontType.TEXT:
+            if self.token.front_type == TokenFrontType.TEXT:
+                return self.token.front_value.replace("|", "\n")
+            return self._fallback_front_text().replace("|", "\n")
+        if front_type == TokenFrontType.TEXT_IMAGE:
             return str(self.token.metadata.get("front_text", "")).strip().replace("|", "\n")
         return ""
+
+    def _has_front_image(self) -> bool:
+        return Path(self.token.front_value).is_file()
+
+    def _fallback_front_text(self) -> str:
+        text = str(self.token.metadata.get("front_text", "")).strip()
+        if text:
+            return text
+        return self.token.name
+
+    def _draw_formatted_front_text(self, painter, text: str, color: str) -> None:
+        rect = self._bounds.adjusted(6, 6, -6, -6)
+        rich_text = self._to_rich_text(text, color)
+
+        document = QTextDocument()
+        document.setDefaultFont(QFont("Segoe UI", 7, QFont.Weight.DemiBold))
+        option = QTextOption()
+        option.setWrapMode(QTextOption.WrapMode.WordWrap)
+        option.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        document.setDefaultTextOption(option)
+        document.setHtml(rich_text)
+        document.setTextWidth(rect.width())
+
+        vertical_offset = max(0.0, (rect.height() - document.size().height()) / 2.0)
+
+        painter.save()
+        painter.translate(rect.left(), rect.top() + vertical_offset)
+        document.drawContents(painter)
+        painter.restore()
+
+    @staticmethod
+    def _to_rich_text(text: str, color: str) -> str:
+        escaped = html.escape(text)
+        escaped = escaped.replace("\n", "<br/>")
+
+        escaped = re.sub(
+            r"&lt;\s*([^&<>]+?)\s*&gt;",
+            r'<span style="font-size:8pt; font-weight:700;"><b>\1</b></span>',
+            escaped,
+        )
+        escaped = re.sub(r"\*\*(.+?)\*\*", r"<b>\1</b>", escaped)
+        escaped = re.sub(r"(?<!\*)\*(?!\*)(.+?)(?<!\*)\*(?!\*)", r"<i>\1</i>", escaped)
+
+        return f'<div style="color:{color};">{escaped}</div>'
+
+    @staticmethod
+    def _auto_text_color_for_pixmap(pixmap: QPixmap | None) -> str:
+        if pixmap is None or pixmap.isNull():
+            return "#1f2a36"
+
+        image = pixmap.toImage().scaled(
+            1,
+            1,
+            Qt.AspectRatioMode.IgnoreAspectRatio,
+            Qt.TransformationMode.SmoothTransformation,
+        )
+        color = image.pixelColor(0, 0)
+        luminance = (0.299 * color.red()) + (0.587 * color.green()) + (0.114 * color.blue())
+        return "#000000" if luminance >= 145 else "#ffffff"
 
     @property
     def token_id(self) -> UUID:

@@ -395,3 +395,54 @@ def test_release1_graphics_item_supports_all_requested_shapes(tmp_path):
 
         path = item._shape_path()
         assert not path.isEmpty(), f"Shape path empty for {shape.value}"
+
+
+def test_release1_hover_preview_switches_image_to_text_and_restores(tmp_path):
+    back_path = _create_test_image(tmp_path / "back_hover_preview.png", (25, 35, 45))
+    front_image_path = _create_test_image(tmp_path / "front_hover_preview.png", (210, 160, 90))
+
+    token = Token(
+        name="HoverName",
+        shape=TokenShape.SQUARE,
+        front_type=TokenFrontType.IMAGE,
+        front_value=front_image_path,
+        back_value=back_path,
+        metadata={"front_text": "<Titolo> **Bold**|riga *2*"},
+    )
+
+    from src.core.models.table_token import TableToken
+
+    table = TableToken(token_id=token.id, state=TokenState.FACE_UP, x=0.0, y=0.0)
+    item = TokenGraphicsItem(token=token, table_token=table)
+
+    assert item._effective_front_type() == TokenFrontType.IMAGE
+
+    item._set_hover_preview_enabled(True)
+    assert item._effective_front_type() == TokenFrontType.TEXT
+    assert item._front_label_text(item._effective_front_type()) == "<Titolo> **Bold**\nriga *2*"
+
+    item._set_hover_preview_enabled(False)
+    assert item._effective_front_type() == TokenFrontType.IMAGE
+
+
+def test_release1_hover_preview_keeps_text_mode_without_front_image(tmp_path):
+    back_path = _create_test_image(tmp_path / "back_hover_text.png", (70, 80, 90))
+
+    token = Token(
+        name="TextOnly",
+        shape=TokenShape.CIRCLE,
+        front_type=TokenFrontType.TEXT,
+        front_value="Solo testo",
+        back_value=back_path,
+    )
+
+    from src.core.models.table_token import TableToken
+
+    table = TableToken(token_id=token.id, state=TokenState.FACE_UP, x=0.0, y=0.0)
+    item = TokenGraphicsItem(token=token, table_token=table)
+
+    assert item._effective_front_type() == TokenFrontType.TEXT
+
+    item._set_hover_preview_enabled(True)
+    assert item._effective_front_type() == TokenFrontType.TEXT
+    assert item._front_label_text(item._effective_front_type()) == "Solo testo"

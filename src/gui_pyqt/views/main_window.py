@@ -1,4 +1,5 @@
 from pathlib import Path
+import re
 
 from PyQt6.QtCore import Qt
 from PyQt6.QtGui import QColor, QIcon, QPainter, QPen, QPixmap
@@ -52,12 +53,19 @@ class _TokenPaneSplitter(QSplitter):
 
 
 class TokenEditDialog(QDialog):
+    MODE_TEXT_ONLY = "text_only"
+    MODE_IMAGE_ONLY = "image_only"
+    MODE_IMAGE_TEXT_BLACK = "image_text_black"
+    MODE_IMAGE_TEXT_WHITE = "image_text_white"
+    MODE_IMAGE_TEXT_AUTO = "image_text_auto"
+
     def __init__(
         self,
         *,
-        default_name: str,
+        default_text: str,
         default_tags: list[str],
         default_shape: TokenShape,
+        default_mode: str,
         parent: QWidget | None = None,
     ) -> None:
         super().__init__(parent)
@@ -65,8 +73,8 @@ class TokenEditDialog(QDialog):
 
         form = QFormLayout(self)
 
-        self.name_edit = QLineEdit(default_name)
-        form.addRow("Nome:", self.name_edit)
+        self.text_edit = QLineEdit(default_text)
+        form.addRow("Testo:", self.text_edit)
 
         self.tags_edit = QLineEdit("; ".join(default_tags))
         self.tags_edit.setPlaceholderText("tag1; tag2 oppure tag1, tag2")
@@ -80,6 +88,17 @@ class TokenEditDialog(QDialog):
             self.shape_combo.setCurrentIndex(index)
         form.addRow("Forma:", self.shape_combo)
 
+        self.mode_combo = QComboBox()
+        self.mode_combo.addItem("Solo Testo", self.MODE_TEXT_ONLY)
+        self.mode_combo.addItem("Solo Immagine", self.MODE_IMAGE_ONLY)
+        self.mode_combo.addItem("Imm+Testo Nero", self.MODE_IMAGE_TEXT_BLACK)
+        self.mode_combo.addItem("Imm+Testo Bianco", self.MODE_IMAGE_TEXT_WHITE)
+        self.mode_combo.addItem("Imm+Testo Auto", self.MODE_IMAGE_TEXT_AUTO)
+        mode_index = self.mode_combo.findData(default_mode)
+        if mode_index >= 0:
+            self.mode_combo.setCurrentIndex(mode_index)
+        form.addRow("Modalita:", self.mode_combo)
+
         self.button_box = QDialogButtonBox(
             QDialogButtonBox.StandardButton.Ok | QDialogButtonBox.StandardButton.Cancel
         )
@@ -87,11 +106,14 @@ class TokenEditDialog(QDialog):
         self.button_box.rejected.connect(self.reject)
         form.addRow(self.button_box)
 
-    def values(self) -> tuple[str, str, TokenShape]:
+    def values(self) -> tuple[str, str, TokenShape, str]:
         shape = self.shape_combo.currentData()
         if not isinstance(shape, TokenShape):
             shape = TokenShape.CIRCLE
-        return self.name_edit.text(), self.tags_edit.text(), shape
+        mode = self.mode_combo.currentData()
+        if not isinstance(mode, str):
+            mode = self.MODE_TEXT_ONLY
+        return self.text_edit.text(), self.tags_edit.text(), shape, mode
 
 
 class MainWindow(QMainWindow):
@@ -123,20 +145,6 @@ class MainWindow(QMainWindow):
         self.create_selected_session_btn = QPushButton("Inserisci in Bag")
         self.create_selected_session_btn.setObjectName("create_selected_session_btn")
         self.controls_grid.addWidget(self.create_selected_session_btn, 1, 0)
-
-        self.new_token_btn = QPushButton("+")
-        self.new_token_btn.setObjectName("new_token_btn")
-        self.new_token_btn.setToolTip("New Token (1)")
-        self.new_token_btn.setText("")
-        self.new_token_btn.setIcon(self._icon_plus())
-        self.controls_grid.addWidget(self.new_token_btn, 0, 8)
-
-        self.delete_token_btn = QPushButton("X")
-        self.delete_token_btn.setObjectName("delete_token_btn")
-        self.delete_token_btn.setToolTip("Delete Token selezionati")
-        self.delete_token_btn.setText("")
-        self.delete_token_btn.setIcon(self._icon_red_x())
-        self.controls_grid.addWidget(self.delete_token_btn, 1, 8)
 
         self.select_all_btn = QPushButton("")
         self.select_all_btn.setObjectName("select_all_btn")
@@ -462,6 +470,7 @@ class MainWindow(QMainWindow):
         text: str | None = None,
         tags_text: str | None = None,
         shape: TokenShape | None = None,
+        display_mode: str | None = None,
     ) -> None:
         try:
             clicked_token_id = item.data(Qt.ItemDataRole.UserRole)
@@ -481,25 +490,30 @@ class MainWindow(QMainWindow):
             name_value = text
             tags_value = tags_text
             shape_value = shape
+            mode_value = display_mode
 
-            if name_value is None and tags_value is None and shape_value is None:
+            if name_value is None and tags_value is None and shape_value is None and mode_value is None:
+                default_mode = self._display_mode_for_token(clicked_token)
                 dialog = TokenEditDialog(
-                    default_name=clicked_token.name,
+                    default_text=self.controller.front_text_for_token(clicked_uuid),
                     default_tags=clicked_token.tags,
                     default_shape=clicked_token.shape,
+                    default_mode=default_mode,
                     parent=self,
                 )
                 if dialog.exec() != QDialog.DialogCode.Accepted:
                     self.status_label.setText("Modifica token annullata")
                     return
 
-                dialog_name, dialog_tags, dialog_shape = dialog.values()
+                dialog_name, dialog_tags, dialog_shape, dialog_mode = dialog.values()
                 if name_value is None:
                     name_value = dialog_name
                 if tags_value is None:
                     tags_value = dialog_tags
                 if shape_value is None:
                     shape_value = dialog_shape
+                if mode_value is None:
+                    mode_value = dialog_mode
 
             if name_value is None:
                 name_value = clicked_token.name
@@ -507,15 +521,18 @@ class MainWindow(QMainWindow):
                 tags_value = "; ".join(clicked_token.tags)
             if shape_value is None:
                 shape_value = clicked_token.shape
+            if mode_value is None:
+                mode_value = self._display_mode_for_token(clicked_token)
 
             parsed_tags = self._parse_tags_input(tags_value or "")
             chosen_shape = shape_value if isinstance(shape_value, TokenShape) else clicked_token.shape
 
             updated_count = self.controller.apply_token_metadata_to_tokens(
                 target_ids,
-                name=name_value or clicked_token.name,
+                text=name_value or clicked_token.name,
                 tags=parsed_tags,
                 shape=chosen_shape,
+                display_mode=mode_value,
             )
             self.status_label.setText(f"Token aggiornati da lista su {updated_count} token")
             self._refresh_list()
@@ -585,10 +602,11 @@ class MainWindow(QMainWindow):
         self.token_list.clear()
         self.token_list.blockSignals(True)
         for entry in entries:
+            display_name = self._display_name_for_list(str(entry["name"]))
             tags = entry.get("tags", [])
             tags_text = ", ".join(tags) if tags else "-"
             row_text = (
-                f"{entry['name']} | {entry['status']} | "
+                f"{display_name} | {entry['status']} | "
                 f"{entry.get('shape', '-')} | #: {tags_text}"
             )
             item = QListWidgetItem(row_text)
@@ -749,6 +767,29 @@ class MainWindow(QMainWindow):
     def _draw_status_text(prefix: str, drawn_ids: list[str]) -> str:
         count = len(drawn_ids)
         return f"{prefix}: {count} token"
+
+    @staticmethod
+    def _display_mode_for_token(token) -> str:
+        from src.core.models.enums import TokenFrontType
+
+        if token.front_type == TokenFrontType.TEXT:
+            return TokenEditDialog.MODE_TEXT_ONLY
+        if token.front_type == TokenFrontType.IMAGE:
+            return TokenEditDialog.MODE_IMAGE_ONLY
+
+        color_mode = str(token.metadata.get("front_text_color_mode", "auto")).strip().lower()
+        if color_mode == "black":
+            return TokenEditDialog.MODE_IMAGE_TEXT_BLACK
+        if color_mode == "white":
+            return TokenEditDialog.MODE_IMAGE_TEXT_WHITE
+        return TokenEditDialog.MODE_IMAGE_TEXT_AUTO
+
+    @staticmethod
+    def _display_name_for_list(raw_name: str) -> str:
+        match = re.search(r"<\s*([^<>]+?)\s*>", raw_name)
+        if match:
+            return match.group(1).strip()
+        return raw_name.replace("<", "").replace(">", "").strip()
 
     @staticmethod
     def _icon_plus(size: int = 16) -> QIcon:

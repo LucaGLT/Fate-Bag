@@ -1,5 +1,6 @@
 import json
 import math
+import re
 from pathlib import Path
 from uuid import UUID
 
@@ -457,6 +458,7 @@ class MainController:
         normalized_text = text.strip()
         if not normalized_text:
             raise ValueError("Il testo front deve essere non vuoto")
+        normalized_name = self._extract_name_from_formatted_text(normalized_text)
 
         updated_count = 0
         for token_id in selected_ids:
@@ -475,7 +477,7 @@ class MainController:
             else:
                 payload["front_value"] = normalized_text
 
-            payload["name"] = normalized_text
+            payload["name"] = normalized_name
 
             updated = Token.model_validate(payload)
             self._token_service.update_token(updated)
@@ -500,12 +502,17 @@ class MainController:
         self,
         token_ids: list[UUID],
         *,
-        name: str,
+        text: str,
         tags: list[str],
         shape: TokenShape,
+        display_mode: str,
     ) -> int:
         selected_ids = self._normalize_selected_token_ids(token_ids)
-        normalized_name = name.strip()
+        normalized_text = text.strip()
+        if not normalized_text:
+            raise ValueError("Il testo token deve essere non vuoto")
+
+        normalized_name = self._extract_name_from_formatted_text(normalized_text)
         if not normalized_name:
             raise ValueError("Il nome token deve essere non vuoto")
 
@@ -521,13 +528,35 @@ class MainController:
             payload["name"] = normalized_name
             payload["tags"] = normalized_tags
             payload["shape"] = shape.value
+            metadata = dict(payload.get("metadata", {}))
 
-            if token.front_type == TokenFrontType.TEXT:
-                payload["front_value"] = normalized_name
-            elif token.front_type == TokenFrontType.TEXT_IMAGE:
-                metadata = dict(payload.get("metadata", {}))
-                metadata["front_text"] = normalized_name
-                payload["metadata"] = metadata
+            if display_mode == "text_only":
+                payload["front_type"] = TokenFrontType.TEXT.value
+                payload["front_value"] = normalized_text
+                metadata.pop("front_text", None)
+                metadata.pop("front_text_color_mode", None)
+            elif display_mode == "image_only":
+                if token.front_type not in (TokenFrontType.IMAGE, TokenFrontType.TEXT_IMAGE):
+                    raise ValueError("Per 'Solo Immagine' serve prima una Front-Img")
+                # Preserve full text for hover preview in IMAGE mode.
+                metadata["front_text"] = normalized_text
+                metadata.pop("front_text_color_mode", None)
+                payload["front_type"] = TokenFrontType.IMAGE.value
+            elif display_mode in ("image_text_black", "image_text_white", "image_text_auto"):
+                if token.front_type not in (TokenFrontType.IMAGE, TokenFrontType.TEXT_IMAGE):
+                    raise ValueError("Per 'Imm+Testo' serve prima una Front-Img")
+                payload["front_type"] = TokenFrontType.TEXT_IMAGE.value
+                metadata["front_text"] = normalized_text
+                if display_mode == "image_text_black":
+                    metadata["front_text_color_mode"] = "black"
+                elif display_mode == "image_text_white":
+                    metadata["front_text_color_mode"] = "white"
+                else:
+                    metadata["front_text_color_mode"] = "auto"
+            else:
+                raise ValueError(f"Modalita non supportata: {display_mode}")
+
+            payload["metadata"] = metadata
 
             updated = Token.model_validate(payload)
             self._token_service.update_token(updated)
@@ -562,11 +591,40 @@ class MainController:
         tokens: list[Token] = []
         for item in data:
             payload = dict(item)
-            if self._is_runtime_back_placeholder(payload.get("back_value")):
+            back_value = payload.get("back_value")
+            if self._is_runtime_back_placeholder(back_value):
                 payload["back_value"] = str(back_image)
+            elif isinstance(back_value, str) and not Path(back_value).is_file():
+                payload["back_value"] = str(back_image)
+
+            self._sanitize_invalid_front_image_payload(payload)
             tokens.append(Token.model_validate(payload))
 
         return tokens
+
+    @staticmethod
+    def _sanitize_invalid_front_image_payload(payload: dict) -> None:
+        front_type_raw = str(payload.get("front_type", "")).strip().upper()
+        if front_type_raw not in (TokenFrontType.IMAGE.value, TokenFrontType.TEXT_IMAGE.value):
+            return
+
+        front_value = payload.get("front_value")
+        if isinstance(front_value, str) and Path(front_value).is_file():
+            return
+
+        metadata = payload.get("metadata")
+        if not isinstance(metadata, dict):
+            metadata = {}
+
+        fallback_text = str(metadata.get("front_text", "")).strip()
+        if not fallback_text:
+            fallback_text = str(payload.get("name", "Token")).strip() or "Token"
+
+        payload["front_type"] = TokenFrontType.TEXT.value
+        payload["front_value"] = fallback_text
+        metadata.pop("front_text", None)
+        metadata.pop("front_text_color_mode", None)
+        payload["metadata"] = metadata
 
     def _ensure_services_ready(self) -> None:
         if self._session_service is None or self._draw_service is None:
@@ -605,6 +663,20 @@ class MainController:
             if text:
                 return text
         return token.name
+
+    @staticmethod
+    def _extract_name_from_formatted_text(full_text: str) -> str:
+        match = re.search(r"<\s*([^<>]+?)\s*>", full_text)
+        if match:
+            candidate = MainController._sanitize_name_text(match.group(1))
+            if candidate:
+                return candidate
+        return MainController._sanitize_name_text(full_text)
+
+    @staticmethod
+    def _sanitize_name_text(value: str) -> str:
+        cleaned = value.replace("<", "").replace(">", "").strip()
+        return cleaned
 
     def _update_token_cache(self, updated: Token) -> None:
         self._tokens_by_id[updated.id] = updated

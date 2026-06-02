@@ -839,6 +839,103 @@ def test_load_tokens_accepts_empty_json_and_allows_new_token(window, tmp_path):
     assert len(saved) == 1
 
 
+def test_load_tokens_sanitizes_invalid_front_image_paths(window, tmp_path):
+    source_file = Path("config/default_tokens_20.json")
+    payload = json.loads(source_file.read_text(encoding="utf-8"))
+
+    payload[0]["front_type"] = TokenFrontType.IMAGE.value
+    payload[0]["front_value"] = str(tmp_path / "missing_front_image_0.png")
+
+    payload[1]["front_type"] = TokenFrontType.TEXT_IMAGE.value
+    payload[1]["front_value"] = str(tmp_path / "missing_front_image_1.png")
+    payload[1].setdefault("metadata", {})["front_text"] = "Fallback Overlay"
+
+    custom_file = tmp_path / "tokens_invalid_front_paths.json"
+    custom_file.write_text(json.dumps(payload, indent=2), encoding="utf-8")
+
+    window._on_load_tokens(str(custom_file))
+
+    from uuid import UUID
+
+    token0_id = UUID(payload[0]["id"])
+    token1_id = UUID(payload[1]["id"])
+    token0 = window.controller._tokens_by_id[token0_id]
+    token1 = window.controller._tokens_by_id[token1_id]
+
+    _debug_case(
+        "Load tokens sanitizes invalid front image paths",
+        {"file": str(custom_file)},
+        {
+            "status_starts_with": "Token caricati",
+            "token0_front_type": "TEXT",
+            "token1_front_type": "TEXT",
+        },
+        {
+            "status": window.status_label.text(),
+            "token0": {
+                "front_type": token0.front_type.value,
+                "front_value": token0.front_value,
+                "metadata": token0.metadata,
+            },
+            "token1": {
+                "front_type": token1.front_type.value,
+                "front_value": token1.front_value,
+                "metadata": token1.metadata,
+            },
+        },
+    )
+
+    assert window.status_label.text().startswith("Token caricati")
+    assert token0.front_type == TokenFrontType.TEXT
+    assert token1.front_type == TokenFrontType.TEXT
+    assert token1.front_value == "Fallback Overlay"
+
+
+def test_front_text_name_extraction_rules(window):
+    window._on_load_tokens()
+
+    for index in range(window.token_list.count()):
+        window.token_list.item(index).setCheckState(Qt.CheckState.Unchecked)
+
+    window.token_list.item(0).setCheckState(Qt.CheckState.Checked)
+    token_id_raw = window.token_list.item(0).data(Qt.ItemDataRole.UserRole)
+    from uuid import UUID
+
+    token_uuid = UUID(token_id_raw)
+
+    formatted_text = "TEXT=<Nome del Token> descrizione del **token** piu *lunga*"
+    window._on_front_text_edit(formatted_text)
+    token = window.controller._tokens_by_id[token_uuid]
+
+    _debug_case(
+        "Name extracted from <...> while front text keeps full content",
+        {"input_text": formatted_text},
+        {"name": "Nome del Token", "front_text_full": formatted_text},
+        {"name": token.name, "front_value": token.front_value},
+    )
+
+    assert token.name == "Nome del Token"
+    assert "<" not in token.name
+    assert ">" not in token.name
+    assert token.front_value == formatted_text
+
+    row_text = None
+    for i in range(window.token_list.count()):
+        row = window.token_list.item(i)
+        if row.data(Qt.ItemDataRole.UserRole) == str(token_uuid):
+            row_text = row.text()
+            break
+
+    assert row_text is not None
+    assert row_text.startswith("Nome del Token |")
+
+    plain_text = "Solo testo senza marcatori"
+    window._on_front_text_edit(plain_text)
+    token_plain = window.controller._tokens_by_id[token_uuid]
+    assert token_plain.name == plain_text
+    assert token_plain.front_value == plain_text
+
+
 def test_checkbox_selection_updates_scene_highlight(window):
     window._on_load_tokens()
 
