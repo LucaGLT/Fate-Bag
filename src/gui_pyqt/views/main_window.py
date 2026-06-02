@@ -57,6 +57,10 @@ class MainWindow(QMainWindow):
         self.draw_n_btn.setObjectName("draw_n_btn")
         button_row.addWidget(self.draw_n_btn)
 
+        self.shuffle_btn = QPushButton("Shuffle")
+        self.shuffle_btn.setObjectName("shuffle_btn")
+        button_row.addWidget(self.shuffle_btn)
+
         self.reveal_all_btn = QPushButton("Reveal all")
         self.reveal_all_btn.setObjectName("reveal_all_btn")
         button_row.addWidget(self.reveal_all_btn)
@@ -84,6 +88,7 @@ class MainWindow(QMainWindow):
         self.create_session_btn.clicked.connect(self._on_create_session)
         self.draw_one_btn.clicked.connect(self._on_draw_one)
         self.draw_n_btn.clicked.connect(self._on_draw_n)
+        self.shuffle_btn.clicked.connect(self._on_shuffle)
         self.reveal_all_btn.clicked.connect(self._on_reveal_all)
         self.hide_all_btn.clicked.connect(self._on_hide_all)
         self.reset_btn.clicked.connect(self._on_reset)
@@ -119,6 +124,14 @@ class MainWindow(QMainWindow):
             self._refresh_list()
         except Exception as exc:
             self.status_label.setText(f"Errore draw N: {exc}")
+
+    def _on_shuffle(self) -> None:
+        try:
+            self.controller.shuffle()
+            self.status_label.setText("Shuffle eseguito")
+            self._refresh_list()
+        except Exception as exc:
+            self.status_label.setText(f"Errore shuffle: {exc}")
 
     def _on_reveal_all(self) -> None:
         try:

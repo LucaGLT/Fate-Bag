@@ -27,7 +27,7 @@ def qapp():
 
 @pytest.fixture
 def window(tmp_path, qapp):
-    controller = MainController(base_dir=Path(tmp_path) / "gui-runtime")
+    controller = MainController(base_dir=Path(tmp_path) / "gui-runtime", deterministic_mode=True)
     main_window = MainWindow(controller=controller)
     yield main_window
     main_window.close()
@@ -39,6 +39,7 @@ def test_main_window_has_required_controls(window):
         "create_session_btn": window.create_session_btn.text(),
         "draw_one_btn": window.draw_one_btn.text(),
         "draw_n_btn": window.draw_n_btn.text(),
+        "shuffle_btn": window.shuffle_btn.text(),
         "reveal_all_btn": window.reveal_all_btn.text(),
         "hide_all_btn": window.hide_all_btn.text(),
         "reset_btn": window.reset_btn.text(),
@@ -53,6 +54,7 @@ def test_main_window_has_required_controls(window):
                 "Crea sessione",
                 "Draw 1",
                 "Draw N",
+                "Shuffle",
                 "Reveal all",
                 "Hide all",
                 "Reset",
@@ -65,6 +67,7 @@ def test_main_window_has_required_controls(window):
     assert controls["create_session_btn"] == "Crea sessione"
     assert controls["draw_one_btn"] == "Draw 1"
     assert controls["draw_n_btn"] == "Draw N"
+    assert controls["shuffle_btn"] == "Shuffle"
     assert controls["reveal_all_btn"] == "Reveal all"
     assert controls["hide_all_btn"] == "Hide all"
     assert controls["reset_btn"] == "Reset"
@@ -85,6 +88,9 @@ def test_gui_flow_load_create_draw_reveal_hide_reset(window):
     window._on_draw_n()
     after_draw_n_status = window.status_label.text()
 
+    window._on_shuffle()
+    after_shuffle_status = window.status_label.text()
+
     window._on_reveal_all()
     rows_after_reveal = [window.token_list.item(i).text() for i in range(window.token_list.count())]
 
@@ -101,6 +107,7 @@ def test_gui_flow_load_create_draw_reveal_hide_reset(window):
             "load_ok": True,
             "session_created": True,
             "rows_count": 3,
+            "shuffle_ok": True,
             "reveal_has_face_up": True,
             "hide_has_face_down": True,
             "reset_has_face_down": True,
@@ -110,6 +117,7 @@ def test_gui_flow_load_create_draw_reveal_hide_reset(window):
             "after_create_status": after_create_status,
             "after_draw_one_status": after_draw_one_status,
             "after_draw_n_status": after_draw_n_status,
+            "after_shuffle_status": after_shuffle_status,
             "rows_after_create": session_rows_after_create,
             "rows_after_reveal": rows_after_reveal,
             "rows_after_hide": rows_after_hide,
@@ -121,6 +129,7 @@ def test_gui_flow_load_create_draw_reveal_hide_reset(window):
     assert after_create_status.startswith("Sessione creata")
     assert "Draw 1" in after_draw_one_status
     assert "Draw N" in after_draw_n_status
+    assert after_shuffle_status.startswith("Shuffle")
     assert len(session_rows_after_create) == 3
     assert any("FACE_UP" in row for row in rows_after_reveal)
     assert all("FACE_DOWN" in row for row in rows_after_hide)

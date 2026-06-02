@@ -16,8 +16,15 @@ from src.infrastructure.json.json_token_repository import JsonTokenRepository
 
 
 class MainController:
-    def __init__(self, base_dir: str | Path = ".runtime/gui") -> None:
+    def __init__(
+        self,
+        base_dir: str | Path = ".runtime/gui",
+        *,
+        deterministic_mode: bool = False,
+    ) -> None:
         self._base_dir = Path(base_dir)
+        self._deterministic_mode = deterministic_mode
+        self._seed_counter = 0
         self._token_repo = JsonTokenRepository(self._base_dir / "tokens.json")
         self._session_repo = JsonSessionRepository(self._base_dir / "sessions.json")
         self._event_bus = EventBus()
@@ -59,23 +66,37 @@ class MainController:
 
     def create_session(self) -> Session:
         self._ensure_services_ready()
-        self.current_session = self._session_service.start_session(seed=42)
+        seed = 42 if self._deterministic_mode else None
+        self.current_session = self._session_service.start_session(seed=seed)
         return self.current_session
 
     def draw_one(self) -> list[str]:
         self._ensure_session_ready()
-        return self._draw_service.draw_uniform(self.current_session, count=1, with_replacement=False, seed=1)
+        seed = self._next_seed() if self._deterministic_mode else None
+        return self._draw_service.draw_uniform(
+            self.current_session,
+            count=1,
+            with_replacement=False,
+            seed=seed,
+        )
 
     def draw_many(self, count: int) -> list[str]:
         if count <= 0:
             raise ValueError("count must be greater than zero")
         self._ensure_session_ready()
+        seed = self._next_seed() if self._deterministic_mode else None
         return self._draw_service.draw_uniform(
             self.current_session,
             count=count,
             with_replacement=False,
-            seed=1,
+            seed=seed,
         )
+
+    def shuffle(self) -> Session:
+        self._ensure_session_ready()
+        seed = self._next_seed() if self._deterministic_mode else None
+        self.current_session = self._session_service.shuffle_session(self.current_session, seed=seed)
+        return self.current_session
 
     def reveal_all(self) -> list[str]:
         self._ensure_session_ready()
@@ -154,3 +175,7 @@ class MainController:
         self._ensure_services_ready()
         if self.current_session is None:
             raise ValueError("Create session before draw/reveal/hide/reset")
+
+    def _next_seed(self) -> int:
+        self._seed_counter += 1
+        return self._seed_counter
