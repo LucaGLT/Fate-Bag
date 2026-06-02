@@ -4,11 +4,16 @@ from PyQt6.QtCore import Qt
 from PyQt6.QtGui import QPainter
 from PyQt6.QtWidgets import (
     QApplication,
+    QComboBox,
+    QDialog,
+    QDialogButtonBox,
     QFileDialog,
+    QFormLayout,
     QGraphicsView,
     QGridLayout,
     QInputDialog,
     QLabel,
+    QLineEdit,
     QListWidget,
     QListWidgetItem,
     QMainWindow,
@@ -21,6 +26,7 @@ from PyQt6.QtWidgets import (
 )
 
 from src.gui_pyqt.controllers.main_controller import MainController
+from src.core.models.enums import TokenShape
 from src.gui_pyqt.scene.token_table_scene import TokenTableScene
 
 
@@ -42,6 +48,49 @@ class _TokenPaneSplitter(QSplitter):
 
     def toggle_left_panel(self) -> None:
         self._on_toggle()
+
+
+class TokenEditDialog(QDialog):
+    def __init__(
+        self,
+        *,
+        default_name: str,
+        default_tags: list[str],
+        default_shape: TokenShape,
+        parent: QWidget | None = None,
+    ) -> None:
+        super().__init__(parent)
+        self.setWindowTitle("Modifica Token Selezionati")
+
+        form = QFormLayout(self)
+
+        self.name_edit = QLineEdit(default_name)
+        form.addRow("Nome:", self.name_edit)
+
+        self.tags_edit = QLineEdit("; ".join(default_tags))
+        self.tags_edit.setPlaceholderText("tag1; tag2 oppure tag1, tag2")
+        form.addRow("Tag:", self.tags_edit)
+
+        self.shape_combo = QComboBox()
+        for shape in TokenShape:
+            self.shape_combo.addItem(shape.value, shape)
+        index = self.shape_combo.findData(default_shape)
+        if index >= 0:
+            self.shape_combo.setCurrentIndex(index)
+        form.addRow("Forma:", self.shape_combo)
+
+        self.button_box = QDialogButtonBox(
+            QDialogButtonBox.StandardButton.Ok | QDialogButtonBox.StandardButton.Cancel
+        )
+        self.button_box.accepted.connect(self.accept)
+        self.button_box.rejected.connect(self.reject)
+        form.addRow(self.button_box)
+
+    def values(self) -> tuple[str, str, TokenShape]:
+        shape = self.shape_combo.currentData()
+        if not isinstance(shape, TokenShape):
+            shape = TokenShape.CIRCLE
+        return self.name_edit.text(), self.tags_edit.text(), shape
 
 
 class MainWindow(QMainWindow):
@@ -351,6 +400,8 @@ class MainWindow(QMainWindow):
         self,
         item: QListWidgetItem,
         text: str | None = None,
+        tags_text: str | None = None,
+        shape: TokenShape | None = None,
     ) -> None:
         try:
             clicked_token_id = item.data(Qt.ItemDataRole.UserRole)
@@ -365,23 +416,48 @@ class MainWindow(QMainWindow):
             selected_ids = list(self._checked_token_ids_from_ui())
             target_ids = selected_ids if selected_ids else [clicked_uuid]
 
-            value = text
-            if value is None:
-                default_text = self.controller.front_text_for_token(clicked_uuid)
-                value, ok = QInputDialog.getText(
-                    self,
-                    "Front Text (Lista)",
-                    "Nuovo testo front per i token selezionati:",
-                    text=default_text,
+            clicked_token = self.controller.token_for_id(clicked_uuid)
+
+            name_value = text
+            tags_value = tags_text
+            shape_value = shape
+
+            if name_value is None and tags_value is None and shape_value is None:
+                dialog = TokenEditDialog(
+                    default_name=clicked_token.name,
+                    default_tags=clicked_token.tags,
+                    default_shape=clicked_token.shape,
+                    parent=self,
                 )
-                if not ok:
-                    self.status_label.setText("Edit front text da lista annullato")
+                if dialog.exec() != QDialog.DialogCode.Accepted:
+                    self.status_label.setText("Modifica token annullata")
                     return
 
-            updated_count = self.controller.apply_front_text_to_tokens(target_ids, value)
-            self.status_label.setText(
-                f"Front text aggiornato da lista su {updated_count} token"
+                dialog_name, dialog_tags, dialog_shape = dialog.values()
+                if name_value is None:
+                    name_value = dialog_name
+                if tags_value is None:
+                    tags_value = dialog_tags
+                if shape_value is None:
+                    shape_value = dialog_shape
+
+            if name_value is None:
+                name_value = clicked_token.name
+            if tags_value is None:
+                tags_value = "; ".join(clicked_token.tags)
+            if shape_value is None:
+                shape_value = clicked_token.shape
+
+            parsed_tags = self._parse_tags_input(tags_value or "")
+            chosen_shape = shape_value if isinstance(shape_value, TokenShape) else clicked_token.shape
+
+            updated_count = self.controller.apply_token_metadata_to_tokens(
+                target_ids,
+                name=name_value or clicked_token.name,
+                tags=parsed_tags,
+                shape=chosen_shape,
             )
+            self.status_label.setText(f"Token aggiornati da lista su {updated_count} token")
             self._refresh_list()
         except Exception as exc:
             self.status_label.setText(f"Errore edit lista: {exc}")
@@ -449,7 +525,13 @@ class MainWindow(QMainWindow):
         self.token_list.clear()
         self.token_list.blockSignals(True)
         for entry in entries:
-            item = QListWidgetItem(f"{entry['name']} | {entry['status']}")
+            tags = entry.get("tags", [])
+            tags_text = ", ".join(tags) if tags else "-"
+            row_text = (
+                f"{entry['name']} | {entry['status']} | "
+                f"{entry.get('shape', '-')} | #: {tags_text}"
+            )
+            item = QListWidgetItem(row_text)
             item.setData(Qt.ItemDataRole.UserRole, str(entry["token_id"]))
             item.setFlags(item.flags() | Qt.ItemFlag.ItemIsUserCheckable)
 
@@ -516,6 +598,11 @@ class MainWindow(QMainWindow):
 
         fallback = Path.cwd() / "config"
         return str(fallback if fallback.exists() else Path.cwd())
+
+    @staticmethod
+    def _parse_tags_input(raw_tags: str) -> list[str]:
+        normalized = raw_tags.replace(";", ",")
+        return [chunk.strip() for chunk in normalized.split(",") if chunk.strip()]
 
     def _set_checkbox_checked(self, token_id: str) -> bool:
         for index in range(self.token_list.count()):

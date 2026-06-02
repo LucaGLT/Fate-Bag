@@ -7,7 +7,7 @@ from src.core.engine.draw_engine import DrawEngine
 from src.core.engine.session_engine import SessionEngine
 from src.core.engine.shuffle_engine import ShuffleEngine
 from src.core.events.event_bus import EventBus
-from src.core.models.enums import TokenFrontType, TokenState
+from src.core.models.enums import TokenFrontType, TokenShape, TokenState
 from src.core.models.session import Session
 from src.core.models.table_token import TableToken
 from src.core.models.token import Token
@@ -245,6 +245,8 @@ class MainController:
                     "token_id": token.id,
                     "name": token.name,
                     "status": status,
+                    "shape": token.shape.value,
+                    "tags": list(token.tags),
                     "in_session": in_session,
                 }
             )
@@ -419,6 +421,52 @@ class MainController:
         if token is None:
             raise ValueError(f"Token non trovato: {token_id}")
         return self._current_front_text(token)
+
+    def token_for_id(self, token_id: UUID) -> Token:
+        token = self._tokens_by_id.get(token_id)
+        if token is None:
+            raise ValueError(f"Token non trovato: {token_id}")
+        return token
+
+    def apply_token_metadata_to_tokens(
+        self,
+        token_ids: list[UUID],
+        *,
+        name: str,
+        tags: list[str],
+        shape: TokenShape,
+    ) -> int:
+        selected_ids = self._normalize_selected_token_ids(token_ids)
+        normalized_name = name.strip()
+        if not normalized_name:
+            raise ValueError("Il nome token deve essere non vuoto")
+
+        normalized_tags = [tag.strip() for tag in tags if str(tag).strip()]
+
+        updated_count = 0
+        for token_id in selected_ids:
+            token = self._tokens_by_id.get(token_id)
+            if token is None:
+                raise ValueError(f"Token non trovato: {token_id}")
+
+            payload = token.model_dump(mode="json")
+            payload["name"] = normalized_name
+            payload["tags"] = normalized_tags
+            payload["shape"] = shape.value
+
+            if token.front_type == TokenFrontType.TEXT:
+                payload["front_value"] = normalized_name
+            elif token.front_type == TokenFrontType.TEXT_IMAGE:
+                metadata = dict(payload.get("metadata", {}))
+                metadata["front_text"] = normalized_name
+                payload["metadata"] = metadata
+
+            updated = Token.model_validate(payload)
+            self._token_service.update_token(updated)
+            self._update_token_cache(updated)
+            updated_count += 1
+
+        return updated_count
 
     def _ensure_runtime_assets(self) -> None:
         assets_dir = self._base_dir / "assets"

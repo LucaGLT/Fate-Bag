@@ -5,7 +5,7 @@ import pytest
 from PyQt6.QtCore import Qt
 from PyQt6.QtWidgets import QApplication
 
-from src.core.models.enums import TokenFrontType
+from src.core.models.enums import TokenFrontType, TokenShape
 from src.gui_pyqt.controllers.main_controller import MainController
 from src.gui_pyqt.views.main_window import MainWindow
 
@@ -296,7 +296,9 @@ def test_sort_places_face_up_before_face_down(window):
     for i in range(window.token_list.count()):
         text = window.token_list.item(i).text()
         if "|" in text:
-            statuses.append(text.split("|", 1)[1].strip())
+            parts = [part.strip() for part in text.split("|")]
+            if len(parts) >= 2:
+                statuses.append(parts[1])
 
     first_face_down_index = next((i for i, status in enumerate(statuses) if status == "FACE_DOWN"), None)
     first_face_up_index = next((i for i, status in enumerate(statuses) if status == "FACE_UP"), None)
@@ -533,7 +535,7 @@ def test_front_text_edit_directly_from_checkbox_list(window):
             "new_text": "Testo Da Lista",
         },
         {
-            "status_starts_with": "Front text aggiornato da lista",
+            "status_starts_with": "Token aggiornati da lista",
             "double_clicked_auto_selected": True,
             "checked_tokens_updated": True,
             "unchecked_token_unchanged": True,
@@ -559,7 +561,7 @@ def test_front_text_edit_directly_from_checkbox_list(window):
         },
     )
 
-    assert window.status_label.text().startswith("Front text aggiornato da lista")
+    assert window.status_label.text().startswith("Token aggiornati da lista")
     assert window.token_list.item(0).checkState() == Qt.CheckState.Checked
     assert (
         token0.front_value == "Testo Da Lista"
@@ -573,6 +575,77 @@ def test_front_text_edit_directly_from_checkbox_list(window):
         token2.front_value != "Testo Da Lista"
         and token2.metadata.get("front_text") != "Testo Da Lista"
     )
+
+
+def test_token_popup_edit_updates_name_tags_shape_for_selected_tokens(window):
+    window._on_load_tokens()
+
+    for index in range(window.token_list.count()):
+        window.token_list.item(index).setCheckState(Qt.CheckState.Unchecked)
+
+    window.token_list.item(0).setCheckState(Qt.CheckState.Checked)
+    window.token_list.item(1).setCheckState(Qt.CheckState.Checked)
+
+    from uuid import UUID
+
+    token0_id = UUID(window.token_list.item(0).data(Qt.ItemDataRole.UserRole))
+    token1_id = UUID(window.token_list.item(1).data(Qt.ItemDataRole.UserRole))
+    token2_id = UUID(window.token_list.item(2).data(Qt.ItemDataRole.UserRole))
+
+    clicked_item = window.token_list.item(0)
+    window._on_token_list_item_double_clicked(
+        clicked_item,
+        text="Token Multi Edit",
+        tags_text="alpha; beta, gamma",
+        shape=TokenShape.OCTAGON,
+    )
+
+    token0 = window.controller._tokens_by_id[token0_id]
+    token1 = window.controller._tokens_by_id[token1_id]
+    token2 = window.controller._tokens_by_id[token2_id]
+
+    _debug_case(
+        "Popup token edit updates selected tokens",
+        {
+            "selected_count": 2,
+            "name": "Token Multi Edit",
+            "tags": ["alpha", "beta", "gamma"],
+            "shape": TokenShape.OCTAGON.value,
+        },
+        {
+            "status_starts_with": "Token aggiornati da lista",
+            "token0_updated": True,
+            "token1_updated": True,
+            "token2_unchanged": True,
+        },
+        {
+            "status": window.status_label.text(),
+            "token0": {
+                "name": token0.name,
+                "tags": token0.tags,
+                "shape": token0.shape.value,
+            },
+            "token1": {
+                "name": token1.name,
+                "tags": token1.tags,
+                "shape": token1.shape.value,
+            },
+            "token2": {
+                "name": token2.name,
+                "tags": token2.tags,
+                "shape": token2.shape.value,
+            },
+        },
+    )
+
+    assert window.status_label.text().startswith("Token aggiornati da lista")
+    assert token0.name == "Token Multi Edit"
+    assert token1.name == "Token Multi Edit"
+    assert token0.tags == ["alpha", "beta", "gamma"]
+    assert token1.tags == ["alpha", "beta", "gamma"]
+    assert token0.shape == TokenShape.OCTAGON
+    assert token1.shape == TokenShape.OCTAGON
+    assert token2.name != "Token Multi Edit"
 
 
 def test_select_and_deselect_all_buttons(window):
