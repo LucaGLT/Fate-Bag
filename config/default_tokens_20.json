@@ -1,11 +1,11 @@
 [
   {
-    "id": "019758e2-e73e-45bd-950e-6dc695822d68",
-    "name": "Anomalia|Severa",
+    "id": "1be8a2e6-4449-4454-9f05-cf685bedb94b",
+    "name": "Blessing",
     "shape": "CIRCLE",
     "front_type": "TEXT",
-    "front_value": "Anomalia|Severa",
-    "back_value": "C:\\_GLT_\\Qt Prj\\Fate-Bag\\Fate-Bag\\assets\\images\\token_backs\\Blue_Back.PNG",
+    "front_value": "Blessing",
+    "back_value": "C:\\Users\\Gianluca.TATA\\AppData\\Local\\Temp\\pytest-of-Gianluca.TATA\\pytest-103\\test_reload_tokens_file_replac0\\gui-runtime\\assets\\back.png",
     "categories": [
       "holy"
     ],
@@ -19,12 +19,12 @@
     "rarity": "common"
   },
   {
-    "id": "ed860145-06f5-45b9-bfc0-95aade73d1a4",
-    "name": "Anomalia_1",
+    "id": "20fea004-5690-4167-9c1c-e6403f5d1016",
+    "name": "Curse",
     "shape": "HEXAGON",
     "front_type": "TEXT",
-    "front_value": "Anomalia_1",
-    "back_value": "C:\\_GLT_\\Qt Prj\\Fate-Bag\\Fate-Bag\\assets\\images\\token_backs\\Blue_Back.PNG",
+    "front_value": "Curse",
+    "back_value": "C:\\Users\\Gianluca.TATA\\AppData\\Local\\Temp\\pytest-of-Gianluca.TATA\\pytest-103\\test_reload_tokens_file_replac0\\gui-runtime\\assets\\back.png",
     "categories": [
       "shadow"
     ],
@@ -38,12 +38,12 @@
     "rarity": "rare"
   },
   {
-    "id": "5babccc8-288b-4595-a656-7772e03bf44c",
-    "name": "Scudo",
-    "shape": "SQUARE",
+    "id": "b859e9d9-092f-4e05-831f-67a769c38b51",
+    "name": "Shield",
+    "shape": "CIRCLE",
     "front_type": "TEXT",
-    "front_value": "Scudo",
-    "back_value": "C:\\_GLT_\\Qt Prj\\Fate-Bag\\Fate-Bag\\assets\\images\\token_backs\\Blue_Back.PNG",
+    "front_value": "Shield",
+    "back_value": "C:\\Users\\Gianluca.TATA\\AppData\\Local\\Temp\\pytest-of-Gianluca.TATA\\pytest-103\\test_reload_tokens_file_replac0\\gui-runtime\\assets\\back.png",
     "categories": [
       "holy"
     ],
@@ -57,12 +57,12 @@
     "rarity": "common"
   },
   {
-    "id": "662d3c3f-bc7a-4022-959a-99a2aad191f5",
+    "id": "a903e78c-847c-43e5-9317-932ecd25c826",
     "name": "Wrath",
-    "shape": "PENTAGON",
+    "shape": "HEXAGON",
     "front_type": "TEXT",
-    "front_value": "Gia",
-    "back_value": "C:\\_GLT_\\Qt Prj\\Fate-Bag\\Fate-Bag\\assets\\images\\token_backs\\Blue_Back.PNG",
+    "front_value": "Wrath",
+    "back_value": "C:\\Users\\Gianluca.TATA\\AppData\\Local\\Temp\\pytest-of-Gianluca.TATA\\pytest-103\\test_reload_tokens_file_replac0\\gui-runtime\\assets\\back.png",
     "categories": [
       "shadow"
     ],
@@ -76,12 +76,12 @@
     "rarity": "rare"
   },
   {
-    "id": "f44035d8-8a08-4fb8-b56d-10b9d5c28ac3",
+    "id": "d7706f94-43cf-49fe-b0ba-80496c307698",
     "name": "Mercy",
-    "shape": "EPTAGON",
+    "shape": "CIRCLE",
     "front_type": "TEXT",
     "front_value": "Mercy",
-    "back_value": "C:\\_GLT_\\Qt Prj\\Fate-Bag\\Fate-Bag\\assets\\images\\token_backs\\Blue_Back.PNG",
+    "back_value": "C:\\Users\\Gianluca.TATA\\AppData\\Local\\Temp\\pytest-of-Gianluca.TATA\\pytest-103\\test_reload_tokens_file_replac0\\gui-runtime\\assets\\back.png",
     "categories": [
       "holy"
     ],
@@ -95,12 +95,12 @@
     "rarity": "common"
   },
   {
-    "id": "35ea65e1-1dec-4e12-a9f5-9271ba35ad56",
-    "name": "Stella",
-    "shape": "OCTAGON",
+    "id": "f6c2376b-e767-48e4-a5c4-fc5133ca65d1",
+    "name": "Ruin",
+    "shape": "HEXAGON",
     "front_type": "TEXT",
-    "front_value": "Stella",
-    "back_value": "C:\\_GLT_\\Qt Prj\\Fate-Bag\\Fate-Bag\\assets\\images\\token_backs\\Blue_Back.PNG",
+    "front_value": "Ruin",
+    "back_value": "C:\\Users\\Gianluca.TATA\\AppData\\Local\\Temp\\pytest-of-Gianluca.TATA\\pytest-103\\test_reload_tokens_file_replac0\\gui-runtime\\assets\\back.png",
     "categories": [
       "shadow"
     ],
@@ -114,12 +114,12 @@
     "rarity": "legendary"
   },
   {
-    "id": "b6a7246d-5f51-441a-997b-f2a57419c9c2",
+    "id": "07fbf88d-aded-4adb-8cb0-dd2880b1a076",
     "name": "Aegis",
-    "shape": "STAR",
+    "shape": "CIRCLE",
     "front_type": "TEXT",
     "front_value": "Aegis",
-    "back_value": "C:\\_GLT_\\Qt Prj\\Fate-Bag\\Fate-Bag\\assets\\images\\token_backs\\Blue_Back.PNG",
+    "back_value": "C:\\Users\\Gianluca.TATA\\AppData\\Local\\Temp\\pytest-of-Gianluca.TATA\\pytest-103\\test_reload_tokens_file_replac0\\gui-runtime\\assets\\back.png",
     "categories": [
       "holy"
     ],
@@ -133,12 +133,12 @@
     "rarity": "common"
   },
   {
-    "id": "d3c13483-b92b-4373-a3bb-a19386fbd2c0",
+    "id": "94e5d277-9842-4d4b-9599-36b37b60b115",
     "name": "Blight",
-    "shape": "RECTANGLE_3:4",
+    "shape": "HEXAGON",
     "front_type": "TEXT",
     "front_value": "Blight",
-    "back_value": "C:\\_GLT_\\Qt Prj\\Fate-Bag\\Fate-Bag\\assets\\images\\token_backs\\Blue_Back.PNG",
+    "back_value": "C:\\Users\\Gianluca.TATA\\AppData\\Local\\Temp\\pytest-of-Gianluca.TATA\\pytest-103\\test_reload_tokens_file_replac0\\gui-runtime\\assets\\back.png",
     "categories": [
       "shadow"
     ],
@@ -152,12 +152,12 @@
     "rarity": "rare"
   },
   {
-    "id": "2a78e9e5-e9dd-4d06-b498-751aa239a568",
+    "id": "ec57936c-c4c9-4bb2-8e63-12c3a92827b9",
     "name": "Beacon",
-    "shape": "RECTANGLE_4:3",
+    "shape": "CIRCLE",
     "front_type": "TEXT",
     "front_value": "Beacon",
-    "back_value": "C:\\_GLT_\\Qt Prj\\Fate-Bag\\Fate-Bag\\assets\\images\\token_backs\\Blue_Back.PNG",
+    "back_value": "C:\\Users\\Gianluca.TATA\\AppData\\Local\\Temp\\pytest-of-Gianluca.TATA\\pytest-103\\test_reload_tokens_file_replac0\\gui-runtime\\assets\\back.png",
     "categories": [
       "holy"
     ],
@@ -171,12 +171,12 @@
     "rarity": "common"
   },
   {
-    "id": "d0b56100-0a52-40af-b958-6d4a320acc44",
+    "id": "0eb5925f-e66f-4b17-9a0a-6a40bd0b7d78",
     "name": "Fang",
-    "shape": "RECTANGLE_3:5",
+    "shape": "HEXAGON",
     "front_type": "TEXT",
     "front_value": "Fang",
-    "back_value": "C:\\_GLT_\\Qt Prj\\Fate-Bag\\Fate-Bag\\assets\\images\\token_backs\\Blue_Back.PNG",
+    "back_value": "C:\\Users\\Gianluca.TATA\\AppData\\Local\\Temp\\pytest-of-Gianluca.TATA\\pytest-103\\test_reload_tokens_file_replac0\\gui-runtime\\assets\\back.png",
     "categories": [
       "shadow"
     ],
@@ -190,12 +190,12 @@
     "rarity": "rare"
   },
   {
-    "id": "376f2566-5537-4994-b5bf-13e5cf844857",
+    "id": "4b9c0aca-4617-4635-9985-f1fadb73faa2",
     "name": "Ward",
-    "shape": "RECTANGLE_5:3",
+    "shape": "CIRCLE",
     "front_type": "TEXT",
     "front_value": "Ward",
-    "back_value": "C:\\_GLT_\\Qt Prj\\Fate-Bag\\Fate-Bag\\assets\\images\\token_backs\\Blue_Back.PNG",
+    "back_value": "C:\\Users\\Gianluca.TATA\\AppData\\Local\\Temp\\pytest-of-Gianluca.TATA\\pytest-103\\test_reload_tokens_file_replac0\\gui-runtime\\assets\\back.png",
     "categories": [
       "holy"
     ],
@@ -209,12 +209,12 @@
     "rarity": "common"
   },
   {
-    "id": "22698ffc-94b3-4712-a568-b6a744b93444",
+    "id": "272fdd17-e3c4-4468-9d39-8c3423982a50",
     "name": "Gloom",
-    "shape": "CIRCLE",
+    "shape": "HEXAGON",
     "front_type": "TEXT",
     "front_value": "Gloom",
-    "back_value": "C:\\_GLT_\\Qt Prj\\Fate-Bag\\Fate-Bag\\assets\\images\\token_backs\\Blue_Back.PNG",
+    "back_value": "C:\\Users\\Gianluca.TATA\\AppData\\Local\\Temp\\pytest-of-Gianluca.TATA\\pytest-103\\test_reload_tokens_file_replac0\\gui-runtime\\assets\\back.png",
     "categories": [
       "shadow"
     ],
@@ -228,12 +228,12 @@
     "rarity": "common"
   },
   {
-    "id": "dcbbafe1-8890-40ab-87e5-5c4f6f577fff",
+    "id": "26533910-eea0-4963-89a8-c0b818a6f75e",
     "name": "Valor",
-    "shape": "HEXAGON",
+    "shape": "CIRCLE",
     "front_type": "TEXT",
     "front_value": "Valor",
-    "back_value": "C:\\_GLT_\\Qt Prj\\Fate-Bag\\Fate-Bag\\assets\\images\\token_backs\\Blue_Back.PNG",
+    "back_value": "C:\\Users\\Gianluca.TATA\\AppData\\Local\\Temp\\pytest-of-Gianluca.TATA\\pytest-103\\test_reload_tokens_file_replac0\\gui-runtime\\assets\\back.png",
     "categories": [
       "holy"
     ],
@@ -247,12 +247,12 @@
     "rarity": "common"
   },
   {
-    "id": "b6544819-fe41-4251-b3fa-0ec502fb8c2a",
-    "name": "Runa del Mare",
-    "shape": "STAR",
+    "id": "054aa7fd-f9a9-425d-8673-5c72107f4a1e",
+    "name": "Rift",
+    "shape": "HEXAGON",
     "front_type": "TEXT",
-    "front_value": "Runa del Mare",
-    "back_value": "C:\\_GLT_\\Qt Prj\\Fate-Bag\\Fate-Bag\\assets\\images\\token_backs\\Blue_Back.PNG",
+    "front_value": "Rift",
+    "back_value": "C:\\Users\\Gianluca.TATA\\AppData\\Local\\Temp\\pytest-of-Gianluca.TATA\\pytest-103\\test_reload_tokens_file_replac0\\gui-runtime\\assets\\back.png",
     "categories": [
       "shadow"
     ],
@@ -266,12 +266,12 @@
     "rarity": "legendary"
   },
   {
-    "id": "50a9b6e5-a7b5-4d9c-b46e-a5178b9a1904",
+    "id": "4faf3c05-c505-499f-a226-89dc781518b3",
     "name": "Halo",
-    "shape": "SQUARE",
+    "shape": "CIRCLE",
     "front_type": "TEXT",
     "front_value": "Halo",
-    "back_value": "C:\\_GLT_\\Qt Prj\\Fate-Bag\\Fate-Bag\\assets\\images\\token_backs\\Blue_Back.PNG",
+    "back_value": "C:\\Users\\Gianluca.TATA\\AppData\\Local\\Temp\\pytest-of-Gianluca.TATA\\pytest-103\\test_reload_tokens_file_replac0\\gui-runtime\\assets\\back.png",
     "categories": [
       "holy"
     ],
@@ -285,12 +285,12 @@
     "rarity": "common"
   },
   {
-    "id": "570c7f77-be23-485b-b645-e9d11663099b",
+    "id": "3b6ba10b-30e5-4f77-b406-6ebf1283c55a",
     "name": "Dread",
-    "shape": "PENTAGON",
+    "shape": "HEXAGON",
     "front_type": "TEXT",
     "front_value": "Dread",
-    "back_value": "C:\\_GLT_\\Qt Prj\\Fate-Bag\\Fate-Bag\\assets\\images\\token_backs\\Blue_Back.PNG",
+    "back_value": "C:\\Users\\Gianluca.TATA\\AppData\\Local\\Temp\\pytest-of-Gianluca.TATA\\pytest-103\\test_reload_tokens_file_replac0\\gui-runtime\\assets\\back.png",
     "categories": [
       "shadow"
     ],
@@ -304,12 +304,12 @@
     "rarity": "rare"
   },
   {
-    "id": "ff4acafa-db43-4cf6-a21e-eed7289c3b6d",
+    "id": "6b2bb1c3-7940-488b-8346-741e541d14f0",
     "name": "Grace",
-    "shape": "EPTAGON",
+    "shape": "CIRCLE",
     "front_type": "TEXT",
     "front_value": "Grace",
-    "back_value": "C:\\_GLT_\\Qt Prj\\Fate-Bag\\Fate-Bag\\assets\\images\\token_backs\\Blue_Back.PNG",
+    "back_value": "C:\\Users\\Gianluca.TATA\\AppData\\Local\\Temp\\pytest-of-Gianluca.TATA\\pytest-103\\test_reload_tokens_file_replac0\\gui-runtime\\assets\\back.png",
     "categories": [
       "holy"
     ],
@@ -323,12 +323,12 @@
     "rarity": "common"
   },
   {
-    "id": "e748f33b-d966-4770-834b-332e1b781f69",
+    "id": "bea9e1ff-e953-4974-af60-bd0ddb4520c4",
     "name": "Thorn",
-    "shape": "OCTAGON",
+    "shape": "HEXAGON",
     "front_type": "TEXT",
     "front_value": "Thorn",
-    "back_value": "C:\\_GLT_\\Qt Prj\\Fate-Bag\\Fate-Bag\\assets\\images\\token_backs\\Blue_Back.PNG",
+    "back_value": "C:\\Users\\Gianluca.TATA\\AppData\\Local\\Temp\\pytest-of-Gianluca.TATA\\pytest-103\\test_reload_tokens_file_replac0\\gui-runtime\\assets\\back.png",
     "categories": [
       "shadow"
     ],
@@ -342,12 +342,12 @@
     "rarity": "common"
   },
   {
-    "id": "87295da3-a53b-4285-998a-c63b43f39fc5",
+    "id": "326f6ef5-c3bb-41ff-826a-edbce1b7d3b5",
     "name": "Crown",
-    "shape": "RECTANGLE_3:4",
+    "shape": "CIRCLE",
     "front_type": "TEXT",
     "front_value": "Crown",
-    "back_value": "C:\\_GLT_\\Qt Prj\\Fate-Bag\\Fate-Bag\\assets\\images\\token_backs\\Blue_Back.PNG",
+    "back_value": "C:\\Users\\Gianluca.TATA\\AppData\\Local\\Temp\\pytest-of-Gianluca.TATA\\pytest-103\\test_reload_tokens_file_replac0\\gui-runtime\\assets\\back.png",
     "categories": [
       "holy"
     ],
@@ -361,12 +361,12 @@
     "rarity": "rare"
   },
   {
-    "id": "cf391cc7-cdef-407b-a553-e7f1d90b0300",
+    "id": "1f862358-cf5e-4790-bb0b-108c911085f3",
     "name": "Abyss",
-    "shape": "RECTANGLE_4:3",
+    "shape": "HEXAGON",
     "front_type": "TEXT",
     "front_value": "Abyss",
-    "back_value": "C:\\_GLT_\\Qt Prj\\Fate-Bag\\Fate-Bag\\assets\\images\\token_backs\\Blue_Back.PNG",
+    "back_value": "C:\\Users\\Gianluca.TATA\\AppData\\Local\\Temp\\pytest-of-Gianluca.TATA\\pytest-103\\test_reload_tokens_file_replac0\\gui-runtime\\assets\\back.png",
     "categories": [
       "shadow"
     ],
@@ -377,101 +377,6 @@
       "source": "bootstrap"
     },
     "weight": 0.7,
-    "rarity": "legendary"
-  },
-  {
-    "id": "1ef72e37-2857-4e20-8a33-9b9b4b8def33",
-    "name": "Blessing",
-    "shape": "CIRCLE",
-    "front_type": "TEXT",
-    "front_value": "Blessing",
-    "back_value": "C:\\_GLT_\\Qt Prj\\Fate-Bag\\Fate-Bag\\assets\\images\\token_backs\\Blue_Back.PNG",
-    "categories": [
-      "holy"
-    ],
-    "tags": [
-      "light"
-    ],
-    "metadata": {
-      "source": "bootstrap"
-    },
-    "weight": 2.0,
-    "rarity": "common"
-  },
-  {
-    "id": "40905162-787d-4d76-9417-e3ea3ffb7be3",
-    "name": "Curse",
-    "shape": "HEXAGON",
-    "front_type": "TEXT",
-    "front_value": "Curse",
-    "back_value": "C:\\_GLT_\\Qt Prj\\Fate-Bag\\Fate-Bag\\assets\\images\\token_backs\\Blue_Back.PNG",
-    "categories": [
-      "shadow"
-    ],
-    "tags": [
-      "dark"
-    ],
-    "metadata": {
-      "source": "bootstrap"
-    },
-    "weight": 1.0,
-    "rarity": "rare"
-  },
-  {
-    "id": "e26c6883-e7cd-4dc5-8508-620eea53dbf6",
-    "name": "Shield",
-    "shape": "SQUARE",
-    "front_type": "TEXT",
-    "front_value": "Shield",
-    "back_value": "C:\\_GLT_\\Qt Prj\\Fate-Bag\\Fate-Bag\\assets\\images\\token_backs\\Blue_Back.PNG",
-    "categories": [
-      "holy"
-    ],
-    "tags": [
-      "defense"
-    ],
-    "metadata": {
-      "source": "bootstrap"
-    },
-    "weight": 3.0,
-    "rarity": "common"
-  },
-  {
-    "id": "d5564364-7de3-4bcf-8f2b-0aecfc8c4d49",
-    "name": "Ruin",
-    "shape": "OCTAGON",
-    "front_type": "TEXT",
-    "front_value": "Ruin",
-    "back_value": "C:\\_GLT_\\Qt Prj\\Fate-Bag\\Fate-Bag\\assets\\images\\token_backs\\Blue_Back.PNG",
-    "categories": [
-      "shadow"
-    ],
-    "tags": [
-      "damage"
-    ],
-    "metadata": {
-      "source": "bootstrap"
-    },
-    "weight": 0.8,
-    "rarity": "legendary"
-  },
-  {
-    "id": "66ca3c0c-29da-48d0-8d5f-f38c567ecb9b",
-    "name": "Rift",
-    "shape": "STAR",
-    "front_type": "TEXT",
-    "front_value": "Rift",
-    "back_value": "C:\\_GLT_\\Qt Prj\\Fate-Bag\\Fate-Bag\\assets\\images\\token_backs\\Blue_Back.PNG",
-    "categories": [
-      "shadow"
-    ],
-    "tags": [
-      "chaos"
-    ],
-    "metadata": {
-      "source": "bootstrap"
-    },
-    "weight": 0.9,
     "rarity": "legendary"
   }
 ]

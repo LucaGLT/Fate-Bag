@@ -51,34 +51,43 @@ class MainController:
         self._ensure_runtime_assets()
 
         if tokens_file is not None:
-            self._bootstrap_tokens_file = Path(tokens_file)
+            selected_file = Path(tokens_file)
+            self._bootstrap_tokens_file = selected_file
+            bootstrap_tokens = self._load_tokens_from_bootstrap_file()
+            self._write_tokens_to_file(selected_file, bootstrap_tokens)
+            self._set_active_token_repository(selected_file)
+            tokens = self._token_service.list_tokens()
+            self.current_session = None
 
-        tokens = self._token_service.list_tokens()
+            self._tokens = tokens
+            self._tokens_by_id = {token.id: token for token in tokens}
+            self._token_name_by_id = {token.id: token.name for token in tokens}
+
+            session_engine = SessionEngine(tokens)
+            self._session_service = SessionService(
+                session_engine=session_engine,
+                shuffle_engine=ShuffleEngine(),
+                repository=self._session_repo,
+                event_bus=self._event_bus,
+            )
+            self._draw_service = DrawService(
+                draw_engine=DrawEngine(tokens),
+                session_repository=self._session_repo,
+                event_bus=self._event_bus,
+            )
+
+            return tokens
+
         bootstrap_tokens = self._load_tokens_from_bootstrap_file()
-        if not tokens:
-            for token in bootstrap_tokens:
-                self._token_service.create_token(token)
-        else:
-            existing_by_name = {token.name: token for token in tokens}
-            for bootstrap_token in bootstrap_tokens:
-                existing_token = existing_by_name.get(bootstrap_token.name)
-                if existing_token is None:
-                    self._token_service.create_token(bootstrap_token)
-                    continue
+        existing_tokens = self._token_service.list_tokens()
+        for token in existing_tokens:
+            self._token_service.delete_token(token.id)
 
-                desired_payload = bootstrap_token.model_dump(mode="json")
-                desired_payload["id"] = str(existing_token.id)
-                # Keep user-uploaded media assets when reloading bootstrap defaults.
-                desired_payload["front_type"] = existing_token.front_type.value
-                desired_payload["front_value"] = existing_token.front_value
-                desired_payload["back_value"] = existing_token.back_value
-                desired_payload["metadata"] = dict(existing_token.metadata)
-                desired_token = Token.model_validate(desired_payload)
-
-                if existing_token.model_dump(mode="json") != desired_token.model_dump(mode="json"):
-                    self._token_service.update_token(desired_token)
+        for token in bootstrap_tokens:
+            self._token_service.create_token(token)
 
         tokens = self._token_service.list_tokens()
+        self.current_session = None
 
         self._tokens = tokens
         self._tokens_by_id = {token.id: token for token in tokens}
@@ -99,6 +108,16 @@ class MainController:
 
         return tokens
 
+    def _set_active_token_repository(self, file_path: Path) -> None:
+        self._token_repo = JsonTokenRepository(file_path)
+        self._token_service = TokenService(self._token_repo, self._event_bus)
+
+    @staticmethod
+    def _write_tokens_to_file(file_path: Path, tokens: list[Token]) -> None:
+        file_path.parent.mkdir(parents=True, exist_ok=True)
+        payload = [token.model_dump(mode="json") for token in tokens]
+        file_path.write_text(json.dumps(payload, indent=2), encoding="utf-8")
+
     def create_session(self) -> Session:
         self._ensure_services_ready()
         seed = 42 if self._deterministic_mode else None
@@ -114,7 +133,6 @@ class MainController:
         return self.current_session
 
     def create_new_token(self) -> Token:
-        self._ensure_tokens_ready()
         existing_names = {token.name for token in self._tokens}
         base_name = "Nuovo Token"
         suffix = 1
@@ -544,14 +562,9 @@ class MainController:
         tokens: list[Token] = []
         for item in data:
             payload = dict(item)
-            if payload.get("back_value") == "__RUNTIME_BACK_IMAGE__":
+            if self._is_runtime_back_placeholder(payload.get("back_value")):
                 payload["back_value"] = str(back_image)
             tokens.append(Token.model_validate(payload))
-
-        if len(tokens) < 20:
-            raise ValueError(
-                "Bootstrap token file must contain at least 20 tokens"
-            )
 
         return tokens
 
@@ -568,6 +581,13 @@ class MainController:
         if not token_ids:
             raise ValueError("Seleziona almeno un token")
         return token_ids
+
+    @staticmethod
+    def _is_runtime_back_placeholder(value: object) -> bool:
+        if not isinstance(value, str):
+            return False
+        normalized = value.strip().upper().replace("_", "")
+        return normalized == "RUNTIMEBACKIMAGE"
 
     @staticmethod
     def _validate_image_file(image_path: str | Path) -> Path:

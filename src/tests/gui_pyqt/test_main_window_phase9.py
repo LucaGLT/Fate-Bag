@@ -1,4 +1,5 @@
 import os
+import json
 from pathlib import Path
 
 import pytest
@@ -720,6 +721,122 @@ def test_new_and_delete_token_buttons(window):
 
     assert after_delete_count == initial_count
     assert window.status_label.text().startswith("Token eliminati")
+
+
+def test_reload_tokens_file_replaces_runtime_instead_of_merge(window):
+    window._on_load_tokens()
+
+    first_row = window.token_list.item(0)
+    second_token_id = window.token_list.item(1).data(Qt.ItemDataRole.UserRole)
+
+    # Rename first token via popup handler overrides.
+    window._on_token_list_item_double_clicked(
+        first_row,
+        text="RINOMINATO_TEMP",
+        tags_text="tmp",
+        shape=TokenShape.SQUARE,
+    )
+
+    # Delete second token.
+    for index in range(window.token_list.count()):
+        window.token_list.item(index).setCheckState(Qt.CheckState.Unchecked)
+    for index in range(window.token_list.count()):
+        row = window.token_list.item(index)
+        if row.data(Qt.ItemDataRole.UserRole) == second_token_id:
+            row.setCheckState(Qt.CheckState.Checked)
+            break
+    window._on_delete_selected_tokens()
+
+    # Reload from JSON must restore exact file content (no merge with runtime changes).
+    json_path = Path(window.controller.bootstrap_tokens_file)
+    raw = json.loads(json_path.read_text(encoding="utf-8"))
+    expected_names = [item["name"] for item in raw]
+
+    window._on_load_tokens(str(json_path))
+    actual_names = [entry["name"] for entry in window.controller.token_status_entries()]
+
+    _debug_case(
+        "Reload from file replaces runtime token set",
+        {"modified_runtime": ["RINOMINATO_TEMP", "second token deleted"]},
+        {"names_equal_json_file": True},
+        {
+            "expected_count": len(expected_names),
+            "actual_count": len(actual_names),
+            "contains_temp_rename": "RINOMINATO_TEMP" in actual_names,
+        },
+    )
+
+    assert actual_names == expected_names
+    assert "RINOMINATO_TEMP" not in actual_names
+
+
+def test_loaded_file_becomes_persistence_target(window, tmp_path):
+    source_file = Path("config/default_tokens_20.json")
+    custom_file = tmp_path / "tokens_custom.json"
+    custom_file.write_text(source_file.read_text(encoding="utf-8"), encoding="utf-8")
+
+    window._on_load_tokens(str(custom_file))
+    initial_count = window.token_list.count()
+
+    window._on_new_token()
+
+    payload = json.loads(custom_file.read_text(encoding="utf-8"))
+    _debug_case(
+        "Loaded JSON file is used as persistence target",
+        {"loaded_file": str(custom_file), "initial_count": initial_count},
+        {"file_count_after_new": initial_count + 1},
+        {"file_count_after_new": len(payload)},
+    )
+
+    assert len(payload) == initial_count + 1
+
+
+def test_load_tokens_accepts_single_underscore_runtime_back_marker(window, tmp_path):
+    source_file = Path("config/default_tokens_20.json")
+    payload = json.loads(source_file.read_text(encoding="utf-8"))
+    for item in payload:
+        item["back_value"] = "_RUNTIME_BACK_IMAGE_"
+
+    custom_file = tmp_path / "tokens_single_underscore_marker.json"
+    custom_file.write_text(json.dumps(payload, indent=2), encoding="utf-8")
+
+    window._on_load_tokens(str(custom_file))
+
+    _debug_case(
+        "Load tokens accepts _RUNTIME_BACK_IMAGE_ placeholder",
+        {"file": str(custom_file)},
+        {"status_starts_with": "Token caricati"},
+        {"status": window.status_label.text()},
+    )
+
+    assert window.status_label.text().startswith("Token caricati")
+
+
+def test_load_tokens_accepts_empty_json_and_allows_new_token(window, tmp_path):
+    empty_file = tmp_path / "tokens_empty.json"
+    empty_file.write_text("[]", encoding="utf-8")
+
+    window._on_load_tokens(str(empty_file))
+
+    _debug_case(
+        "Load tokens accepts empty JSON list",
+        {"file": str(empty_file)},
+        {"status": "Token caricati: 0", "rows_count": 0},
+        {
+            "status": window.status_label.text(),
+            "rows_count": window.token_list.count(),
+        },
+    )
+
+    assert window.status_label.text().startswith("Token caricati: 0")
+    assert window.token_list.count() == 0
+
+    window._on_new_token()
+
+    saved = json.loads(empty_file.read_text(encoding="utf-8"))
+    assert window.status_label.text().startswith("Nuovo token creato")
+    assert window.token_list.count() == 1
+    assert len(saved) == 1
 
 
 def test_checkbox_selection_updates_scene_highlight(window):
