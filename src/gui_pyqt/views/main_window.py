@@ -221,6 +221,7 @@ class MainWindow(QMainWindow):
 
         self.status_label = QLabel("Pronto")
         self.status_label.setObjectName("status_label")
+        self.status_label.setWordWrap(True)
         layout.addWidget(self.status_label)
 
         self.content_splitter = _TokenPaneSplitter(self._toggle_token_list_visibility, self)
@@ -356,7 +357,7 @@ class MainWindow(QMainWindow):
     def _on_draw_one(self) -> None:
         try:
             drawn = self.controller.draw_one()
-            self.status_label.setText(f"Pesca 1: {drawn}")
+            self.status_label.setText(self._draw_status_text("Pesca 1", drawn))
             self._refresh_list()
         except Exception as exc:
             self.status_label.setText(f"Errore draw 1: {exc}")
@@ -364,7 +365,7 @@ class MainWindow(QMainWindow):
     def _on_draw_all(self) -> None:
         try:
             drawn = self.controller.draw_all()
-            self.status_label.setText(f"Pesca Tutte: {drawn}")
+            self.status_label.setText(self._draw_status_text("Pesca Tutte", drawn))
             self._refresh_list()
         except Exception as exc:
             self.status_label.setText(f"Errore pesca tutte: {exc}")
@@ -372,7 +373,7 @@ class MainWindow(QMainWindow):
     def _on_draw_n(self) -> None:
         try:
             drawn = self.controller.draw_many(self.draw_n_spin.value())
-            self.status_label.setText(f"Pesca N: {drawn}")
+            self.status_label.setText(self._draw_status_text("Pesca N", drawn))
             self._refresh_list()
         except Exception as exc:
             self.status_label.setText(f"Errore draw N: {exc}")
@@ -743,6 +744,11 @@ class MainWindow(QMainWindow):
         }
         self.status_label.setText(f"{status_prefix}: {session.session_id}")
         self._refresh_list()
+
+    @staticmethod
+    def _draw_status_text(prefix: str, drawn_ids: list[str]) -> str:
+        count = len(drawn_ids)
+        return f"{prefix}: {count} token"
 
     @staticmethod
     def _icon_plus(size: int = 16) -> QIcon:
