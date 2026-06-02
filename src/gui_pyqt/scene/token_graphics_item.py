@@ -12,7 +12,9 @@ from src.core.models.token import Token
 
 
 class TokenGraphicsItem(QGraphicsObject):
-    clicked = pyqtSignal(str)
+    selected = pyqtSignal(str)
+    flip_requested = pyqtSignal(str)
+    drag_finished = pyqtSignal(str, float, float)
 
     def __init__(self, token: Token, table_token: TableToken, size: float = 84.0) -> None:
         super().__init__()
@@ -21,6 +23,8 @@ class TokenGraphicsItem(QGraphicsObject):
         self.size = size
         self._bounds = QRectF(-size / 2, -size / 2, size, size)
         self.setFlag(self.GraphicsItemFlag.ItemIsSelectable, True)
+        self.setFlag(self.GraphicsItemFlag.ItemIsMovable, True)
+        self._press_pos = QPointF(0.0, 0.0)
 
     def boundingRect(self) -> QRectF:
         return self._bounds
@@ -51,8 +55,25 @@ class TokenGraphicsItem(QGraphicsObject):
             painter.drawPath(path)
 
     def mousePressEvent(self, event) -> None:
-        self.clicked.emit(str(self.token.id))
+        self._press_pos = QPointF(self.pos())
+        is_ctrl_click = bool(event.modifiers() & Qt.KeyboardModifier.ControlModifier)
         super().mousePressEvent(event)
+        if not is_ctrl_click:
+            self.selected.emit(str(self.token.id))
+
+    def mouseDoubleClickEvent(self, event) -> None:
+        super().mouseDoubleClickEvent(event)
+        self.selected.emit(str(self.token.id))
+        self.flip_requested.emit(str(self.token.id))
+
+    def mouseReleaseEvent(self, event) -> None:
+        super().mouseReleaseEvent(event)
+        current = self.pos()
+        delta = current - self._press_pos
+        moved = abs(delta.x()) > 0.5 or abs(delta.y()) > 0.5
+        if moved:
+            self.selected.emit(str(self.token.id))
+            self.drag_finished.emit(str(self.token.id), float(current.x()), float(current.y()))
 
     def _shape_path(self) -> QPainterPath:
         path = QPainterPath()

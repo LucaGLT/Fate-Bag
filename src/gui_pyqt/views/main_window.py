@@ -26,6 +26,7 @@ class MainWindow(QMainWindow):
     def __init__(self, controller: MainController | None = None) -> None:
         super().__init__()
         self.controller = controller or MainController()
+        self._is_refreshing_scene = False
 
         self.setWindowTitle("Fate-Bag - GUI Tecnica Minima")
         self.resize(760, 480)
@@ -150,8 +151,12 @@ class MainWindow(QMainWindow):
         self.reveal_all_btn.clicked.connect(self._on_reveal_all)
         self.hide_all_btn.clicked.connect(self._on_hide_all)
         self.reset_btn.clicked.connect(self._on_reset)
+        self.table_scene.token_selected.connect(self._on_scene_token_selected)
+        self.table_scene.token_selection_changed.connect(self._on_scene_selection_changed)
         self.table_scene.token_flip_requested.connect(self._on_scene_token_flip)
+        self.table_scene.token_dragged.connect(self._on_scene_token_dragged)
         self.token_list.itemDoubleClicked.connect(self._on_token_list_item_double_clicked)
+        self.token_list.itemChanged.connect(self._on_token_list_item_changed)
 
     def _on_load_tokens(self) -> None:
         try:
@@ -347,34 +352,59 @@ class MainWindow(QMainWindow):
 
     def _on_scene_token_flip(self, token_id: str) -> None:
         try:
+            self._set_checkbox_checked(token_id)
             new_state = self.controller.flip_token(token_id)
             self.status_label.setText(f"Flip token: {token_id} -> {new_state}")
             self._refresh_list()
         except Exception as exc:
             self.status_label.setText(f"Errore flip: {exc}")
 
+    def _on_scene_token_selected(self, token_id: str) -> None:
+        changed = self._set_checkbox_exclusive(token_id)
+        if changed:
+            self.status_label.setText(f"Token selezionato: {token_id}")
+
+    def _on_scene_selection_changed(self, selected_token_ids: set[str]) -> None:
+        if self._is_refreshing_scene:
+            return
+        self._set_checkboxes_from_token_ids(selected_token_ids)
+
+    def _on_scene_token_dragged(self, token_id: str, x: float, y: float) -> None:
+        try:
+            self._set_checkbox_checked(token_id)
+            self.controller.move_token(token_id, x, y)
+            self.status_label.setText(f"Token spostato: {token_id} -> ({x:.1f}, {y:.1f})")
+            self._refresh_scene_preserve_checkbox_selection()
+        except Exception as exc:
+            self.status_label.setText(f"Errore move token: {exc}")
+
     def _refresh_list(self) -> None:
         selected_ids = self._checked_token_ids_from_ui()
         entries = self.controller.token_status_entries(selected_ids)
 
         self.token_list.clear()
+        self.token_list.blockSignals(True)
         for entry in entries:
             item = QListWidgetItem(f"{entry['name']} | {entry['status']}")
             item.setData(Qt.ItemDataRole.UserRole, str(entry["token_id"]))
             item.setFlags(item.flags() | Qt.ItemFlag.ItemIsUserCheckable)
 
-            if entry["in_session"]:
-                is_checked = True
-            else:
-                is_checked = entry["token_id"] in selected_ids
+            is_checked = entry["token_id"] in selected_ids
 
             item.setCheckState(Qt.CheckState.Checked if is_checked else Qt.CheckState.Unchecked)
             self.token_list.addItem(item)
+        self.token_list.blockSignals(False)
 
-        self._refresh_scene()
+        self._refresh_scene_preserve_checkbox_selection()
 
     def _refresh_scene(self) -> None:
         self.table_scene.load_from_session(self.controller.scene_entries())
+
+    def _refresh_scene_preserve_checkbox_selection(self) -> None:
+        self._is_refreshing_scene = True
+        self._refresh_scene()
+        self._is_refreshing_scene = False
+        self._sync_scene_selection_from_checkboxes()
 
     def _checked_token_ids_from_ui(self) -> set:
         selected = set()
@@ -398,6 +428,51 @@ class MainWindow(QMainWindow):
         if not file_path:
             return None
         return file_path
+
+    def _set_checkbox_checked(self, token_id: str) -> bool:
+        for index in range(self.token_list.count()):
+            item = self.token_list.item(index)
+            row_token_id = item.data(Qt.ItemDataRole.UserRole)
+            if row_token_id == token_id:
+                if item.checkState() != Qt.CheckState.Checked:
+                    item.setCheckState(Qt.CheckState.Checked)
+                    self._sync_scene_selection_from_checkboxes()
+                    return True
+                return False
+        return False
+
+    def _set_checkbox_exclusive(self, token_id: str) -> bool:
+        changed = False
+        for index in range(self.token_list.count()):
+            item = self.token_list.item(index)
+            row_token_id = item.data(Qt.ItemDataRole.UserRole)
+            should_check = row_token_id == token_id
+            desired = Qt.CheckState.Checked if should_check else Qt.CheckState.Unchecked
+            if item.checkState() != desired:
+                item.setCheckState(desired)
+                changed = True
+        self._sync_scene_selection_from_checkboxes()
+        return changed
+
+    def _on_token_list_item_changed(self, item: QListWidgetItem) -> None:
+        del item
+        self._sync_scene_selection_from_checkboxes()
+
+    def _set_checkboxes_from_token_ids(self, selected_token_ids: set[str]) -> None:
+        self.token_list.blockSignals(True)
+        for index in range(self.token_list.count()):
+            item = self.token_list.item(index)
+            row_token_id = item.data(Qt.ItemDataRole.UserRole)
+            should_check = row_token_id in selected_token_ids
+            item.setCheckState(Qt.CheckState.Checked if should_check else Qt.CheckState.Unchecked)
+        self.token_list.blockSignals(False)
+
+    def _sync_scene_selection_from_checkboxes(self) -> None:
+        selected = {
+            str(token_id)
+            for token_id in self._checked_token_ids_from_ui()
+        }
+        self.table_scene.set_selected_token_ids(selected)
 
 
 def main(base_dir: str | Path = ".runtime/gui") -> int:

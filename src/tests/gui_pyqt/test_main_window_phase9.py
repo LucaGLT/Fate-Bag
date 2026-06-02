@@ -530,3 +530,62 @@ def test_select_and_deselect_all_buttons(window):
 
     assert all_checked
     assert all_unchecked
+
+
+def test_checkbox_selection_updates_scene_highlight(window):
+    window._on_load_tokens()
+
+    for index in range(window.token_list.count()):
+        window.token_list.item(index).setCheckState(Qt.CheckState.Unchecked)
+
+    # Create session with first three tokens so they exist on the table scene.
+    window.token_list.item(0).setCheckState(Qt.CheckState.Checked)
+    window.token_list.item(1).setCheckState(Qt.CheckState.Checked)
+    window.token_list.item(2).setCheckState(Qt.CheckState.Checked)
+    window._on_create_session_from_selection()
+
+    token_id_0 = window.token_list.item(0).data(Qt.ItemDataRole.UserRole)
+    token_id_1 = window.token_list.item(1).data(Qt.ItemDataRole.UserRole)
+
+    scene_items = window.table_scene.token_items()
+    item0 = scene_items[token_id_0]
+    item1 = scene_items[token_id_1]
+
+    # Uncheck all, then select one and verify only that one is highlighted.
+    for index in range(window.token_list.count()):
+        window.token_list.item(index).setCheckState(Qt.CheckState.Unchecked)
+
+    row0 = None
+    row1 = None
+    for i in range(window.token_list.count()):
+        row = window.token_list.item(i)
+        if row.data(Qt.ItemDataRole.UserRole) == token_id_0:
+            row0 = row
+        if row.data(Qt.ItemDataRole.UserRole) == token_id_1:
+            row1 = row
+
+    assert row0 is not None
+    assert row1 is not None
+
+    row0.setCheckState(Qt.CheckState.Checked)
+
+    _debug_case(
+        "Checkbox selection controls scene highlight",
+        {"checked_token": token_id_0},
+        {"item0_selected": True, "item1_selected": False},
+        {"item0_selected": item0.isSelected(), "item1_selected": item1.isSelected()},
+    )
+
+    assert item0.isSelected() is True
+    assert item1.isSelected() is False
+
+    row0.setCheckState(Qt.CheckState.Unchecked)
+
+    _debug_case(
+        "Uncheck removes scene highlight",
+        {"unchecked_token": token_id_0},
+        {"item0_selected": False},
+        {"item0_selected": item0.isSelected()},
+    )
+
+    assert item0.isSelected() is False

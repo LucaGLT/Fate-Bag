@@ -1,6 +1,7 @@
 from pathlib import Path
 
 import pytest
+from PyQt6.QtCore import Qt
 from PyQt6.QtGui import QColor, QImage
 from PyQt6.QtWidgets import QApplication, QListWidgetItem
 
@@ -98,6 +99,111 @@ def test_release1_scene_click_flip_updates_state(window):
     assert any("FACE_UP" in row_text for row_text in matching_rows)
 
 
+def test_release1_scene_single_click_selects_checkbox(window):
+    window._on_load_tokens()
+    window._on_create_session()
+
+    target_token_id = next(iter(window.table_scene.token_items().keys()))
+
+    target_row = None
+    for i in range(window.token_list.count()):
+        row = window.token_list.item(i)
+        if row.data(0x0100) == target_token_id:
+            target_row = row
+        row.setCheckState(Qt.CheckState.Unchecked)
+
+    assert target_row is not None
+
+    window._on_scene_token_selected(target_token_id)
+
+    print("\n[GIVEN] token in lista deselezionato manualmente")
+    print("[EXPECTED] click singolo su token scena selezione esclusiva checkbox")
+    assert target_row.checkState() == Qt.CheckState.Checked
+    checked_count = sum(
+        1
+        for i in range(window.token_list.count())
+        if window.token_list.item(i).checkState() == Qt.CheckState.Checked
+    )
+    assert checked_count == 1
+
+
+def test_release1_scene_double_click_selects_and_flips(window):
+    window._on_load_tokens()
+    window._on_create_session()
+
+    target_token_id = next(iter(window.table_scene.token_items().keys()))
+
+    target_row = None
+    for i in range(window.token_list.count()):
+        row = window.token_list.item(i)
+        if row.data(0x0100) == target_token_id:
+            target_row = row
+        row.setCheckState(Qt.CheckState.Unchecked)
+
+    assert target_row is not None
+    window._on_scene_token_selected(target_token_id)
+    window._on_scene_token_flip(target_token_id)
+
+    refreshed_row = None
+    for i in range(window.token_list.count()):
+        row = window.token_list.item(i)
+        if row.data(0x0100) == target_token_id:
+            refreshed_row = row
+            break
+
+    assert refreshed_row is not None
+
+    print("\n[GIVEN] doppio click simulato con select + flip")
+    print("[EXPECTED] checkbox selezionata e stato token FACE_UP")
+    assert refreshed_row.checkState() == Qt.CheckState.Checked
+    assert "FACE_UP" in refreshed_row.text()
+    checked_count = sum(
+        1
+        for i in range(window.token_list.count())
+        if window.token_list.item(i).checkState() == Qt.CheckState.Checked
+    )
+    assert checked_count == 1
+
+
+def test_release1_scene_drag_drop_moves_token_and_selects_checkbox(window):
+    window._on_load_tokens()
+    window._on_create_session()
+
+    entries_before = {
+        str(token.id): (table_token.x, table_token.y)
+        for token, table_token in window.controller.scene_entries()
+    }
+
+    target_token_id = next(iter(entries_before.keys()))
+
+    target_row = None
+    for i in range(window.token_list.count()):
+        row = window.token_list.item(i)
+        if row.data(0x0100) == target_token_id:
+            target_row = row
+        row.setCheckState(Qt.CheckState.Unchecked)
+
+    assert target_row is not None
+    window._on_scene_token_dragged(target_token_id, 12.5, 33.3)
+
+    entries_after = {
+        str(token.id): (table_token.x, table_token.y)
+        for token, table_token in window.controller.scene_entries()
+    }
+
+    print("\n[GIVEN] drag&drop token su nuova posizione core")
+    print("[EXPECTED] checkbox selezionata e coordinate token aggiornate")
+    assert target_row.checkState() == Qt.CheckState.Checked
+    checked_count = sum(
+        1
+        for i in range(window.token_list.count())
+        if window.token_list.item(i).checkState() == Qt.CheckState.Checked
+    )
+    assert checked_count == 1
+    assert entries_before[target_token_id] != entries_after[target_token_id]
+    assert entries_after[target_token_id] == (12.5, 33.3)
+
+
 def test_release1_shuffle_moves_tokens_in_scene(window):
     window._on_load_tokens()
     window._on_create_session()
@@ -122,6 +228,50 @@ def test_release1_shuffle_moves_tokens_in_scene(window):
 
     assert moved_count > 0
     assert sorted(before_map.values()) == sorted(after_map.values())
+
+
+def test_release1_sort_places_face_up_above_face_down(window):
+    window._on_load_tokens()
+    window._on_select_all_tokens()
+    window._on_create_session_from_selection()
+
+    window.draw_n_spin.setValue(3)
+    window._on_draw_n()
+    window._on_sort()
+
+    entries = window.controller.scene_entries()
+    face_up_y = [table_token.y for _, table_token in entries if table_token.state == TokenState.FACE_UP]
+    face_down_y = [table_token.y for _, table_token in entries if table_token.state == TokenState.FACE_DOWN]
+
+    print("\n[GIVEN] sort eseguito dopo alcuni draw")
+    print("[EXPECTED] token FACE_UP in media più in alto dei FACE_DOWN")
+    assert face_up_y
+    assert face_down_y
+    assert max(face_up_y) <= min(face_down_y)
+
+
+def test_release1_scene_multi_selection_updates_checkbox_list(window):
+    window._on_load_tokens()
+    window._on_create_session()
+
+    for i in range(window.token_list.count()):
+        window.token_list.item(i).setCheckState(Qt.CheckState.Unchecked)
+
+    scene_ids = list(window.table_scene.token_items().keys())
+    assert len(scene_ids) >= 2
+    selected_ids = {scene_ids[0], scene_ids[1]}
+
+    window.table_scene.set_selected_token_ids(selected_ids)
+
+    checked_ids = {
+        window.token_list.item(i).data(0x0100)
+        for i in range(window.token_list.count())
+        if window.token_list.item(i).checkState() == Qt.CheckState.Checked
+    }
+
+    print("\n[GIVEN] selezione multipla in scena simulata (come Ctrl+click)")
+    print("[EXPECTED] checkbox lista allineate con stessi token selezionati")
+    assert checked_ids == selected_ids
 
 
 def test_release1_graphics_item_supports_shapes_and_front_back(tmp_path):
