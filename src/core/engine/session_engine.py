@@ -1,4 +1,5 @@
 import random
+import math
 from uuid import UUID
 
 from src.core.models.enums import TokenState
@@ -63,9 +64,17 @@ class SessionEngine:
             rng = random.Random(seed)
             selected_tokens = rng.sample(selected_tokens, random_subset_size)
 
+        positions = self._generate_grid_positions(len(selected_tokens))
         table_tokens = [
-            TableToken(token_id=token.id, state=TokenState.FACE_DOWN, x=0.0, y=0.0)
-            for token in selected_tokens
+            TableToken(
+                token_id=token.id,
+                state=TokenState.FACE_DOWN,
+                x=positions[index][0],
+                y=positions[index][1],
+                z=0.0,
+                rotation=0.0,
+            )
+            for index, token in enumerate(selected_tokens)
         ]
 
         return Session(seed=seed, table_tokens=table_tokens)
@@ -91,3 +100,33 @@ class SessionEngine:
         if token is None:
             raise ValueError(f"Unknown token ID: {token_id}")
         return token
+
+    @staticmethod
+    def _generate_grid_positions(count: int) -> list[tuple[float, float]]:
+        if count <= 0:
+            return []
+
+        cols = max(1, math.ceil(math.sqrt(count)))
+        rows = max(1, math.ceil(count / cols))
+
+        x_min, x_max = 10.0, 90.0
+        y_min, y_max = 10.0, 90.0
+
+        if cols == 1:
+            x_values = [50.0]
+        else:
+            x_values = [x_min + i * ((x_max - x_min) / (cols - 1)) for i in range(cols)]
+
+        if rows == 1:
+            y_values = [50.0]
+        else:
+            y_values = [y_min + i * ((y_max - y_min) / (rows - 1)) for i in range(rows)]
+
+        positions: list[tuple[float, float]] = []
+        for row in range(rows):
+            for col in range(cols):
+                positions.append((round(x_values[col], 3), round(y_values[row], 3)))
+                if len(positions) == count:
+                    return positions
+
+        return positions

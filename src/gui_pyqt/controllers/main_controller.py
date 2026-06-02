@@ -6,8 +6,9 @@ from src.core.engine.draw_engine import DrawEngine
 from src.core.engine.session_engine import SessionEngine
 from src.core.engine.shuffle_engine import ShuffleEngine
 from src.core.events.event_bus import EventBus
-from src.core.models.enums import TokenFrontType, TokenShape
+from src.core.models.enums import TokenState
 from src.core.models.session import Session
+from src.core.models.table_token import TableToken
 from src.core.models.token import Token
 from src.core.services.draw_service import DrawService
 from src.core.services.session_service import SessionService
@@ -34,6 +35,7 @@ class MainController:
 
         self._token_service = TokenService(self._token_repo, self._event_bus)
         self._tokens: list[Token] = []
+        self._tokens_by_id: dict[UUID, Token] = {}
         self._token_name_by_id: dict[UUID, str] = {}
 
         self._session_service: SessionService | None = None
@@ -57,6 +59,7 @@ class MainController:
         tokens = self._token_service.list_tokens()
 
         self._tokens = tokens
+        self._tokens_by_id = {token.id: token for token in tokens}
         self._token_name_by_id = {token.id: token.name for token in tokens}
 
         session_engine = SessionEngine(tokens)
@@ -164,6 +167,35 @@ class MainController:
             )
 
         return entries
+
+    def scene_entries(self) -> list[tuple[Token, TableToken]]:
+        if self.current_session is None:
+            return []
+
+        entries: list[tuple[Token, TableToken]] = []
+        for table_token in self.current_session.table_tokens:
+            token = self._tokens_by_id.get(table_token.token_id)
+            if token is not None:
+                entries.append((token, table_token))
+        return entries
+
+    def flip_token(self, token_id: str | UUID) -> str:
+        self._ensure_session_ready()
+        parsed_id = token_id if isinstance(token_id, UUID) else UUID(str(token_id))
+
+        table_token = next(
+            (item for item in self.current_session.table_tokens if item.token_id == parsed_id),
+            None,
+        )
+        if table_token is None:
+            raise ValueError(f"Token non trovato in sessione: {parsed_id}")
+
+        if table_token.state == TokenState.FACE_DOWN:
+            self._draw_service.reveal_tokens(self.current_session, [str(parsed_id)])
+        elif table_token.state == TokenState.FACE_UP:
+            self._draw_service.hide_tokens(self.current_session, [str(parsed_id)])
+
+        return table_token.state.value
 
     def _ensure_runtime_assets(self) -> None:
         assets_dir = self._base_dir / "assets"

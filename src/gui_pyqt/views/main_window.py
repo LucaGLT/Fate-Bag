@@ -2,6 +2,7 @@ from pathlib import Path
 
 from PyQt6.QtWidgets import (
     QApplication,
+    QGraphicsView,
     QHBoxLayout,
     QLabel,
     QListWidget,
@@ -13,8 +14,10 @@ from PyQt6.QtWidgets import (
     QWidget,
 )
 from PyQt6.QtCore import Qt
+from PyQt6.QtGui import QPainter
 
 from src.gui_pyqt.controllers.main_controller import MainController
+from src.gui_pyqt.scene.token_table_scene import TokenTableScene
 
 
 class MainWindow(QMainWindow):
@@ -85,9 +88,20 @@ class MainWindow(QMainWindow):
         self.status_label.setObjectName("status_label")
         layout.addWidget(self.status_label)
 
+        content_row = QHBoxLayout()
+
         self.token_list = QListWidget()
         self.token_list.setObjectName("token_list")
-        layout.addWidget(self.token_list)
+        content_row.addWidget(self.token_list, 1)
+
+        self.table_scene = TokenTableScene()
+        self.table_view = QGraphicsView(self.table_scene)
+        self.table_view.setObjectName("table_view")
+        self.table_view.setRenderHint(QPainter.RenderHint.Antialiasing, True)
+        self.table_view.setRenderHint(QPainter.RenderHint.SmoothPixmapTransform, True)
+        content_row.addWidget(self.table_view, 2)
+
+        layout.addLayout(content_row)
 
     def _connect_signals(self) -> None:
         self.load_tokens_btn.clicked.connect(self._on_load_tokens)
@@ -99,6 +113,7 @@ class MainWindow(QMainWindow):
         self.reveal_all_btn.clicked.connect(self._on_reveal_all)
         self.hide_all_btn.clicked.connect(self._on_hide_all)
         self.reset_btn.clicked.connect(self._on_reset)
+        self.table_scene.token_flip_requested.connect(self._on_scene_token_flip)
 
     def _on_load_tokens(self) -> None:
         try:
@@ -173,6 +188,14 @@ class MainWindow(QMainWindow):
         except Exception as exc:
             self.status_label.setText(f"Errore reset: {exc}")
 
+    def _on_scene_token_flip(self, token_id: str) -> None:
+        try:
+            new_state = self.controller.flip_token(token_id)
+            self.status_label.setText(f"Flip token: {token_id} -> {new_state}")
+            self._refresh_list()
+        except Exception as exc:
+            self.status_label.setText(f"Errore flip: {exc}")
+
     def _refresh_list(self) -> None:
         selected_ids = self._checked_token_ids_from_ui()
         entries = self.controller.token_status_entries(selected_ids)
@@ -190,6 +213,11 @@ class MainWindow(QMainWindow):
 
             item.setCheckState(Qt.CheckState.Checked if is_checked else Qt.CheckState.Unchecked)
             self.token_list.addItem(item)
+
+        self._refresh_scene()
+
+    def _refresh_scene(self) -> None:
+        self.table_scene.load_from_session(self.controller.scene_entries())
 
     def _checked_token_ids_from_ui(self) -> set:
         selected = set()
