@@ -5,6 +5,7 @@ import pytest
 from PyQt6.QtCore import Qt
 from PyQt6.QtWidgets import QApplication
 
+from src.core.models.enums import TokenFrontType
 from src.gui_pyqt.controllers.main_controller import MainController
 from src.gui_pyqt.views.main_window import MainWindow
 
@@ -43,6 +44,8 @@ def test_main_window_has_required_controls(window):
         "draw_n_btn": window.draw_n_btn.text(),
         "shuffle_btn": window.shuffle_btn.text(),
         "sort_btn": window.sort_btn.text(),
+        "front_img_upload_btn": window.front_img_upload_btn.text(),
+        "back_img_upload_btn": window.back_img_upload_btn.text(),
         "reveal_all_btn": window.reveal_all_btn.text(),
         "hide_all_btn": window.hide_all_btn.text(),
         "reset_btn": window.reset_btn.text(),
@@ -60,6 +63,8 @@ def test_main_window_has_required_controls(window):
                 "Draw N",
                 "Shuffle",
                 "Sort",
+                "Front-Img Upload",
+                "Back-Img Upload",
                 "Reveal all",
                 "Hide all",
                 "Reset",
@@ -75,6 +80,8 @@ def test_main_window_has_required_controls(window):
     assert controls["draw_n_btn"] == "Draw N"
     assert controls["shuffle_btn"] == "Shuffle"
     assert controls["sort_btn"] == "Sort"
+    assert controls["front_img_upload_btn"] == "Front-Img Upload"
+    assert controls["back_img_upload_btn"] == "Back-Img Upload"
     assert controls["reveal_all_btn"] == "Reveal all"
     assert controls["hide_all_btn"] == "Hide all"
     assert controls["reset_btn"] == "Reset"
@@ -230,3 +237,78 @@ def test_sort_places_face_up_before_face_down(window):
     assert first_face_up_index is not None
     assert first_face_down_index is not None
     assert first_face_up_index < first_face_down_index
+
+
+def test_upload_front_and_back_images_to_selected_tokens(window, tmp_path):
+    window._on_load_tokens()
+
+    for index in range(window.token_list.count()):
+        window.token_list.item(index).setCheckState(Qt.CheckState.Unchecked)
+
+    window.token_list.item(0).setCheckState(Qt.CheckState.Checked)
+    window.token_list.item(1).setCheckState(Qt.CheckState.Checked)
+
+    selected_ids = []
+    for index in [0, 1]:
+        token_id = window.token_list.item(index).data(Qt.ItemDataRole.UserRole)
+        from uuid import UUID
+
+        selected_ids.append(UUID(token_id))
+
+    not_selected_id = None
+    if window.token_list.count() >= 3:
+        from uuid import UUID
+
+        not_selected_id = UUID(window.token_list.item(2).data(Qt.ItemDataRole.UserRole))
+
+    front_path = tmp_path / "front_upload.png"
+    back_path = tmp_path / "back_upload.png"
+    front_path.write_bytes(b"front-image")
+    back_path.write_bytes(b"back-image")
+
+    window._on_front_img_upload(str(front_path))
+    after_front_status = window.status_label.text()
+
+    window._on_back_img_upload(str(back_path))
+    after_back_status = window.status_label.text()
+
+    selected_tokens = [window.controller._tokens_by_id[token_id] for token_id in selected_ids]
+
+    _debug_case(
+        "Front/Back image upload applies to selected tokens",
+        {
+            "selected_count": 2,
+            "front_path": str(front_path),
+            "back_path": str(back_path),
+        },
+        {
+            "front_status_starts_with": "Front image applicata",
+            "back_status_starts_with": "Back image applicata",
+            "selected_front_type": "IMAGE",
+            "selected_front_value": str(front_path),
+            "selected_back_value": str(back_path),
+        },
+        {
+            "after_front_status": after_front_status,
+            "after_back_status": after_back_status,
+            "selected_tokens": [
+                {
+                    "name": token.name,
+                    "front_type": token.front_type.value,
+                    "front_value": token.front_value,
+                    "back_value": token.back_value,
+                }
+                for token in selected_tokens
+            ],
+        },
+    )
+
+    assert after_front_status.startswith("Front image applicata")
+    assert after_back_status.startswith("Back image applicata")
+    assert all(token.front_type == TokenFrontType.IMAGE for token in selected_tokens)
+    assert all(token.front_value == str(front_path) for token in selected_tokens)
+    assert all(token.back_value == str(back_path) for token in selected_tokens)
+
+    if not_selected_id is not None:
+        not_selected = window.controller._tokens_by_id[not_selected_id]
+        assert not_selected.front_value != str(front_path)

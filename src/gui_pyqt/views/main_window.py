@@ -2,6 +2,7 @@ from pathlib import Path
 
 from PyQt6.QtWidgets import (
     QApplication,
+    QFileDialog,
     QGraphicsView,
     QHBoxLayout,
     QLabel,
@@ -74,6 +75,14 @@ class MainWindow(QMainWindow):
         self.sort_btn.setObjectName("sort_btn")
         button_row.addWidget(self.sort_btn)
 
+        self.front_img_upload_btn = QPushButton("Front-Img Upload")
+        self.front_img_upload_btn.setObjectName("front_img_upload_btn")
+        button_row.addWidget(self.front_img_upload_btn)
+
+        self.back_img_upload_btn = QPushButton("Back-Img Upload")
+        self.back_img_upload_btn.setObjectName("back_img_upload_btn")
+        button_row.addWidget(self.back_img_upload_btn)
+
         self.reveal_all_btn = QPushButton("Reveal all")
         self.reveal_all_btn.setObjectName("reveal_all_btn")
         button_row.addWidget(self.reveal_all_btn)
@@ -115,6 +124,8 @@ class MainWindow(QMainWindow):
         self.draw_n_btn.clicked.connect(self._on_draw_n)
         self.shuffle_btn.clicked.connect(self._on_shuffle)
         self.sort_btn.clicked.connect(self._on_sort)
+        self.front_img_upload_btn.clicked.connect(self._on_front_img_upload)
+        self.back_img_upload_btn.clicked.connect(self._on_back_img_upload)
         self.reveal_all_btn.clicked.connect(self._on_reveal_all)
         self.hide_all_btn.clicked.connect(self._on_hide_all)
         self.reset_btn.clicked.connect(self._on_reset)
@@ -176,6 +187,34 @@ class MainWindow(QMainWindow):
             self._refresh_list()
         except Exception as exc:
             self.status_label.setText(f"Errore sort: {exc}")
+
+    def _on_front_img_upload(self, image_path: str | None = None) -> None:
+        try:
+            selected_ids = list(self._checked_token_ids_from_ui())
+            path = image_path or self._pick_image_file("Seleziona immagine front")
+            if not path:
+                self.status_label.setText("Upload front annullato")
+                return
+
+            updated_count = self.controller.apply_front_image_to_tokens(selected_ids, path)
+            self.status_label.setText(f"Front image applicata a {updated_count} token")
+            self._refresh_list()
+        except Exception as exc:
+            self.status_label.setText(f"Errore front upload: {exc}")
+
+    def _on_back_img_upload(self, image_path: str | None = None) -> None:
+        try:
+            selected_ids = list(self._checked_token_ids_from_ui())
+            path = image_path or self._pick_image_file("Seleziona immagine back")
+            if not path:
+                self.status_label.setText("Upload back annullato")
+                return
+
+            updated_count = self.controller.apply_back_image_to_tokens(selected_ids, path)
+            self.status_label.setText(f"Back image applicata a {updated_count} token")
+            self._refresh_list()
+        except Exception as exc:
+            self.status_label.setText(f"Errore back upload: {exc}")
 
     def _on_reveal_all(self) -> None:
         try:
@@ -243,6 +282,17 @@ class MainWindow(QMainWindow):
 
                     selected.add(UUID(token_id))
         return selected
+
+    def _pick_image_file(self, title: str) -> str | None:
+        file_path, _ = QFileDialog.getOpenFileName(
+            self,
+            title,
+            "",
+            "Images (*.png *.jpg *.jpeg *.bmp *.gif *.webp);;All files (*.*)",
+        )
+        if not file_path:
+            return None
+        return file_path
 
 
 def main(base_dir: str | Path = ".runtime/gui") -> int:

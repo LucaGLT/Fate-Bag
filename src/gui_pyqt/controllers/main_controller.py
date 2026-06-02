@@ -6,7 +6,7 @@ from src.core.engine.draw_engine import DrawEngine
 from src.core.engine.session_engine import SessionEngine
 from src.core.engine.shuffle_engine import ShuffleEngine
 from src.core.events.event_bus import EventBus
-from src.core.models.enums import TokenState
+from src.core.models.enums import TokenFrontType, TokenState
 from src.core.models.session import Session
 from src.core.models.table_token import TableToken
 from src.core.models.token import Token
@@ -60,6 +60,10 @@ class MainController:
 
                 desired_payload = bootstrap_token.model_dump(mode="json")
                 desired_payload["id"] = str(existing_token.id)
+                # Keep user-uploaded media assets when reloading bootstrap defaults.
+                desired_payload["front_type"] = existing_token.front_type.value
+                desired_payload["front_value"] = existing_token.front_value
+                desired_payload["back_value"] = existing_token.back_value
                 desired_token = Token.model_validate(desired_payload)
 
                 if existing_token.model_dump(mode="json") != desired_token.model_dump(mode="json"):
@@ -245,6 +249,47 @@ class MainController:
 
         return table_token.state.value
 
+    def apply_front_image_to_tokens(self, token_ids: list[UUID], image_path: str | Path) -> int:
+        selected_ids = self._normalize_selected_token_ids(token_ids)
+        image_file = self._validate_image_file(image_path)
+
+        updated_count = 0
+        for token_id in selected_ids:
+            token = self._tokens_by_id.get(token_id)
+            if token is None:
+                raise ValueError(f"Token non trovato: {token_id}")
+
+            payload = token.model_dump(mode="json")
+            payload["front_type"] = TokenFrontType.IMAGE.value
+            payload["front_value"] = str(image_file)
+
+            updated = Token.model_validate(payload)
+            self._token_service.update_token(updated)
+            self._update_token_cache(updated)
+            updated_count += 1
+
+        return updated_count
+
+    def apply_back_image_to_tokens(self, token_ids: list[UUID], image_path: str | Path) -> int:
+        selected_ids = self._normalize_selected_token_ids(token_ids)
+        image_file = self._validate_image_file(image_path)
+
+        updated_count = 0
+        for token_id in selected_ids:
+            token = self._tokens_by_id.get(token_id)
+            if token is None:
+                raise ValueError(f"Token non trovato: {token_id}")
+
+            payload = token.model_dump(mode="json")
+            payload["back_value"] = str(image_file)
+
+            updated = Token.model_validate(payload)
+            self._token_service.update_token(updated)
+            self._update_token_cache(updated)
+            updated_count += 1
+
+        return updated_count
+
     def _ensure_runtime_assets(self) -> None:
         assets_dir = self._base_dir / "assets"
         assets_dir.mkdir(parents=True, exist_ok=True)
@@ -281,6 +326,32 @@ class MainController:
     def _ensure_services_ready(self) -> None:
         if self._session_service is None or self._draw_service is None:
             raise ValueError("Load tokens before creating a session")
+
+    def _ensure_tokens_ready(self) -> None:
+        if not self._tokens:
+            raise ValueError("Load tokens before uploading images")
+
+    def _normalize_selected_token_ids(self, token_ids: list[UUID]) -> list[UUID]:
+        self._ensure_tokens_ready()
+        if not token_ids:
+            raise ValueError("Seleziona almeno un token")
+        return token_ids
+
+    @staticmethod
+    def _validate_image_file(image_path: str | Path) -> Path:
+        path = Path(image_path)
+        if not path.is_file():
+            raise ValueError(f"File immagine non trovato: {path}")
+        return path
+
+    def _update_token_cache(self, updated: Token) -> None:
+        self._tokens_by_id[updated.id] = updated
+        self._token_name_by_id[updated.id] = updated.name
+
+        for index, token in enumerate(self._tokens):
+            if token.id == updated.id:
+                self._tokens[index] = updated
+                break
 
     def _ensure_session_ready(self) -> None:
         self._ensure_services_ready()
