@@ -70,6 +70,14 @@ class MainController:
         self.current_session = self._session_service.start_session(seed=seed)
         return self.current_session
 
+    def create_session_from_selection(self, token_ids: list[UUID]) -> Session:
+        if not token_ids:
+            raise ValueError("Seleziona almeno un token")
+        self._ensure_services_ready()
+        seed = 42 if self._deterministic_mode else None
+        self.current_session = self._session_service.start_session(use_token_ids=token_ids, seed=seed)
+        return self.current_session
+
     def draw_one(self) -> list[str]:
         self._ensure_session_ready()
         seed = self._next_seed() if self._deterministic_mode else None
@@ -112,14 +120,40 @@ class MainController:
         return self.current_session
 
     def table_rows(self) -> list[str]:
-        if self.current_session is None:
-            return []
+        entries = self.token_status_entries()
+        return [f"{entry['name']} | {entry['status']}" for entry in entries]
 
-        rows = []
-        for table_token in self.current_session.table_tokens:
-            token_name = self._token_name_by_id.get(table_token.token_id, str(table_token.token_id))
-            rows.append(f"{token_name} | {table_token.state.value}")
-        return rows
+    def token_status_entries(self, selected_token_ids: set[UUID] | None = None) -> list[dict]:
+        selected = selected_token_ids or set()
+        state_by_token_id = {}
+        if self.current_session is not None:
+            state_by_token_id = {
+                table_token.token_id: table_token.state.value
+                for table_token in self.current_session.table_tokens
+            }
+
+        entries = []
+        for token in self._tokens:
+            if token.id in state_by_token_id:
+                status = state_by_token_id[token.id]
+                in_session = True
+            elif self.current_session is None and token.id in selected:
+                status = "Selezionato (pronto)"
+                in_session = False
+            else:
+                status = "Deselezionato"
+                in_session = False
+
+            entries.append(
+                {
+                    "token_id": token.id,
+                    "name": token.name,
+                    "status": status,
+                    "in_session": in_session,
+                }
+            )
+
+        return entries
 
     def _ensure_runtime_assets(self) -> None:
         assets_dir = self._base_dir / "assets"

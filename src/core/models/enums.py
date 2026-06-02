@@ -15,6 +15,11 @@ class TokenState(str, Enum):
     FACE_DOWN = "FACE_DOWN"
     FACE_UP = "FACE_UP"
     EXCLUDED = "EXCLUDED"
-    SELECTED = "SELECTED"
     LOCKED = "LOCKED"
-    REMOVED = "REMOVED"
+
+'''
+FACE_DOWN : token placed in bag but not revealed.
+FACE_UP : token drawn/revealed
+EXCLUDED : token excluded from session, not inserted into Bag
+LOCKED : token temporarily locked (not editable, not drawable from the bag).
+'''

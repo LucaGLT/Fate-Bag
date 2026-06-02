@@ -71,16 +71,16 @@ class DrawEngine:
         )
 
     def reveal_tokens(self, session: Session, token_ids: list[UUID] | None = None) -> list[UUID]:
-        selected = self._target_tokens(session, token_ids)
-        for token in selected:
+        drawn_from_deck = self._target_tokens(session, token_ids)
+        for token in drawn_from_deck:
             token.state = TokenState.FACE_UP
-        return [token.token_id for token in selected]
+        return [token.token_id for token in drawn_from_deck]
 
     def hide_tokens(self, session: Session, token_ids: list[UUID] | None = None) -> list[UUID]:
-        selected = self._target_tokens(session, token_ids)
-        for token in selected:
+        put_back_in_bag = self._target_tokens(session, token_ids)
+        for token in put_back_in_bag:
             token.state = TokenState.FACE_DOWN
-        return [token.token_id for token in selected]
+        return [token.token_id for token in put_back_in_bag]
 
     def _draw_from_candidates(
         self,
@@ -119,13 +119,13 @@ class DrawEngine:
 
         table_index = {table_token.token_id: table_token for table_token in session.table_tokens}
         for token_id in set(drawn_ids):
-            table_index[token_id].state = TokenState.SELECTED
+            table_index[token_id].state = TokenState.FACE_UP
         session.draw_history.extend(drawn_ids)
 
         return drawn_ids
 
     def _eligible_token_ids(self, session: Session) -> list[UUID]:
-        eligible_states = {TokenState.FACE_DOWN, TokenState.FACE_UP}
+        eligible_states = {TokenState.FACE_DOWN}
         return [
             table_token.token_id
             for table_token in session.table_tokens

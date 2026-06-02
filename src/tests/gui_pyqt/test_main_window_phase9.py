@@ -2,6 +2,7 @@ import os
 from pathlib import Path
 
 import pytest
+from PyQt6.QtCore import Qt
 from PyQt6.QtWidgets import QApplication
 
 from src.gui_pyqt.controllers.main_controller import MainController
@@ -37,6 +38,7 @@ def test_main_window_has_required_controls(window):
     controls = {
         "load_tokens_btn": window.load_tokens_btn.text(),
         "create_session_btn": window.create_session_btn.text(),
+        "create_selected_session_btn": window.create_selected_session_btn.text(),
         "draw_one_btn": window.draw_one_btn.text(),
         "draw_n_btn": window.draw_n_btn.text(),
         "shuffle_btn": window.shuffle_btn.text(),
@@ -52,6 +54,7 @@ def test_main_window_has_required_controls(window):
             "required_controls": [
                 "Carica token",
                 "Crea sessione",
+                "Crea sessione da selezione",
                 "Draw 1",
                 "Draw N",
                 "Shuffle",
@@ -65,6 +68,7 @@ def test_main_window_has_required_controls(window):
 
     assert controls["load_tokens_btn"] == "Carica token"
     assert controls["create_session_btn"] == "Crea sessione"
+    assert controls["create_selected_session_btn"] == "Crea sessione da selezione"
     assert controls["draw_one_btn"] == "Draw 1"
     assert controls["draw_n_btn"] == "Draw N"
     assert controls["shuffle_btn"] == "Shuffle"
@@ -76,6 +80,15 @@ def test_main_window_has_required_controls(window):
 def test_gui_flow_load_create_draw_reveal_hide_reset(window):
     window._on_load_tokens()
     after_load_status = window.status_label.text()
+
+    # Select first two tokens before creating session from selection.
+    window.token_list.item(0).setCheckState(Qt.CheckState.Checked)
+    window.token_list.item(1).setCheckState(Qt.CheckState.Checked)
+    window.token_list.item(2).setCheckState(Qt.CheckState.Unchecked)
+
+    window._on_create_session_from_selection()
+    after_create_selected_status = window.status_label.text()
+    rows_after_create_selected = [window.token_list.item(i).text() for i in range(window.token_list.count())]
 
     window._on_create_session()
     after_create_status = window.status_label.text()
@@ -105,6 +118,8 @@ def test_gui_flow_load_create_draw_reveal_hide_reset(window):
         {"draw_n": 2},
         {
             "load_ok": True,
+            "create_selected_ok": True,
+            "deselected_visible": True,
             "session_created": True,
             "rows_count": 3,
             "shuffle_ok": True,
@@ -114,6 +129,8 @@ def test_gui_flow_load_create_draw_reveal_hide_reset(window):
         },
         {
             "after_load_status": after_load_status,
+            "after_create_selected_status": after_create_selected_status,
+            "rows_after_create_selected": rows_after_create_selected,
             "after_create_status": after_create_status,
             "after_draw_one_status": after_draw_one_status,
             "after_draw_n_status": after_draw_n_status,
@@ -126,6 +143,8 @@ def test_gui_flow_load_create_draw_reveal_hide_reset(window):
     )
 
     assert after_load_status.startswith("Token caricati")
+    assert after_create_selected_status.startswith("Sessione da selezione creata")
+    assert any("Deselezionato" in row for row in rows_after_create_selected)
     assert after_create_status.startswith("Sessione creata")
     assert "Draw 1" in after_draw_one_status
     assert "Draw N" in after_draw_n_status
@@ -134,6 +153,24 @@ def test_gui_flow_load_create_draw_reveal_hide_reset(window):
     assert any("FACE_UP" in row for row in rows_after_reveal)
     assert all("FACE_DOWN" in row for row in rows_after_hide)
     assert all("FACE_DOWN" in row for row in rows_after_reset)
+
+
+def test_create_session_from_selection_requires_at_least_one_token(window):
+    window._on_load_tokens()
+    for index in range(window.token_list.count()):
+        window.token_list.item(index).setCheckState(Qt.CheckState.Unchecked)
+
+    window._on_create_session_from_selection()
+    status = window.status_label.text()
+
+    _debug_case(
+        "Create session from selection validates empty selection",
+        {"selected_token_count": 0},
+        {"status_starts_with": "Errore create session da selezione"},
+        {"status": status},
+    )
+
+    assert status.startswith("Errore create session da selezione")
 
 
 def test_draw_n_handles_invalid_request(window):

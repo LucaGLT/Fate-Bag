@@ -5,12 +5,14 @@ from PyQt6.QtWidgets import (
     QHBoxLayout,
     QLabel,
     QListWidget,
+    QListWidgetItem,
     QMainWindow,
     QPushButton,
     QSpinBox,
     QVBoxLayout,
     QWidget,
 )
+from PyQt6.QtCore import Qt
 
 from src.gui_pyqt.controllers.main_controller import MainController
 
@@ -41,6 +43,10 @@ class MainWindow(QMainWindow):
         self.create_session_btn = QPushButton("Crea sessione")
         self.create_session_btn.setObjectName("create_session_btn")
         button_row.addWidget(self.create_session_btn)
+
+        self.create_selected_session_btn = QPushButton("Crea sessione da selezione")
+        self.create_selected_session_btn.setObjectName("create_selected_session_btn")
+        button_row.addWidget(self.create_selected_session_btn)
 
         self.draw_one_btn = QPushButton("Draw 1")
         self.draw_one_btn.setObjectName("draw_one_btn")
@@ -86,6 +92,7 @@ class MainWindow(QMainWindow):
     def _connect_signals(self) -> None:
         self.load_tokens_btn.clicked.connect(self._on_load_tokens)
         self.create_session_btn.clicked.connect(self._on_create_session)
+        self.create_selected_session_btn.clicked.connect(self._on_create_session_from_selection)
         self.draw_one_btn.clicked.connect(self._on_draw_one)
         self.draw_n_btn.clicked.connect(self._on_draw_n)
         self.shuffle_btn.clicked.connect(self._on_shuffle)
@@ -108,6 +115,15 @@ class MainWindow(QMainWindow):
             self._refresh_list()
         except Exception as exc:
             self.status_label.setText(f"Errore create session: {exc}")
+
+    def _on_create_session_from_selection(self) -> None:
+        try:
+            selected_ids = list(self._checked_token_ids_from_ui())
+            session = self.controller.create_session_from_selection(selected_ids)
+            self.status_label.setText(f"Sessione da selezione creata: {session.session_id}")
+            self._refresh_list()
+        except Exception as exc:
+            self.status_label.setText(f"Errore create session da selezione: {exc}")
 
     def _on_draw_one(self) -> None:
         try:
@@ -158,9 +174,34 @@ class MainWindow(QMainWindow):
             self.status_label.setText(f"Errore reset: {exc}")
 
     def _refresh_list(self) -> None:
+        selected_ids = self._checked_token_ids_from_ui()
+        entries = self.controller.token_status_entries(selected_ids)
+
         self.token_list.clear()
-        for row in self.controller.table_rows():
-            self.token_list.addItem(row)
+        for entry in entries:
+            item = QListWidgetItem(f"{entry['name']} | {entry['status']}")
+            item.setData(Qt.ItemDataRole.UserRole, str(entry["token_id"]))
+            item.setFlags(item.flags() | Qt.ItemFlag.ItemIsUserCheckable)
+
+            if entry["in_session"]:
+                is_checked = True
+            else:
+                is_checked = entry["token_id"] in selected_ids
+
+            item.setCheckState(Qt.CheckState.Checked if is_checked else Qt.CheckState.Unchecked)
+            self.token_list.addItem(item)
+
+    def _checked_token_ids_from_ui(self) -> set:
+        selected = set()
+        for index in range(self.token_list.count()):
+            item = self.token_list.item(index)
+            if item.checkState() == Qt.CheckState.Checked:
+                token_id = item.data(Qt.ItemDataRole.UserRole)
+                if token_id:
+                    from uuid import UUID
+
+                    selected.add(UUID(token_id))
+        return selected
 
 
 def main(base_dir: str | Path = ".runtime/gui") -> int:
