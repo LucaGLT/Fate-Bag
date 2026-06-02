@@ -217,13 +217,17 @@ class TokenGraphicsItem(QGraphicsObject):
             painter.setPen(QPen(QColor("#1f2a36"), 1))
 
         painter.setFont(QFont("Segoe UI", 8, QFont.Weight.DemiBold))
-        painter.drawText(self._bounds.adjusted(6, 6, -6, -6), Qt.AlignmentFlag.AlignCenter, front_label)
+        painter.drawText(
+            self._bounds.adjusted(6, 6, -6, -6),
+            Qt.AlignmentFlag.AlignCenter | Qt.TextFlag.TextWordWrap,
+            front_label,
+        )
 
     def _front_label_text(self) -> str:
         if self.token.front_type == TokenFrontType.TEXT:
-            return self.token.front_value
+            return self.token.front_value.replace("|", "\n")
         if self.token.front_type == TokenFrontType.TEXT_IMAGE:
-            return str(self.token.metadata.get("front_text", "")).strip()
+            return str(self.token.metadata.get("front_text", "")).strip().replace("|", "\n")
         return ""
 
     @property

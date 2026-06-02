@@ -1,7 +1,7 @@
 from pathlib import Path
 
 from PyQt6.QtCore import Qt
-from PyQt6.QtGui import QPainter
+from PyQt6.QtGui import QColor, QIcon, QPainter, QPen, QPixmap
 from PyQt6.QtWidgets import (
     QApplication,
     QComboBox,
@@ -18,6 +18,7 @@ from PyQt6.QtWidgets import (
     QListWidgetItem,
     QMainWindow,
     QPushButton,
+    QStyle,
     QSpinBox,
     QSplitter,
     QSplitterHandle,
@@ -123,64 +124,98 @@ class MainWindow(QMainWindow):
         self.create_selected_session_btn.setObjectName("create_selected_session_btn")
         self.controls_grid.addWidget(self.create_selected_session_btn, 1, 0)
 
-        self.select_all_btn = QPushButton("Seleziona Tutto")
+        self.new_token_btn = QPushButton("+")
+        self.new_token_btn.setObjectName("new_token_btn")
+        self.new_token_btn.setToolTip("New Token (1)")
+        self.new_token_btn.setText("")
+        self.new_token_btn.setIcon(self._icon_plus())
+        self.controls_grid.addWidget(self.new_token_btn, 0, 8)
+
+        self.delete_token_btn = QPushButton("X")
+        self.delete_token_btn.setObjectName("delete_token_btn")
+        self.delete_token_btn.setToolTip("Delete Token selezionati")
+        self.delete_token_btn.setText("")
+        self.delete_token_btn.setIcon(self._icon_red_x())
+        self.controls_grid.addWidget(self.delete_token_btn, 1, 8)
+
+        self.select_all_btn = QPushButton("")
         self.select_all_btn.setObjectName("select_all_btn")
+        self.select_all_btn.setToolTip("Seleziona Tutto")
+        self.select_all_btn.setIcon(
+            self.style().standardIcon(QStyle.StandardPixmap.SP_DialogApplyButton)
+        )
         self.controls_grid.addWidget(self.select_all_btn, 0, 1)
 
-        self.deselect_all_btn = QPushButton("Deseleziona Tutto")
+        self.deselect_all_btn = QPushButton("")
         self.deselect_all_btn.setObjectName("deselect_all_btn")
+        self.deselect_all_btn.setToolTip("Deseleziona Tutto")
+        self.deselect_all_btn.setIcon(self._icon_empty_checkbox())
         self.controls_grid.addWidget(self.deselect_all_btn, 1, 1)
+
+        self.new_token_btn = QPushButton("+")
+        self.new_token_btn.setObjectName("new_token_btn")
+        self.new_token_btn.setToolTip("New Token (1)")
+        self.new_token_btn.setText("")
+        self.new_token_btn.setIcon(self._icon_plus())
+        self.controls_grid.addWidget(self.new_token_btn, 0, 2)
+
+        self.delete_token_btn = QPushButton("X")
+        self.delete_token_btn.setObjectName("delete_token_btn")
+        self.delete_token_btn.setToolTip("Delete Token selezionati")
+        self.delete_token_btn.setText("")
+        self.delete_token_btn.setIcon(self._icon_red_x())
+        self.controls_grid.addWidget(self.delete_token_btn, 1, 2)
 
         self.front_img_upload_btn = QPushButton("Front-Img Upload")
         self.front_img_upload_btn.setObjectName("front_img_upload_btn")
-        self.controls_grid.addWidget(self.front_img_upload_btn, 0, 2)
+        self.controls_grid.addWidget(self.front_img_upload_btn, 0, 3)
 
         self.front_img_delete_btn = QPushButton("Front-Img Delete")
         self.front_img_delete_btn.setObjectName("front_img_delete_btn")
-        self.controls_grid.addWidget(self.front_img_delete_btn, 1, 2)
+        self.controls_grid.addWidget(self.front_img_delete_btn, 1, 3)
 
         self.back_img_upload_btn = QPushButton("Back-Img Upload")
         self.back_img_upload_btn.setObjectName("back_img_upload_btn")
-        self.controls_grid.addWidget(self.back_img_upload_btn, 0, 3)
+        self.controls_grid.addWidget(self.back_img_upload_btn, 0, 4)
 
         self.back_img_delete_btn = QPushButton("Back-Img Delete")
         self.back_img_delete_btn.setObjectName("back_img_delete_btn")
-        self.controls_grid.addWidget(self.back_img_delete_btn, 1, 3)
+        self.controls_grid.addWidget(self.back_img_delete_btn, 1, 4)
 
         self.shuffle_btn = QPushButton("Shuffle")
         self.shuffle_btn.setObjectName("shuffle_btn")
-        self.controls_grid.addWidget(self.shuffle_btn, 0, 4)
+        self.controls_grid.addWidget(self.shuffle_btn, 0, 5)
 
         self.sort_btn = QPushButton("Sort")
         self.sort_btn.setObjectName("sort_btn")
-        self.controls_grid.addWidget(self.sort_btn, 1, 4)
+        self.controls_grid.addWidget(self.sort_btn, 1, 5)
 
         self.draw_n_spin = QSpinBox()
         self.draw_n_spin.setObjectName("draw_n_spin")
         self.draw_n_spin.setMinimum(1)
         self.draw_n_spin.setMaximum(99)
         self.draw_n_spin.setValue(2)
-        self.controls_grid.addWidget(self.draw_n_spin, 0, 5)
+        self.controls_grid.addWidget(self.draw_n_spin, 0, 6)
 
         self.draw_n_btn = QPushButton("Pesca N")
         self.draw_n_btn.setObjectName("draw_n_btn")
-        self.controls_grid.addWidget(self.draw_n_btn, 1, 5)
+        self.controls_grid.addWidget(self.draw_n_btn, 1, 6)
 
         self.draw_one_btn = QPushButton("Pesca 1")
         self.draw_one_btn.setObjectName("draw_one_btn")
-        self.controls_grid.addWidget(self.draw_one_btn, 0, 6)
+        self.controls_grid.addWidget(self.draw_one_btn, 0, 7)
 
         self.draw_all_btn = QPushButton("Pesca Tutte")
         self.draw_all_btn.setObjectName("draw_all_btn")
-        self.controls_grid.addWidget(self.draw_all_btn, 1, 6)
+        self.controls_grid.addWidget(self.draw_all_btn, 1, 7)
 
         self.reinsert_bag_btn = QPushButton("Rimetti in Bag")
         self.reinsert_bag_btn.setObjectName("reinsert_bag_btn")
-        self.controls_grid.addWidget(self.reinsert_bag_btn, 0, 7)
+        self.controls_grid.addWidget(self.reinsert_bag_btn, 0, 8)
 
         self.reset_btn = QPushButton("Svuota Bag")
         self.reset_btn.setObjectName("reset_btn")
-        self.controls_grid.addWidget(self.reset_btn, 1, 7)
+        self.controls_grid.addWidget(self.reset_btn, 1, 8)
 
         layout.addLayout(self.controls_grid)
 
@@ -214,6 +249,8 @@ class MainWindow(QMainWindow):
     def _connect_signals(self) -> None:
         self.load_tokens_btn.clicked.connect(self._on_load_tokens)
         self.create_selected_session_btn.clicked.connect(self._on_create_session_from_selection)
+        self.new_token_btn.clicked.connect(self._on_new_token)
+        self.delete_token_btn.clicked.connect(self._on_delete_selected_tokens)
         self.reinsert_bag_btn.clicked.connect(self._on_reinsert_bag)
         self.select_all_btn.clicked.connect(self._on_select_all_tokens)
         self.deselect_all_btn.clicked.connect(self._on_deselect_all_tokens)
@@ -271,6 +308,28 @@ class MainWindow(QMainWindow):
             self._insert_selected_into_bag(selected_ids, status_prefix="Inseriti in Bag")
         except Exception as exc:
             self.status_label.setText(f"Errore create session da selezione: {exc}")
+
+    def _on_new_token(self) -> None:
+        try:
+            token = self.controller.create_new_token()
+            self.status_label.setText(f"Nuovo token creato: {token.name}")
+            self._refresh_list()
+        except Exception as exc:
+            self.status_label.setText(f"Errore new token: {exc}")
+
+    def _on_delete_selected_tokens(self) -> None:
+        try:
+            selected_ids = list(self._checked_token_ids_from_ui())
+            deleted_count = self.controller.delete_tokens(selected_ids)
+            self._last_inserted_token_ids = {
+                token_id
+                for token_id in self._last_inserted_token_ids
+                if token_id not in {str(value) for value in selected_ids}
+            }
+            self.status_label.setText(f"Token eliminati: {deleted_count}")
+            self._refresh_list()
+        except Exception as exc:
+            self.status_label.setText(f"Errore delete token: {exc}")
 
     def _on_reinsert_bag(self) -> None:
         try:
@@ -684,6 +743,45 @@ class MainWindow(QMainWindow):
         }
         self.status_label.setText(f"{status_prefix}: {session.session_id}")
         self._refresh_list()
+
+    @staticmethod
+    def _icon_plus(size: int = 16) -> QIcon:
+        pixmap = QPixmap(size, size)
+        pixmap.fill(Qt.GlobalColor.transparent)
+        painter = QPainter(pixmap)
+        painter.setRenderHint(QPainter.RenderHint.Antialiasing, True)
+        pen = QPen(QColor("#2e7d32"), 2)
+        painter.setPen(pen)
+        mid = size // 2
+        painter.drawLine(mid, 3, mid, size - 3)
+        painter.drawLine(3, mid, size - 3, mid)
+        painter.end()
+        return QIcon(pixmap)
+
+    @staticmethod
+    def _icon_red_x(size: int = 16) -> QIcon:
+        pixmap = QPixmap(size, size)
+        pixmap.fill(Qt.GlobalColor.transparent)
+        painter = QPainter(pixmap)
+        painter.setRenderHint(QPainter.RenderHint.Antialiasing, True)
+        pen = QPen(QColor("#c62828"), 2)
+        painter.setPen(pen)
+        painter.drawLine(3, 3, size - 3, size - 3)
+        painter.drawLine(size - 3, 3, 3, size - 3)
+        painter.end()
+        return QIcon(pixmap)
+
+    @staticmethod
+    def _icon_empty_checkbox(size: int = 16) -> QIcon:
+        pixmap = QPixmap(size, size)
+        pixmap.fill(Qt.GlobalColor.transparent)
+        painter = QPainter(pixmap)
+        painter.setRenderHint(QPainter.RenderHint.Antialiasing, True)
+        pen = QPen(QColor("#7a7a7a"), 2)
+        painter.setPen(pen)
+        painter.drawRect(3, 3, size - 6, size - 6)
+        painter.end()
+        return QIcon(pixmap)
 
 
 def main(base_dir: str | Path = ".runtime/gui") -> int:

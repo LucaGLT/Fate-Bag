@@ -39,6 +39,8 @@ def test_main_window_has_required_controls(window):
     controls = {
         "load_tokens_btn": window.load_tokens_btn.text(),
         "create_selected_session_btn": window.create_selected_session_btn.text(),
+        "new_token_btn": window.new_token_btn.text(),
+        "delete_token_btn": window.delete_token_btn.text(),
         "reinsert_bag_btn": window.reinsert_bag_btn.text(),
         "select_all_btn": window.select_all_btn.text(),
         "deselect_all_btn": window.deselect_all_btn.text(),
@@ -61,9 +63,11 @@ def test_main_window_has_required_controls(window):
             "required_controls": [
                 "Carica Token",
                 "Inserisci in Bag",
+                "(icona add token)",
+                "(icona delete token)",
                 "Rimetti in Bag",
-                "Seleziona Tutto",
-                "Deseleziona Tutto",
+                "(icona seleziona tutto)",
+                "(icona deseleziona tutto)",
                 "Pesca 1",
                 "Pesca Tutte",
                 "Pesca N",
@@ -81,9 +85,15 @@ def test_main_window_has_required_controls(window):
 
     assert controls["load_tokens_btn"] == "Carica Token"
     assert controls["create_selected_session_btn"] == "Inserisci in Bag"
+    assert controls["new_token_btn"] == ""
+    assert controls["delete_token_btn"] == ""
+    assert window.new_token_btn.toolTip() == "New Token (1)"
+    assert window.delete_token_btn.toolTip() == "Delete Token selezionati"
     assert controls["reinsert_bag_btn"] == "Rimetti in Bag"
-    assert controls["select_all_btn"] == "Seleziona Tutto"
-    assert controls["deselect_all_btn"] == "Deseleziona Tutto"
+    assert controls["select_all_btn"] == ""
+    assert controls["deselect_all_btn"] == ""
+    assert window.select_all_btn.toolTip() == "Seleziona Tutto"
+    assert window.deselect_all_btn.toolTip() == "Deseleziona Tutto"
     assert controls["draw_one_btn"] == "Pesca 1"
     assert controls["draw_all_btn"] == "Pesca Tutte"
     assert controls["draw_n_btn"] == "Pesca N"
@@ -99,6 +109,7 @@ def test_main_window_has_required_controls(window):
 def test_gui_flow_load_create_draw_reveal_hide_reset(window):
     window._on_load_tokens()
     after_load_status = window.status_label.text()
+    loaded_count = window.token_list.count()
 
     window._on_select_all_tokens()
     after_select_all_status = window.status_label.text()
@@ -142,7 +153,7 @@ def test_gui_flow_load_create_draw_reveal_hide_reset(window):
             "select_all_ok": True,
             "create_selected_ok": True,
             "deselected_visible": True,
-            "rows_count": 20,
+            "rows_count": loaded_count,
             "shuffle_ok": True,
             "reveal_has_face_up": True,
             "hide_has_face_down": True,
@@ -172,7 +183,7 @@ def test_gui_flow_load_create_draw_reveal_hide_reset(window):
     assert "Pesca Tutte" in after_draw_all_status
     assert "Pesca N" in after_draw_n_status
     assert after_shuffle_status.startswith("Shuffle")
-    assert len(session_rows_after_create) == 20
+    assert len(session_rows_after_create) == loaded_count
     assert any("FACE_UP" in row for row in rows_after_reveal)
     assert all(("FACE_DOWN" in row) or ("Deselezionato" in row) for row in rows_after_hide)
     assert all("Deselezionato" in row for row in rows_after_reset)
@@ -672,6 +683,43 @@ def test_select_and_deselect_all_buttons(window):
 
     assert all_checked
     assert all_unchecked
+
+
+def test_new_and_delete_token_buttons(window):
+    window._on_load_tokens()
+    initial_count = window.token_list.count()
+
+    window._on_new_token()
+    after_new_count = window.token_list.count()
+
+    assert after_new_count == initial_count + 1
+    assert window.status_label.text().startswith("Nuovo token creato")
+
+    for index in range(window.token_list.count()):
+        window.token_list.item(index).setCheckState(Qt.CheckState.Unchecked)
+
+    last_index = window.token_list.count() - 1
+    window.token_list.item(last_index).setCheckState(Qt.CheckState.Checked)
+    window._on_delete_selected_tokens()
+
+    after_delete_count = window.token_list.count()
+    _debug_case(
+        "New/Delete token buttons",
+        {"initial_count": initial_count},
+        {
+            "after_new_count": initial_count + 1,
+            "after_delete_count": initial_count,
+            "status_starts_with": "Token eliminati",
+        },
+        {
+            "after_new_count": after_new_count,
+            "after_delete_count": after_delete_count,
+            "status": window.status_label.text(),
+        },
+    )
+
+    assert after_delete_count == initial_count
+    assert window.status_label.text().startswith("Token eliminati")
 
 
 def test_checkbox_selection_updates_scene_highlight(window):

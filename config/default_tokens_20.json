@@ -1,242 +1,477 @@
 [
   {
-    "name": "Blessing",
+    "id": "019758e2-e73e-45bd-950e-6dc695822d68",
+    "name": "Anomalia|Severa",
     "shape": "CIRCLE",
     "front_type": "TEXT",
-    "front_value": "Blessing",
-    "back_value": "__RUNTIME_BACK_IMAGE__",
-    "categories": ["holy"],
-    "tags": ["light"],
-    "metadata": {"source": "bootstrap"},
+    "front_value": "Anomalia|Severa",
+    "back_value": "C:\\_GLT_\\Qt Prj\\Fate-Bag\\Fate-Bag\\assets\\images\\token_backs\\Blue_Back.PNG",
+    "categories": [
+      "holy"
+    ],
+    "tags": [
+      "light"
+    ],
+    "metadata": {
+      "source": "bootstrap"
+    },
     "weight": 2.0,
     "rarity": "common"
   },
   {
-    "name": "Curse",
+    "id": "ed860145-06f5-45b9-bfc0-95aade73d1a4",
+    "name": "Anomalia_1",
     "shape": "HEXAGON",
     "front_type": "TEXT",
-    "front_value": "Curse",
-    "back_value": "__RUNTIME_BACK_IMAGE__",
-    "categories": ["shadow"],
-    "tags": ["dark"],
-    "metadata": {"source": "bootstrap"},
+    "front_value": "Anomalia_1",
+    "back_value": "C:\\_GLT_\\Qt Prj\\Fate-Bag\\Fate-Bag\\assets\\images\\token_backs\\Blue_Back.PNG",
+    "categories": [
+      "shadow"
+    ],
+    "tags": [
+      "dark"
+    ],
+    "metadata": {
+      "source": "bootstrap"
+    },
     "weight": 1.0,
     "rarity": "rare"
   },
   {
-    "name": "Shield",
+    "id": "5babccc8-288b-4595-a656-7772e03bf44c",
+    "name": "Scudo",
     "shape": "SQUARE",
     "front_type": "TEXT",
-    "front_value": "Shield",
-    "back_value": "__RUNTIME_BACK_IMAGE__",
-    "categories": ["holy"],
-    "tags": ["defense"],
-    "metadata": {"source": "bootstrap"},
+    "front_value": "Scudo",
+    "back_value": "C:\\_GLT_\\Qt Prj\\Fate-Bag\\Fate-Bag\\assets\\images\\token_backs\\Blue_Back.PNG",
+    "categories": [
+      "holy"
+    ],
+    "tags": [
+      "defense"
+    ],
+    "metadata": {
+      "source": "bootstrap"
+    },
     "weight": 3.0,
     "rarity": "common"
   },
   {
+    "id": "662d3c3f-bc7a-4022-959a-99a2aad191f5",
     "name": "Wrath",
     "shape": "PENTAGON",
     "front_type": "TEXT",
-    "front_value": "Wrath",
-    "back_value": "__RUNTIME_BACK_IMAGE__",
-    "categories": ["shadow"],
-    "tags": ["chaos"],
-    "metadata": {"source": "bootstrap"},
+    "front_value": "Gia",
+    "back_value": "C:\\_GLT_\\Qt Prj\\Fate-Bag\\Fate-Bag\\assets\\images\\token_backs\\Blue_Back.PNG",
+    "categories": [
+      "shadow"
+    ],
+    "tags": [
+      "chaos"
+    ],
+    "metadata": {
+      "source": "bootstrap"
+    },
     "weight": 1.2,
     "rarity": "rare"
   },
   {
+    "id": "f44035d8-8a08-4fb8-b56d-10b9d5c28ac3",
     "name": "Mercy",
     "shape": "EPTAGON",
     "front_type": "TEXT",
     "front_value": "Mercy",
-    "back_value": "__RUNTIME_BACK_IMAGE__",
-    "categories": ["holy"],
-    "tags": ["support"],
-    "metadata": {"source": "bootstrap"},
+    "back_value": "C:\\_GLT_\\Qt Prj\\Fate-Bag\\Fate-Bag\\assets\\images\\token_backs\\Blue_Back.PNG",
+    "categories": [
+      "holy"
+    ],
+    "tags": [
+      "support"
+    ],
+    "metadata": {
+      "source": "bootstrap"
+    },
     "weight": 2.1,
     "rarity": "common"
   },
   {
-    "name": "Ruin",
+    "id": "35ea65e1-1dec-4e12-a9f5-9271ba35ad56",
+    "name": "Stella",
     "shape": "OCTAGON",
     "front_type": "TEXT",
-    "front_value": "Ruin",
-    "back_value": "__RUNTIME_BACK_IMAGE__",
-    "categories": ["shadow"],
-    "tags": ["damage"],
-    "metadata": {"source": "bootstrap"},
+    "front_value": "Stella",
+    "back_value": "C:\\_GLT_\\Qt Prj\\Fate-Bag\\Fate-Bag\\assets\\images\\token_backs\\Blue_Back.PNG",
+    "categories": [
+      "shadow"
+    ],
+    "tags": [
+      "damage"
+    ],
+    "metadata": {
+      "source": "bootstrap"
+    },
     "weight": 0.8,
     "rarity": "legendary"
   },
   {
+    "id": "b6a7246d-5f51-441a-997b-f2a57419c9c2",
     "name": "Aegis",
     "shape": "STAR",
     "front_type": "TEXT",
     "front_value": "Aegis",
-    "back_value": "__RUNTIME_BACK_IMAGE__",
-    "categories": ["holy"],
-    "tags": ["defense"],
-    "metadata": {"source": "bootstrap"},
+    "back_value": "C:\\_GLT_\\Qt Prj\\Fate-Bag\\Fate-Bag\\assets\\images\\token_backs\\Blue_Back.PNG",
+    "categories": [
+      "holy"
+    ],
+    "tags": [
+      "defense"
+    ],
+    "metadata": {
+      "source": "bootstrap"
+    },
     "weight": 2.8,
     "rarity": "common"
   },
   {
+    "id": "d3c13483-b92b-4373-a3bb-a19386fbd2c0",
     "name": "Blight",
     "shape": "RECTANGLE_3:4",
     "front_type": "TEXT",
     "front_value": "Blight",
-    "back_value": "__RUNTIME_BACK_IMAGE__",
-    "categories": ["shadow"],
-    "tags": ["poison"],
-    "metadata": {"source": "bootstrap"},
+    "back_value": "C:\\_GLT_\\Qt Prj\\Fate-Bag\\Fate-Bag\\assets\\images\\token_backs\\Blue_Back.PNG",
+    "categories": [
+      "shadow"
+    ],
+    "tags": [
+      "poison"
+    ],
+    "metadata": {
+      "source": "bootstrap"
+    },
     "weight": 1.1,
     "rarity": "rare"
   },
   {
+    "id": "2a78e9e5-e9dd-4d06-b498-751aa239a568",
     "name": "Beacon",
     "shape": "RECTANGLE_4:3",
     "front_type": "TEXT",
     "front_value": "Beacon",
-    "back_value": "__RUNTIME_BACK_IMAGE__",
-    "categories": ["holy"],
-    "tags": ["light"],
-    "metadata": {"source": "bootstrap"},
+    "back_value": "C:\\_GLT_\\Qt Prj\\Fate-Bag\\Fate-Bag\\assets\\images\\token_backs\\Blue_Back.PNG",
+    "categories": [
+      "holy"
+    ],
+    "tags": [
+      "light"
+    ],
+    "metadata": {
+      "source": "bootstrap"
+    },
     "weight": 2.4,
     "rarity": "common"
   },
   {
+    "id": "d0b56100-0a52-40af-b958-6d4a320acc44",
     "name": "Fang",
     "shape": "RECTANGLE_3:5",
     "front_type": "TEXT",
     "front_value": "Fang",
-    "back_value": "__RUNTIME_BACK_IMAGE__",
-    "categories": ["shadow"],
-    "tags": ["assault"],
-    "metadata": {"source": "bootstrap"},
+    "back_value": "C:\\_GLT_\\Qt Prj\\Fate-Bag\\Fate-Bag\\assets\\images\\token_backs\\Blue_Back.PNG",
+    "categories": [
+      "shadow"
+    ],
+    "tags": [
+      "assault"
+    ],
+    "metadata": {
+      "source": "bootstrap"
+    },
     "weight": 1.3,
     "rarity": "rare"
   },
   {
+    "id": "376f2566-5537-4994-b5bf-13e5cf844857",
     "name": "Ward",
     "shape": "RECTANGLE_5:3",
     "front_type": "TEXT",
     "front_value": "Ward",
-    "back_value": "__RUNTIME_BACK_IMAGE__",
-    "categories": ["holy"],
-    "tags": ["protection"],
-    "metadata": {"source": "bootstrap"},
+    "back_value": "C:\\_GLT_\\Qt Prj\\Fate-Bag\\Fate-Bag\\assets\\images\\token_backs\\Blue_Back.PNG",
+    "categories": [
+      "holy"
+    ],
+    "tags": [
+      "protection"
+    ],
+    "metadata": {
+      "source": "bootstrap"
+    },
     "weight": 2.6,
     "rarity": "common"
   },
   {
+    "id": "22698ffc-94b3-4712-a568-b6a744b93444",
     "name": "Gloom",
     "shape": "CIRCLE",
     "front_type": "TEXT",
     "front_value": "Gloom",
-    "back_value": "__RUNTIME_BACK_IMAGE__",
-    "categories": ["shadow"],
-    "tags": ["debuff"],
-    "metadata": {"source": "bootstrap"},
+    "back_value": "C:\\_GLT_\\Qt Prj\\Fate-Bag\\Fate-Bag\\assets\\images\\token_backs\\Blue_Back.PNG",
+    "categories": [
+      "shadow"
+    ],
+    "tags": [
+      "debuff"
+    ],
+    "metadata": {
+      "source": "bootstrap"
+    },
     "weight": 1.0,
     "rarity": "common"
   },
   {
+    "id": "dcbbafe1-8890-40ab-87e5-5c4f6f577fff",
     "name": "Valor",
     "shape": "HEXAGON",
     "front_type": "TEXT",
     "front_value": "Valor",
-    "back_value": "__RUNTIME_BACK_IMAGE__",
-    "categories": ["holy"],
-    "tags": ["buff"],
-    "metadata": {"source": "bootstrap"},
+    "back_value": "C:\\_GLT_\\Qt Prj\\Fate-Bag\\Fate-Bag\\assets\\images\\token_backs\\Blue_Back.PNG",
+    "categories": [
+      "holy"
+    ],
+    "tags": [
+      "buff"
+    ],
+    "metadata": {
+      "source": "bootstrap"
+    },
     "weight": 2.3,
     "rarity": "common"
   },
   {
-    "name": "Rift",
+    "id": "b6544819-fe41-4251-b3fa-0ec502fb8c2a",
+    "name": "Runa del Mare",
     "shape": "STAR",
     "front_type": "TEXT",
-    "front_value": "Rift",
-    "back_value": "__RUNTIME_BACK_IMAGE__",
-    "categories": ["shadow"],
-    "tags": ["chaos"],
-    "metadata": {"source": "bootstrap"},
+    "front_value": "Runa del Mare",
+    "back_value": "C:\\_GLT_\\Qt Prj\\Fate-Bag\\Fate-Bag\\assets\\images\\token_backs\\Blue_Back.PNG",
+    "categories": [
+      "shadow"
+    ],
+    "tags": [
+      "chaos"
+    ],
+    "metadata": {
+      "source": "bootstrap"
+    },
     "weight": 0.9,
     "rarity": "legendary"
   },
   {
+    "id": "50a9b6e5-a7b5-4d9c-b46e-a5178b9a1904",
     "name": "Halo",
     "shape": "SQUARE",
     "front_type": "TEXT",
     "front_value": "Halo",
-    "back_value": "__RUNTIME_BACK_IMAGE__",
-    "categories": ["holy"],
-    "tags": ["light"],
-    "metadata": {"source": "bootstrap"},
+    "back_value": "C:\\_GLT_\\Qt Prj\\Fate-Bag\\Fate-Bag\\assets\\images\\token_backs\\Blue_Back.PNG",
+    "categories": [
+      "holy"
+    ],
+    "tags": [
+      "light"
+    ],
+    "metadata": {
+      "source": "bootstrap"
+    },
     "weight": 2.2,
     "rarity": "common"
   },
   {
+    "id": "570c7f77-be23-485b-b645-e9d11663099b",
     "name": "Dread",
     "shape": "PENTAGON",
     "front_type": "TEXT",
     "front_value": "Dread",
-    "back_value": "__RUNTIME_BACK_IMAGE__",
-    "categories": ["shadow"],
-    "tags": ["fear"],
-    "metadata": {"source": "bootstrap"},
+    "back_value": "C:\\_GLT_\\Qt Prj\\Fate-Bag\\Fate-Bag\\assets\\images\\token_backs\\Blue_Back.PNG",
+    "categories": [
+      "shadow"
+    ],
+    "tags": [
+      "fear"
+    ],
+    "metadata": {
+      "source": "bootstrap"
+    },
     "weight": 1.4,
     "rarity": "rare"
   },
   {
+    "id": "ff4acafa-db43-4cf6-a21e-eed7289c3b6d",
     "name": "Grace",
     "shape": "EPTAGON",
     "front_type": "TEXT",
     "front_value": "Grace",
-    "back_value": "__RUNTIME_BACK_IMAGE__",
-    "categories": ["holy"],
-    "tags": ["support"],
-    "metadata": {"source": "bootstrap"},
+    "back_value": "C:\\_GLT_\\Qt Prj\\Fate-Bag\\Fate-Bag\\assets\\images\\token_backs\\Blue_Back.PNG",
+    "categories": [
+      "holy"
+    ],
+    "tags": [
+      "support"
+    ],
+    "metadata": {
+      "source": "bootstrap"
+    },
     "weight": 2.5,
     "rarity": "common"
   },
   {
+    "id": "e748f33b-d966-4770-834b-332e1b781f69",
     "name": "Thorn",
     "shape": "OCTAGON",
     "front_type": "TEXT",
     "front_value": "Thorn",
-    "back_value": "__RUNTIME_BACK_IMAGE__",
-    "categories": ["shadow"],
-    "tags": ["counter"],
-    "metadata": {"source": "bootstrap"},
+    "back_value": "C:\\_GLT_\\Qt Prj\\Fate-Bag\\Fate-Bag\\assets\\images\\token_backs\\Blue_Back.PNG",
+    "categories": [
+      "shadow"
+    ],
+    "tags": [
+      "counter"
+    ],
+    "metadata": {
+      "source": "bootstrap"
+    },
     "weight": 1.1,
     "rarity": "common"
   },
   {
+    "id": "87295da3-a53b-4285-998a-c63b43f39fc5",
     "name": "Crown",
     "shape": "RECTANGLE_3:4",
     "front_type": "TEXT",
     "front_value": "Crown",
-    "back_value": "__RUNTIME_BACK_IMAGE__",
-    "categories": ["holy"],
-    "tags": ["command"],
-    "metadata": {"source": "bootstrap"},
+    "back_value": "C:\\_GLT_\\Qt Prj\\Fate-Bag\\Fate-Bag\\assets\\images\\token_backs\\Blue_Back.PNG",
+    "categories": [
+      "holy"
+    ],
+    "tags": [
+      "command"
+    ],
+    "metadata": {
+      "source": "bootstrap"
+    },
     "weight": 2.7,
     "rarity": "rare"
   },
   {
+    "id": "cf391cc7-cdef-407b-a553-e7f1d90b0300",
     "name": "Abyss",
     "shape": "RECTANGLE_4:3",
     "front_type": "TEXT",
     "front_value": "Abyss",
-    "back_value": "__RUNTIME_BACK_IMAGE__",
-    "categories": ["shadow"],
-    "tags": ["void"],
-    "metadata": {"source": "bootstrap"},
+    "back_value": "C:\\_GLT_\\Qt Prj\\Fate-Bag\\Fate-Bag\\assets\\images\\token_backs\\Blue_Back.PNG",
+    "categories": [
+      "shadow"
+    ],
+    "tags": [
+      "void"
+    ],
+    "metadata": {
+      "source": "bootstrap"
+    },
     "weight": 0.7,
+    "rarity": "legendary"
+  },
+  {
+    "id": "1ef72e37-2857-4e20-8a33-9b9b4b8def33",
+    "name": "Blessing",
+    "shape": "CIRCLE",
+    "front_type": "TEXT",
+    "front_value": "Blessing",
+    "back_value": "C:\\_GLT_\\Qt Prj\\Fate-Bag\\Fate-Bag\\assets\\images\\token_backs\\Blue_Back.PNG",
+    "categories": [
+      "holy"
+    ],
+    "tags": [
+      "light"
+    ],
+    "metadata": {
+      "source": "bootstrap"
+    },
+    "weight": 2.0,
+    "rarity": "common"
+  },
+  {
+    "id": "40905162-787d-4d76-9417-e3ea3ffb7be3",
+    "name": "Curse",
+    "shape": "HEXAGON",
+    "front_type": "TEXT",
+    "front_value": "Curse",
+    "back_value": "C:\\_GLT_\\Qt Prj\\Fate-Bag\\Fate-Bag\\assets\\images\\token_backs\\Blue_Back.PNG",
+    "categories": [
+      "shadow"
+    ],
+    "tags": [
+      "dark"
+    ],
+    "metadata": {
+      "source": "bootstrap"
+    },
+    "weight": 1.0,
+    "rarity": "rare"
+  },
+  {
+    "id": "e26c6883-e7cd-4dc5-8508-620eea53dbf6",
+    "name": "Shield",
+    "shape": "SQUARE",
+    "front_type": "TEXT",
+    "front_value": "Shield",
+    "back_value": "C:\\_GLT_\\Qt Prj\\Fate-Bag\\Fate-Bag\\assets\\images\\token_backs\\Blue_Back.PNG",
+    "categories": [
+      "holy"
+    ],
+    "tags": [
+      "defense"
+    ],
+    "metadata": {
+      "source": "bootstrap"
+    },
+    "weight": 3.0,
+    "rarity": "common"
+  },
+  {
+    "id": "d5564364-7de3-4bcf-8f2b-0aecfc8c4d49",
+    "name": "Ruin",
+    "shape": "OCTAGON",
+    "front_type": "TEXT",
+    "front_value": "Ruin",
+    "back_value": "C:\\_GLT_\\Qt Prj\\Fate-Bag\\Fate-Bag\\assets\\images\\token_backs\\Blue_Back.PNG",
+    "categories": [
+      "shadow"
+    ],
+    "tags": [
+      "damage"
+    ],
+    "metadata": {
+      "source": "bootstrap"
+    },
+    "weight": 0.8,
+    "rarity": "legendary"
+  },
+  {
+    "id": "66ca3c0c-29da-48d0-8d5f-f38c567ecb9b",
+    "name": "Rift",
+    "shape": "STAR",
+    "front_type": "TEXT",
+    "front_value": "Rift",
+    "back_value": "C:\\_GLT_\\Qt Prj\\Fate-Bag\\Fate-Bag\\assets\\images\\token_backs\\Blue_Back.PNG",
+    "categories": [
+      "shadow"
+    ],
+    "tags": [
+      "chaos"
+    ],
+    "metadata": {
+      "source": "bootstrap"
+    },
+    "weight": 0.9,
     "rarity": "legendary"
   }
 ]

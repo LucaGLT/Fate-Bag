@@ -113,6 +113,56 @@ class MainController:
         self.current_session = self._session_service.start_session(use_token_ids=token_ids, seed=seed)
         return self.current_session
 
+    def create_new_token(self) -> Token:
+        self._ensure_tokens_ready()
+        existing_names = {token.name for token in self._tokens}
+        base_name = "Nuovo Token"
+        suffix = 1
+        candidate = f"{base_name} {suffix}"
+        while candidate in existing_names:
+            suffix += 1
+            candidate = f"{base_name} {suffix}"
+
+        token = Token(
+            name=candidate,
+            shape=TokenShape.CIRCLE,
+            front_type=TokenFrontType.TEXT,
+            front_value=candidate,
+            back_value=str(self._default_back_image_path()),
+            tags=[],
+            categories=[],
+        )
+        created = self._token_service.create_token(token)
+        self._tokens.append(created)
+        self._tokens_by_id[created.id] = created
+        self._token_name_by_id[created.id] = created.name
+        return created
+
+    def delete_tokens(self, token_ids: list[UUID]) -> int:
+        selected_ids = self._normalize_selected_token_ids(token_ids)
+        selected_set = set(selected_ids)
+
+        for token_id in selected_ids:
+            token = self._tokens_by_id.get(token_id)
+            if token is None:
+                raise ValueError(f"Token non trovato: {token_id}")
+            self._token_service.delete_token(token_id)
+
+        self._tokens = [token for token in self._tokens if token.id not in selected_set]
+        for token_id in selected_set:
+            self._tokens_by_id.pop(token_id, None)
+            self._token_name_by_id.pop(token_id, None)
+
+        if self.current_session is not None:
+            self.current_session.table_tokens = [
+                table_token
+                for table_token in self.current_session.table_tokens
+                if table_token.token_id not in selected_set
+            ]
+            self._session_repo.save(self.current_session)
+
+        return len(selected_ids)
+
     def draw_one(self) -> list[str]:
         self._ensure_session_ready()
         seed = self._next_seed() if self._deterministic_mode else None
