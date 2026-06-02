@@ -42,6 +42,7 @@ def test_main_window_has_required_controls(window):
         "draw_one_btn": window.draw_one_btn.text(),
         "draw_n_btn": window.draw_n_btn.text(),
         "shuffle_btn": window.shuffle_btn.text(),
+        "sort_btn": window.sort_btn.text(),
         "reveal_all_btn": window.reveal_all_btn.text(),
         "hide_all_btn": window.hide_all_btn.text(),
         "reset_btn": window.reset_btn.text(),
@@ -58,6 +59,7 @@ def test_main_window_has_required_controls(window):
                 "Draw 1",
                 "Draw N",
                 "Shuffle",
+                "Sort",
                 "Reveal all",
                 "Hide all",
                 "Reset",
@@ -72,6 +74,7 @@ def test_main_window_has_required_controls(window):
     assert controls["draw_one_btn"] == "Draw 1"
     assert controls["draw_n_btn"] == "Draw N"
     assert controls["shuffle_btn"] == "Shuffle"
+    assert controls["sort_btn"] == "Sort"
     assert controls["reveal_all_btn"] == "Reveal all"
     assert controls["hide_all_btn"] == "Hide all"
     assert controls["reset_btn"] == "Reset"
@@ -190,3 +193,40 @@ def test_draw_n_handles_invalid_request(window):
     )
 
     assert status.startswith("Errore draw N")
+
+
+def test_sort_places_face_up_before_face_down(window):
+    window._on_load_tokens()
+    window._on_create_session()
+
+    window.draw_n_spin.setValue(3)
+    window._on_draw_n()
+    window._on_sort()
+
+    statuses = []
+    for i in range(window.token_list.count()):
+        text = window.token_list.item(i).text()
+        if "|" in text:
+            statuses.append(text.split("|", 1)[1].strip())
+
+    first_face_down_index = next((i for i, status in enumerate(statuses) if status == "FACE_DOWN"), None)
+    first_face_up_index = next((i for i, status in enumerate(statuses) if status == "FACE_UP"), None)
+
+    _debug_case(
+        "Sort places FACE_UP before FACE_DOWN",
+        {"draw_n": 3},
+        {
+            "status_starts_with": "Sort eseguito",
+            "first_face_up_before_first_face_down": True,
+        },
+        {
+            "status": window.status_label.text(),
+            "first_face_up_index": first_face_up_index,
+            "first_face_down_index": first_face_down_index,
+        },
+    )
+
+    assert window.status_label.text().startswith("Sort eseguito")
+    assert first_face_up_index is not None
+    assert first_face_down_index is not None
+    assert first_face_up_index < first_face_down_index

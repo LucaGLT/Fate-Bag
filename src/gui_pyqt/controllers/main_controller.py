@@ -119,6 +119,35 @@ class MainController:
         self.current_session = self._session_service.shuffle_session(self.current_session, seed=seed)
         return self.current_session
 
+    def sort_face_up_first(self) -> Session:
+        self._ensure_session_ready()
+
+        original_positions = [
+            (table_token.x, table_token.y, table_token.z, table_token.rotation)
+            for table_token in self.current_session.table_tokens
+        ]
+
+        priority = {
+            TokenState.FACE_UP: 0,
+            TokenState.FACE_DOWN: 1,
+        }
+        self.current_session.table_tokens.sort(
+            key=lambda table_token: (
+                priority.get(table_token.state, 2),
+                self._token_name_by_id.get(table_token.token_id, ""),
+            )
+        )
+
+        for index, table_token in enumerate(self.current_session.table_tokens):
+            x, y, z, rotation = original_positions[index]
+            table_token.x = x
+            table_token.y = y
+            table_token.z = z
+            table_token.rotation = rotation
+
+        self._session_repo.save(self.current_session)
+        return self.current_session
+
     def reveal_all(self) -> list[str]:
         self._ensure_session_ready()
         return self._draw_service.reveal_tokens(self.current_session)
@@ -139,14 +168,24 @@ class MainController:
     def token_status_entries(self, selected_token_ids: set[UUID] | None = None) -> list[dict]:
         selected = selected_token_ids or set()
         state_by_token_id = {}
+        ordered_tokens: list[Token] = []
         if self.current_session is not None:
             state_by_token_id = {
                 table_token.token_id: table_token.state.value
                 for table_token in self.current_session.table_tokens
             }
+            for table_token in self.current_session.table_tokens:
+                token = self._tokens_by_id.get(table_token.token_id)
+                if token is not None:
+                    ordered_tokens.append(token)
+
+            in_session_ids = {table_token.token_id for table_token in self.current_session.table_tokens}
+            ordered_tokens.extend(token for token in self._tokens if token.id not in in_session_ids)
+        else:
+            ordered_tokens = list(self._tokens)
 
         entries = []
-        for token in self._tokens:
+        for token in ordered_tokens:
             if token.id in state_by_token_id:
                 status = state_by_token_id[token.id]
                 in_session = True

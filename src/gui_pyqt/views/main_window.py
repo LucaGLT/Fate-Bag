@@ -70,6 +70,10 @@ class MainWindow(QMainWindow):
         self.shuffle_btn.setObjectName("shuffle_btn")
         button_row.addWidget(self.shuffle_btn)
 
+        self.sort_btn = QPushButton("Sort")
+        self.sort_btn.setObjectName("sort_btn")
+        button_row.addWidget(self.sort_btn)
+
         self.reveal_all_btn = QPushButton("Reveal all")
         self.reveal_all_btn.setObjectName("reveal_all_btn")
         button_row.addWidget(self.reveal_all_btn)
@@ -110,6 +114,7 @@ class MainWindow(QMainWindow):
         self.draw_one_btn.clicked.connect(self._on_draw_one)
         self.draw_n_btn.clicked.connect(self._on_draw_n)
         self.shuffle_btn.clicked.connect(self._on_shuffle)
+        self.sort_btn.clicked.connect(self._on_sort)
         self.reveal_all_btn.clicked.connect(self._on_reveal_all)
         self.hide_all_btn.clicked.connect(self._on_hide_all)
         self.reset_btn.clicked.connect(self._on_reset)
@@ -163,6 +168,14 @@ class MainWindow(QMainWindow):
             self._refresh_list()
         except Exception as exc:
             self.status_label.setText(f"Errore shuffle: {exc}")
+
+    def _on_sort(self) -> None:
+        try:
+            self.controller.sort_face_up_first()
+            self.status_label.setText("Sort eseguito (FACE_UP -> FACE_DOWN)")
+            self._refresh_list()
+        except Exception as exc:
+            self.status_label.setText(f"Errore sort: {exc}")
 
     def _on_reveal_all(self) -> None:
         try:
