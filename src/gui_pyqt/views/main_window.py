@@ -150,9 +150,13 @@ class MainWindow(QMainWindow):
         self.reset_btn.clicked.connect(self._on_reset)
         self.table_scene.token_selected.connect(self._on_scene_token_selected)
         self.table_scene.token_selection_changed.connect(self._on_scene_selection_changed)
+        self.table_scene.token_selected.connect(self._on_scene_token_selected)
+        self.table_scene.token_selection_changed.connect(self._on_scene_selection_changed)
         self.table_scene.token_flip_requested.connect(self._on_scene_token_flip)
         self.table_scene.token_dragged.connect(self._on_scene_token_dragged)
+        self.table_scene.token_dragged.connect(self._on_scene_token_dragged)
         self.token_list.itemDoubleClicked.connect(self._on_token_list_item_double_clicked)
+        self.token_list.itemChanged.connect(self._on_token_list_item_changed)
         self.token_list.itemChanged.connect(self._on_token_list_item_changed)
 
     def _on_load_tokens(self, token_file: str | bool | None = None) -> None:
@@ -386,11 +390,31 @@ class MainWindow(QMainWindow):
     def _on_scene_token_flip(self, token_id: str) -> None:
         try:
             self._set_checkbox_checked(token_id)
+            self._set_checkbox_checked(token_id)
             new_state = self.controller.flip_token(token_id)
             self.status_label.setText(f"Flip token: {token_id} -> {new_state}")
             self._refresh_list()
         except Exception as exc:
             self.status_label.setText(f"Errore flip: {exc}")
+
+    def _on_scene_token_selected(self, token_id: str) -> None:
+        changed = self._set_checkbox_exclusive(token_id)
+        if changed:
+            self.status_label.setText(f"Token selezionato: {token_id}")
+
+    def _on_scene_selection_changed(self, selected_token_ids: set[str]) -> None:
+        if self._is_refreshing_scene:
+            return
+        self._set_checkboxes_from_token_ids(selected_token_ids)
+
+    def _on_scene_token_dragged(self, token_id: str, x: float, y: float) -> None:
+        try:
+            self._set_checkbox_checked(token_id)
+            self.controller.move_token(token_id, x, y)
+            self.status_label.setText(f"Token spostato: {token_id} -> ({x:.1f}, {y:.1f})")
+            self._refresh_scene_preserve_checkbox_selection()
+        except Exception as exc:
+            self.status_label.setText(f"Errore move token: {exc}")
 
     def _on_scene_token_selected(self, token_id: str) -> None:
         changed = self._set_checkbox_exclusive(token_id)
@@ -417,21 +441,31 @@ class MainWindow(QMainWindow):
 
         self.token_list.clear()
         self.token_list.blockSignals(True)
+        self.token_list.blockSignals(True)
         for entry in entries:
             item = QListWidgetItem(f"{entry['name']} | {entry['status']}")
             item.setData(Qt.ItemDataRole.UserRole, str(entry["token_id"]))
             item.setFlags(item.flags() | Qt.ItemFlag.ItemIsUserCheckable)
 
             is_checked = entry["token_id"] in selected_ids
+            is_checked = entry["token_id"] in selected_ids
 
             item.setCheckState(Qt.CheckState.Checked if is_checked else Qt.CheckState.Unchecked)
             self.token_list.addItem(item)
         self.token_list.blockSignals(False)
+        self.token_list.blockSignals(False)
 
+        self._refresh_scene_preserve_checkbox_selection()
         self._refresh_scene_preserve_checkbox_selection()
 
     def _refresh_scene(self) -> None:
         self.table_scene.load_from_session(self.controller.scene_entries())
+
+    def _refresh_scene_preserve_checkbox_selection(self) -> None:
+        self._is_refreshing_scene = True
+        self._refresh_scene()
+        self._is_refreshing_scene = False
+        self._sync_scene_selection_from_checkboxes()
 
     def _refresh_scene_preserve_checkbox_selection(self) -> None:
         self._is_refreshing_scene = True
