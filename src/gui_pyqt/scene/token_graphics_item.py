@@ -28,11 +28,19 @@ class TokenGraphicsItem(QGraphicsObject):
     flip_requested = pyqtSignal(str)
     drag_finished = pyqtSignal(str, float, float)
 
-    def __init__(self, token: Token, table_token: TableToken, size: float = 84.0) -> None:
+    def __init__(
+        self,
+        token: Token,
+        table_token: TableToken,
+        size: float = 84.0,
+        *,
+        hover_preview_enabled: bool = True,
+    ) -> None:
         super().__init__()
         self.token = token
         self.table_token = table_token
         self.size = size
+        self._hover_preview_enabled = bool(hover_preview_enabled)
         self._bounds = QRectF(-size / 2, -size / 2, size, size)
         self.setFlag(self.GraphicsItemFlag.ItemIsSelectable, True)
         self.setFlag(self.GraphicsItemFlag.ItemIsMovable, True)
@@ -251,7 +259,7 @@ class TokenGraphicsItem(QGraphicsObject):
         self._draw_formatted_front_text(painter, front_label, text_color)
 
     def _effective_front_type(self) -> TokenFrontType:
-        if not self._hover_preview_active:
+        if not self._hover_preview_enabled or not self._hover_preview_active:
             return self.token.front_type
 
         if self.token.front_type == TokenFrontType.TEXT:

@@ -1,189 +1,198 @@
-[
-  {
-    "id": "8c969662-3147-4227-a1a1-7e6f8855593b",
-    "name": "Logoy-Nomon",
-    "shape": "PENTAGON",
-    "front_type": "IMAGE",
-    "front_value": "C:\\_GLT_\\Qt Prj\\Fate-Bag\\Fate-Bag\\assets\\images\\token_fronts\\LogoyNomon.PNG",
-    "back_value": "C:\\_GLT_\\Qt Prj\\Fate-Bag\\Fate-Bag\\assets\\images\\token_backs\\Dio_simple_green_Back.png",
-    "categories": [
-      "holy"
-    ],
-    "tags": [
-      "Dio"
-    ],
-    "metadata": {
-      "source": "bootstrap",
-      "front_text": "<Logoy-Nomon>|Ordine, Legge, Processo"
-    },
-    "weight": 2.8,
-    "rarity": "common"
+{
+  "settings": {
+    "assets_root_path": "C:\\_GLT_\\Qt Prj\\Fate-Bag\\Fate-Bag\\assets\\images",
+    "table_background_file": "01_Isola di Elyra_blu.png",
+    "token_radius_px": 50,
+    "table_grid_margin_px": 40,
+    "hover_preview_enabled": true
   },
-  {
-    "id": "ac27022d-9449-4bdf-9503-4f54d1559041",
-    "name": "Egonya",
-    "shape": "PENTAGON",
-    "front_type": "IMAGE",
-    "front_value": "C:\\_GLT_\\Qt Prj\\Fate-Bag\\Fate-Bag\\assets\\images\\token_fronts\\Egonya_Gray.png",
-    "back_value": "C:\\_GLT_\\Qt Prj\\Fate-Bag\\Fate-Bag\\assets\\images\\token_backs\\Dio_simple_green_Back.png",
-    "categories": [
-      "shadow"
-    ],
-    "tags": [
-      "Dio"
-    ],
-    "metadata": {
-      "source": "bootstrap",
-      "front_text": "<Egonya>|Consapevolezza del S\u00e8"
+  "tokens": [
+    {
+      "id": "8c969662-3147-4227-a1a1-7e6f8855593b",
+      "name": "Logoy-Nomon",
+      "shape": "PENTAGON",
+      "front_type": "IMAGE",
+      "front_value": "token_fronts\\LogoyNomon_lime.PNG",
+      "back_value": "token_backs\\Dio_simple_green_Back.png",
+      "categories": [
+        "holy"
+      ],
+      "tags": [
+        "Dio"
+      ],
+      "metadata": {
+        "source": "bootstrap",
+        "front_text": "<Logoy-Nomon>|Ordine, Legge, Processo"
+      },
+      "weight": 2.8,
+      "rarity": "common"
     },
-    "weight": 1.3,
-    "rarity": "rare"
-  },
-  {
-    "id": "54b4796e-a514-49df-8e1b-cd0d58455e2e",
-    "name": "Mnemora",
-    "shape": "PENTAGON",
-    "front_type": "IMAGE",
-    "front_value": "C:\\_GLT_\\Qt Prj\\Fate-Bag\\Fate-Bag\\assets\\images\\token_fronts\\Mnemora.png",
-    "back_value": "C:\\_GLT_\\Qt Prj\\Fate-Bag\\Fate-Bag\\assets\\images\\token_backs\\Dio_simple_green_Back.png",
-    "categories": [
-      "holy"
-    ],
-    "tags": [
-      "Dio"
-    ],
-    "metadata": {
-      "source": "bootstrap",
-      "front_text": "<Mnemora>|Conservazione, Ricordo"
+    {
+      "id": "ac27022d-9449-4bdf-9503-4f54d1559041",
+      "name": "Egonya",
+      "shape": "PENTAGON",
+      "front_type": "IMAGE",
+      "front_value": "token_fronts\\Egonya_lime.png",
+      "back_value": "token_backs\\Dio_simple_green_Back.png",
+      "categories": [
+        "shadow"
+      ],
+      "tags": [
+        "Dio"
+      ],
+      "metadata": {
+        "source": "bootstrap",
+        "front_text": "<Egonya>|Consapevolezza del S\u00e8"
+      },
+      "weight": 1.3,
+      "rarity": "rare"
     },
-    "weight": 2.7,
-    "rarity": "rare"
-  },
-  {
-    "id": "36269690-0e31-4ad2-86d4-d178a260f62c",
-    "name": "Dyresys",
-    "shape": "PENTAGON",
-    "front_type": "IMAGE",
-    "front_value": "C:\\_GLT_\\Qt Prj\\Fate-Bag\\Fate-Bag\\assets\\images\\token_fronts\\Dyresys.png",
-    "back_value": "C:\\_GLT_\\Qt Prj\\Fate-Bag\\Fate-Bag\\assets\\images\\token_backs\\Dio_simple_green_Back.png",
-    "categories": [
-      "shadow"
-    ],
-    "tags": [
-      "Dio"
-    ],
-    "metadata": {
-      "source": "bootstrap",
-      "front_text": "<Dyresys>|Scelta, Deviazione, Anomalia,"
+    {
+      "id": "54b4796e-a514-49df-8e1b-cd0d58455e2e",
+      "name": "Mnemora",
+      "shape": "PENTAGON",
+      "front_type": "IMAGE",
+      "front_value": "token_fronts\\Mnemora_lime.png",
+      "back_value": "token_backs\\Dio_simple_green_Back.png",
+      "categories": [
+        "holy"
+      ],
+      "tags": [
+        "Dio"
+      ],
+      "metadata": {
+        "source": "bootstrap",
+        "front_text": "<Mnemora>|Conservazione, Ricordo"
+      },
+      "weight": 2.7,
+      "rarity": "rare"
     },
-    "weight": 0.7,
-    "rarity": "legendary"
-  },
-  {
-    "id": "e031e690-10d5-4a36-b1a0-f5d8f8733698",
-    "name": "Lak\u00f9na",
-    "shape": "PENTAGON",
-    "front_type": "IMAGE",
-    "front_value": "C:\\_GLT_\\Qt Prj\\Fate-Bag\\Fate-Bag\\assets\\images\\token_fronts\\Lakuna.png",
-    "back_value": "C:\\_GLT_\\Qt Prj\\Fate-Bag\\Fate-Bag\\assets\\images\\token_backs\\Dio_simple_green_Back.png",
-    "categories": [],
-    "tags": [
-      "Dio"
-    ],
-    "metadata": {
-      "front_text": "<Lak\u00f9na>|Dimenticanza, Oblio"
+    {
+      "id": "36269690-0e31-4ad2-86d4-d178a260f62c",
+      "name": "Dyresys",
+      "shape": "PENTAGON",
+      "front_type": "IMAGE",
+      "front_value": "token_fronts\\Dyresys_lime.png",
+      "back_value": "token_backs\\Dio_simple_green_Back.png",
+      "categories": [
+        "shadow"
+      ],
+      "tags": [
+        "Dio"
+      ],
+      "metadata": {
+        "source": "bootstrap",
+        "front_text": "<Dyresys>|Scelta, Deviazione, Anomalia"
+      },
+      "weight": 0.7,
+      "rarity": "legendary"
     },
-    "weight": 1.0,
-    "rarity": null
-  },
-  {
-    "id": "55c84d2b-d454-480a-ab55-a6817b8e5b0e",
-    "name": "Novizio di Egonya",
-    "shape": "CIRCLE",
-    "front_type": "TEXT_IMAGE",
-    "front_value": "C:\\_GLT_\\Qt Prj\\Fate-Bag\\Fate-Bag\\assets\\images\\token_backs\\PG_Nariel_Veyr_Gray.png",
-    "back_value": "C:\\_GLT_\\Qt Prj\\Fate-Bag\\Fate-Bag\\assets\\images\\token_backs\\PG_Nariel_Veyr.PNG",
-    "categories": [],
-    "tags": [
-      "Nariel",
-      "Caratteristica"
-    ],
-    "metadata": {
-      "front_text": "<Novizio di Egonya>|"
+    {
+      "id": "e031e690-10d5-4a36-b1a0-f5d8f8733698",
+      "name": "Lak\u00f9na",
+      "shape": "PENTAGON",
+      "front_type": "IMAGE",
+      "front_value": "token_fronts\\Lakuna_lime.png",
+      "back_value": "token_backs\\Dio_simple_green_Back.png",
+      "categories": [],
+      "tags": [
+        "Dio"
+      ],
+      "metadata": {
+        "front_text": "<Lak\u00f9na>|Dimenticanza, Oblio"
+      },
+      "weight": 1.0,
+      "rarity": null
     },
-    "weight": 1.0,
-    "rarity": null
-  },
-  {
-    "id": "4c606014-ad43-4ebe-aa85-6b0f9a5ae405",
-    "name": "Esperienza in Mare",
-    "shape": "CIRCLE",
-    "front_type": "TEXT_IMAGE",
-    "front_value": "C:\\_GLT_\\Qt Prj\\Fate-Bag\\Fate-Bag\\assets\\images\\token_backs\\PG_Nariel_Veyr_Gray.png",
-    "back_value": "C:\\_GLT_\\Qt Prj\\Fate-Bag\\Fate-Bag\\assets\\images\\token_backs\\PG_Nariel_Veyr.PNG",
-    "categories": [],
-    "tags": [
-      "Nariel",
-      "Abilit\u00e0"
-    ],
-    "metadata": {
-      "front_text": "<Esperienza in Mare>|da anni di pesca d'altura"
+    {
+      "id": "55c84d2b-d454-480a-ab55-a6817b8e5b0e",
+      "name": "Novizio di Egonya",
+      "shape": "CIRCLE",
+      "front_type": "TEXT_IMAGE",
+      "front_value": "token_backs\\PG_Nariel_Veyr_Gray.png",
+      "back_value": "token_backs\\PG_Nariel_Veyr.PNG",
+      "categories": [],
+      "tags": [
+        "Nariel",
+        "Caratteristica"
+      ],
+      "metadata": {
+        "front_text": "<Novizio di Egonya>|"
+      },
+      "weight": 1.0,
+      "rarity": null
     },
-    "weight": 1.0,
-    "rarity": null
-  },
-  {
-    "id": "d5172257-9298-46b5-9969-5a2e64048f5b",
-    "name": "PERICOLO",
-    "shape": "HEXAGON",
-    "front_type": "TEXT_IMAGE",
-    "front_value": "C:\\_GLT_\\Qt Prj\\Fate-Bag\\Fate-Bag\\assets\\images\\token_backs\\Pericolo.PNG",
-    "back_value": "C:\\_GLT_\\Qt Prj\\Fate-Bag\\Fate-Bag\\assets\\images\\token_backs\\Purple_Back.PNG",
-    "categories": [],
-    "tags": [
-      "Pericolo"
-    ],
-    "metadata": {
-      "front_text": "<PERICOLO>",
-      "front_text_color_mode": "auto"
+    {
+      "id": "4c606014-ad43-4ebe-aa85-6b0f9a5ae405",
+      "name": "Esperienza in Mare",
+      "shape": "CIRCLE",
+      "front_type": "TEXT_IMAGE",
+      "front_value": "token_backs\\PG_Nariel_Veyr_Gray.png",
+      "back_value": "token_backs\\PG_Nariel_Veyr.PNG",
+      "categories": [],
+      "tags": [
+        "Nariel",
+        "Abilit\u00e0"
+      ],
+      "metadata": {
+        "front_text": "<Esperienza in Mare>|da anni di pesca d'altura"
+      },
+      "weight": 1.0,
+      "rarity": null
     },
-    "weight": 1.0,
-    "rarity": null
-  },
-  {
-    "id": "ebc3ae24-198c-45b3-9b93-fc63de44a4ab",
-    "name": "Navigazione Esperta",
-    "shape": "CIRCLE",
-    "front_type": "TEXT_IMAGE",
-    "front_value": "C:\\_GLT_\\Qt Prj\\Fate-Bag\\Fate-Bag\\assets\\images\\token_backs\\PG_Yedid_Gray.png",
-    "back_value": "C:\\_GLT_\\Qt Prj\\Fate-Bag\\Fate-Bag\\assets\\images\\token_backs\\PG_Yedid.PNG",
-    "categories": [],
-    "tags": [
-      "Yedid",
-      "Abilit\u00e0"
-    ],
-    "metadata": {
-      "front_text": "<Navigazione Esperta>"
+    {
+      "id": "d5172257-9298-46b5-9969-5a2e64048f5b",
+      "name": "P E R I C O L O",
+      "shape": "HEXAGON",
+      "front_type": "TEXT_IMAGE",
+      "front_value": "token_backs\\Red_Back.PNG",
+      "back_value": "token_backs\\Dio_simple_green_Back.png",
+      "categories": [],
+      "tags": [
+        "Pericolo"
+      ],
+      "metadata": {
+        "front_text": "<P E R I C O L O>",
+        "front_text_color_mode": "white"
+      },
+      "weight": 1.0,
+      "rarity": null
     },
-    "weight": 1.0,
-    "rarity": null
-  },
-  {
-    "id": "7a1d9c31-2125-4c58-b53a-0c4cdd9edfe0",
-    "name": "Ex Novizio della Manta",
-    "shape": "CIRCLE",
-    "front_type": "TEXT_IMAGE",
-    "front_value": "C:\\_GLT_\\Qt Prj\\Fate-Bag\\Fate-Bag\\assets\\images\\token_backs\\PG_Yedid_Gray.png",
-    "back_value": "C:\\_GLT_\\Qt Prj\\Fate-Bag\\Fate-Bag\\assets\\images\\token_backs\\PG_Yedid.PNG",
-    "categories": [],
-    "tags": [
-      "Yedid",
-      "Caratteristica"
-    ],
-    "metadata": {
-      "front_text": "<Ex Novizio della Manta>"
+    {
+      "id": "ebc3ae24-198c-45b3-9b93-fc63de44a4ab",
+      "name": "Navigazione Esperta",
+      "shape": "CIRCLE",
+      "front_type": "TEXT_IMAGE",
+      "front_value": "token_backs\\PG_Yedid_Gray.png",
+      "back_value": "token_backs\\PG_Yedid.PNG",
+      "categories": [],
+      "tags": [
+        "Yedid",
+        "Abilit\u00e0"
+      ],
+      "metadata": {
+        "front_text": "<Navigazione Esperta>"
+      },
+      "weight": 1.0,
+      "rarity": null
     },
-    "weight": 1.0,
-    "rarity": null
-  }
-]
+    {
+      "id": "7a1d9c31-2125-4c58-b53a-0c4cdd9edfe0",
+      "name": "Ex Novizio della Manta",
+      "shape": "CIRCLE",
+      "front_type": "TEXT_IMAGE",
+      "front_value": "token_backs\\PG_Yedid_Gray.png",
+      "back_value": "token_backs\\PG_Yedid.PNG",
+      "categories": [],
+      "tags": [
+        "Yedid",
+        "Caratteristica"
+      ],
+      "metadata": {
+        "front_text": "<Ex Novizio della Manta>"
+      },
+      "weight": 1.0,
+      "rarity": null
+    }
+  ]
+}

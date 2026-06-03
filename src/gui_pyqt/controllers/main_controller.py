@@ -36,6 +36,7 @@ class MainController:
         self._event_bus = EventBus()
 
         self._token_service = TokenService(self._token_repo, self._event_bus)
+        self._token_file_settings = self._default_token_file_settings(self._bootstrap_tokens_file)
         self._tokens: list[Token] = []
         self._tokens_by_id: dict[UUID, Token] = {}
         self._token_name_by_id: dict[UUID, str] = {}
@@ -48,15 +49,21 @@ class MainController:
     def bootstrap_tokens_file(self) -> Path:
         return self._bootstrap_tokens_file
 
+    @property
+    def token_file_settings(self) -> dict:
+        return dict(self._token_file_settings)
+
     def load_tokens(self, tokens_file: str | Path | None = None) -> list[Token]:
         self._ensure_runtime_assets()
 
         if tokens_file is not None:
             selected_file = Path(tokens_file)
             self._bootstrap_tokens_file = selected_file
-            bootstrap_tokens = self._load_tokens_from_bootstrap_file()
-            self._write_tokens_to_file(selected_file, bootstrap_tokens)
+            bootstrap_tokens, settings = self._load_tokens_and_settings_from_file(selected_file)
+            self._token_file_settings = settings
+            self._write_tokens_to_file(selected_file, bootstrap_tokens, settings)
             self._set_active_token_repository(selected_file)
+            self._token_repo.update_settings(settings)
             tokens = self._token_service.list_tokens()
             self.current_session = None
 
@@ -79,7 +86,8 @@ class MainController:
 
             return tokens
 
-        bootstrap_tokens = self._load_tokens_from_bootstrap_file()
+        bootstrap_tokens, settings = self._load_tokens_and_settings_from_file(self._bootstrap_tokens_file)
+        self._token_file_settings = settings
         existing_tokens = self._token_service.list_tokens()
         for token in existing_tokens:
             self._token_service.delete_token(token.id)
@@ -106,6 +114,7 @@ class MainController:
             session_repository=self._session_repo,
             event_bus=self._event_bus,
         )
+        self._token_repo.update_settings(settings)
 
         return tokens
 
@@ -114,9 +123,12 @@ class MainController:
         self._token_service = TokenService(self._token_repo, self._event_bus)
 
     @staticmethod
-    def _write_tokens_to_file(file_path: Path, tokens: list[Token]) -> None:
+    def _write_tokens_to_file(file_path: Path, tokens: list[Token], settings: dict) -> None:
         file_path.parent.mkdir(parents=True, exist_ok=True)
-        payload = [token.model_dump(mode="json") for token in tokens]
+        payload = JsonTokenRepository(file_path)._normalize_document_for_write({
+            "settings": dict(settings),
+            "tokens": [token.model_dump(mode="json") for token in tokens],
+        })
         file_path.write_text(json.dumps(payload, indent=2), encoding="utf-8")
 
     def create_session(self) -> Session:
@@ -577,30 +589,153 @@ class MainController:
         self._ensure_runtime_assets()
         return self._base_dir / "assets" / "back.png"
 
-    def _load_tokens_from_bootstrap_file(self) -> list[Token]:
-        if not self._bootstrap_tokens_file.exists():
+    def _load_tokens_and_settings_from_file(self, source_file: Path) -> tuple[list[Token], dict]:
+        if not source_file.exists():
             raise FileNotFoundError(
-                f"Bootstrap token file not found: {self._bootstrap_tokens_file}"
+                f"Bootstrap token file not found: {source_file}"
             )
 
-        data = json.loads(self._bootstrap_tokens_file.read_text(encoding="utf-8"))
-        if not isinstance(data, list):
-            raise ValueError("Bootstrap token JSON must contain a list")
+        data = json.loads(source_file.read_text(encoding="utf-8"))
+
+        if isinstance(data, list):
+            raw_tokens = data
+            settings = self._default_token_file_settings(source_file)
+        elif isinstance(data, dict):
+            raw_tokens = data.get("tokens", [])
+            if not isinstance(raw_tokens, list):
+                raise ValueError("Bootstrap token JSON field 'tokens' must contain a list")
+            settings = self._normalize_token_file_settings(data.get("settings", {}), source_file)
+        else:
+            raise ValueError("Bootstrap token JSON must contain either a list or an object")
 
         back_image = self._base_dir / "assets" / "back.png"
+        assets_root_dir = Path(settings["assets_root_path"])
+        source_dir = source_file.parent
         tokens: list[Token] = []
-        for item in data:
+        for item in raw_tokens:
             payload = dict(item)
+
+            front_type_raw = str(payload.get("front_type", "")).strip().upper()
+            if front_type_raw in (TokenFrontType.IMAGE.value, TokenFrontType.TEXT_IMAGE.value):
+                resolved_front = self._resolve_existing_image_path(
+                    payload.get("front_value"),
+                    assets_root_dir=assets_root_dir,
+                    source_dir=source_dir,
+                )
+                if resolved_front is not None:
+                    payload["front_value"] = resolved_front
+
             back_value = payload.get("back_value")
             if self._is_runtime_back_placeholder(back_value):
                 payload["back_value"] = str(back_image)
-            elif isinstance(back_value, str) and not Path(back_value).is_file():
+            else:
+                resolved_back = self._resolve_existing_image_path(
+                    back_value,
+                    assets_root_dir=assets_root_dir,
+                    source_dir=source_dir,
+                )
+                if resolved_back is not None:
+                    payload["back_value"] = resolved_back
+                else:
+                    payload["back_value"] = str(back_image)
+
+            if isinstance(payload.get("back_value"), str) and not Path(payload["back_value"]).is_file():
                 payload["back_value"] = str(back_image)
 
             self._sanitize_invalid_front_image_payload(payload)
             tokens.append(Token.model_validate(payload))
 
-        return tokens
+        return tokens, settings
+
+    def _default_token_file_settings(self, source_file: Path | None) -> dict:
+        source = source_file or self._bootstrap_tokens_file
+        source_parent = source.parent if source.parent else Path.cwd()
+        return {
+            "assets_root_path": str(source_parent.resolve()),
+            "table_background_file": "",
+            "token_radius_px": 42,
+            "table_grid_margin_px": 42,
+            "hover_preview_enabled": True,
+        }
+
+    def _normalize_token_file_settings(self, raw_settings: object, source_file: Path) -> dict:
+        defaults = self._default_token_file_settings(source_file)
+        if not isinstance(raw_settings, dict):
+            return defaults
+
+        normalized = dict(defaults)
+
+        raw_assets_root = (
+            raw_settings.get("assets_root_path")
+            or raw_settings.get("root_path")
+            or raw_settings.get("root-path")
+        )
+        if isinstance(raw_assets_root, str) and raw_assets_root.strip():
+            root_candidate = Path(raw_assets_root.strip())
+            if not root_candidate.is_absolute():
+                root_candidate = (source_file.parent / root_candidate).resolve()
+            normalized["assets_root_path"] = str(root_candidate)
+
+        raw_background = (
+            raw_settings.get("table_background_file")
+            or raw_settings.get("table_background")
+            or raw_settings.get("table-background-file")
+        )
+        resolved_background = self._resolve_existing_image_path(
+            raw_background,
+            assets_root_dir=Path(normalized["assets_root_path"]),
+            source_dir=source_file.parent,
+        )
+        normalized["table_background_file"] = resolved_background or ""
+
+        raw_radius = (
+            raw_settings.get("token_radius_px")
+            or raw_settings.get("token_radius")
+            or raw_settings.get("token-radius-px")
+        )
+        if isinstance(raw_radius, (int, float)):
+            normalized["token_radius_px"] = int(max(16, min(180, round(float(raw_radius)))))
+
+        raw_margin = raw_settings.get("table_grid_margin_px")
+        if isinstance(raw_margin, (int, float)):
+            normalized["table_grid_margin_px"] = int(max(16, min(220, round(float(raw_margin)))))
+
+        raw_hover = raw_settings.get("hover_preview_enabled")
+        if isinstance(raw_hover, bool):
+            normalized["hover_preview_enabled"] = raw_hover
+
+        return normalized
+
+    @staticmethod
+    def _resolve_existing_image_path(
+        raw_path: object,
+        *,
+        assets_root_dir: Path,
+        source_dir: Path,
+    ) -> str | None:
+        if not isinstance(raw_path, str):
+            return None
+
+        candidate = raw_path.strip()
+        if not candidate:
+            return None
+
+        direct = Path(candidate)
+        if direct.is_file():
+            return str(direct)
+
+        attempts: list[Path] = []
+        if direct.is_absolute():
+            attempts.append(direct)
+        else:
+            attempts.append((assets_root_dir / direct).resolve())
+            attempts.append((source_dir / direct).resolve())
+
+        for attempt in attempts:
+            if attempt.is_file():
+                return str(attempt)
+
+        return None
 
     @staticmethod
     def _sanitize_invalid_front_image_payload(payload: dict) -> None:
@@ -658,6 +793,10 @@ class MainController:
     def _current_front_text(token: Token) -> str:
         if token.front_type == TokenFrontType.TEXT:
             return token.front_value
+        if token.front_type == TokenFrontType.IMAGE:
+            text = str(token.metadata.get("front_text", "")).strip()
+            if text:
+                return text
         if token.front_type == TokenFrontType.TEXT_IMAGE:
             text = str(token.metadata.get("front_text", "")).strip()
             if text:

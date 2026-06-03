@@ -4,11 +4,12 @@ from pathlib import Path
 
 import pytest
 from PyQt6.QtCore import Qt
-from PyQt6.QtWidgets import QApplication
+from PyQt6.QtWidgets import QApplication, QFileDialog
 
 from src.core.models.enums import TokenFrontType, TokenShape
 from src.gui_pyqt.controllers.main_controller import MainController
 from src.gui_pyqt.views.main_window import MainWindow
+from src.gui_pyqt.views.main_window import TokenEditDialog
 
 os.environ.setdefault("QT_QPA_PLATFORM", "offscreen")
 
@@ -18,6 +19,15 @@ def _debug_case(title, given, expected, actual):
     print(f"  GIVEN    : {given}")
     print(f"  EXPECTED : {expected}")
     print(f"  ACTUAL   : {actual}")
+
+
+def _tokens_from_json_payload(payload):
+    if isinstance(payload, list):
+        return payload
+    if isinstance(payload, dict):
+        raw_tokens = payload.get("tokens", [])
+        return raw_tokens if isinstance(raw_tokens, list) else []
+    return []
 
 
 @pytest.fixture(scope="module")
@@ -105,6 +115,28 @@ def test_main_window_has_required_controls(window):
     assert controls["back_img_upload_btn"] == "Back-Img Upload"
     assert controls["back_img_delete_btn"] == "Back-Img Delete"
     assert controls["reset_btn"] == "Svuota Bag"
+
+
+def test_token_edit_dialog_is_wider_for_long_text(qapp):
+    dialog = TokenEditDialog(
+        default_text="<Token Lungo>|Descrizione molto lunga da vedere meglio nel popup",
+        default_tags=["uno", "due"],
+        default_shape=TokenShape.CIRCLE,
+        default_mode=TokenEditDialog.MODE_TEXT_ONLY,
+    )
+
+    _debug_case(
+        "Token edit dialog wider layout",
+        {},
+        {"minimum_width_at_least": 720, "text_edit_minimum_width_at_least": 520},
+        {
+            "minimum_width": dialog.minimumWidth(),
+            "text_edit_minimum_width": dialog.text_edit.minimumWidth(),
+        },
+    )
+
+    assert dialog.minimumWidth() >= 720
+    assert dialog.text_edit.minimumWidth() >= 520
 
 
 def test_gui_flow_load_create_draw_reveal_hide_reset(window):
@@ -750,7 +782,7 @@ def test_reload_tokens_file_replaces_runtime_instead_of_merge(window):
     # Reload from JSON must restore exact file content (no merge with runtime changes).
     json_path = Path(window.controller.bootstrap_tokens_file)
     raw = json.loads(json_path.read_text(encoding="utf-8"))
-    expected_names = [item["name"] for item in raw]
+    expected_names = [item["name"] for item in _tokens_from_json_payload(raw)]
 
     window._on_load_tokens(str(json_path))
     actual_names = [entry["name"] for entry in window.controller.token_status_entries()]
@@ -781,19 +813,23 @@ def test_loaded_file_becomes_persistence_target(window, tmp_path):
     window._on_new_token()
 
     payload = json.loads(custom_file.read_text(encoding="utf-8"))
+    payload_tokens = _tokens_from_json_payload(payload)
     _debug_case(
         "Loaded JSON file is used as persistence target",
         {"loaded_file": str(custom_file), "initial_count": initial_count},
         {"file_count_after_new": initial_count + 1},
-        {"file_count_after_new": len(payload)},
+        {
+            "file_count_after_new": len(payload_tokens),
+            "settings_present": isinstance(payload, dict) and "settings" in payload,
+        },
     )
 
-    assert len(payload) == initial_count + 1
+    assert len(payload_tokens) == initial_count + 1
 
 
 def test_load_tokens_accepts_single_underscore_runtime_back_marker(window, tmp_path):
     source_file = Path("config/default_tokens_20.json")
-    payload = json.loads(source_file.read_text(encoding="utf-8"))
+    payload = _tokens_from_json_payload(json.loads(source_file.read_text(encoding="utf-8")))
     for item in payload:
         item["back_value"] = "_RUNTIME_BACK_IMAGE_"
 
@@ -834,14 +870,156 @@ def test_load_tokens_accepts_empty_json_and_allows_new_token(window, tmp_path):
     window._on_new_token()
 
     saved = json.loads(empty_file.read_text(encoding="utf-8"))
+    saved_tokens = _tokens_from_json_payload(saved)
     assert window.status_label.text().startswith("Nuovo token creato")
     assert window.token_list.count() == 1
-    assert len(saved) == 1
+    assert len(saved_tokens) == 1
+
+
+def test_load_tokens_applies_visual_settings_from_json(window, tmp_path):
+    source_file = Path("config/default_tokens_20.json")
+    base_tokens = _tokens_from_json_payload(json.loads(source_file.read_text(encoding="utf-8")))
+
+    background_path = tmp_path / "table_bg.png"
+    background_path.write_bytes(b"bg")
+
+    configured_payload = {
+        "settings": {
+            "assets_root_path": str(tmp_path),
+            "table_background_file": str(background_path),
+            "token_radius_px": 58,
+            "table_grid_margin_px": 64,
+            "hover_preview_enabled": False,
+        },
+        "tokens": base_tokens,
+    }
+
+    configured_file = tmp_path / "tokens_with_settings.json"
+    configured_file.write_text(json.dumps(configured_payload, indent=2), encoding="utf-8")
+
+    window._on_load_tokens(str(configured_file))
+
+    _debug_case(
+        "Load tokens applies scene settings",
+        {"file": str(configured_file)},
+        {"token_radius_px": 58, "table_background_file": str(background_path)},
+        {
+            "status": window.status_label.text(),
+            "token_radius_px": window.table_scene.token_radius_px(),
+            "table_background_file": window.table_scene.table_background_file(),
+        },
+    )
+
+    assert window.status_label.text().startswith("Token caricati")
+    assert window.table_scene.token_radius_px() == pytest.approx(58.0)
+    assert window.table_scene.table_background_file() == str(background_path)
+
+
+def test_image_picker_defaults_to_assets_root_path(window, tmp_path, monkeypatch):
+    assets_root = tmp_path / "assets" / "images"
+    assets_root.mkdir(parents=True)
+
+    payload = {
+        "settings": {
+            "assets_root_path": str(assets_root),
+        },
+        "tokens": [],
+    }
+    token_file = tmp_path / "tokens_assets_root.json"
+    token_file.write_text(json.dumps(payload, indent=2), encoding="utf-8")
+
+    window._on_load_tokens(str(token_file))
+
+    captured = {}
+
+    def fake_get_open_file_name(parent, title, directory, filters):
+        captured["title"] = title
+        captured["directory"] = directory
+        captured["filters"] = filters
+        return "", ""
+
+    monkeypatch.setattr(QFileDialog, "getOpenFileName", fake_get_open_file_name)
+
+    selected = window._pick_image_file("Seleziona immagine front")
+
+    _debug_case(
+        "Image picker defaults to assets_root_path",
+        {"assets_root_path": str(assets_root)},
+        {"directory": str(assets_root), "selected": None},
+        {"directory": captured.get("directory"), "selected": selected},
+    )
+
+    assert selected is None
+    assert captured.get("directory") == str(assets_root)
+
+
+def test_load_tokens_rewrites_image_paths_relative_to_assets_root(window, tmp_path):
+    assets_root = tmp_path / "assets" / "images"
+    fronts_dir = assets_root / "token_fronts"
+    backs_dir = assets_root / "token_backs"
+    fronts_dir.mkdir(parents=True)
+    backs_dir.mkdir(parents=True)
+
+    front_path = fronts_dir / "egonya.png"
+    back_path = backs_dir / "back.png"
+    bg_path = assets_root / "bg_table.png"
+    front_path.write_bytes(b"front")
+    back_path.write_bytes(b"back")
+    bg_path.write_bytes(b"bg")
+
+    payload = {
+        "settings": {
+            "assets_root_path": str(assets_root),
+            "table_background_file": str(bg_path),
+        },
+        "tokens": [
+            {
+                "id": "ac27022d-9449-4bdf-9503-4f54d1559041",
+                "name": "Egonya",
+                "shape": "PENTAGON",
+                "front_type": "IMAGE",
+                "front_value": str(front_path),
+                "back_value": str(back_path),
+                "categories": [],
+                "tags": ["Dio"],
+                "metadata": {"front_text": "<Egonya>|Consapevolezza del Se"},
+                "weight": 1.3,
+                "rarity": "rare"
+            }
+        ],
+    }
+
+    token_file = tmp_path / "mare_tokens_relative.json"
+    token_file.write_text(json.dumps(payload, indent=2), encoding="utf-8")
+
+    window._on_load_tokens(str(token_file))
+
+    saved = json.loads(token_file.read_text(encoding="utf-8"))
+    saved_token = saved["tokens"][0]
+
+    _debug_case(
+        "Load tokens rewrites image paths relative to assets_root_path",
+        {"file": str(token_file), "assets_root_path": str(assets_root)},
+        {
+            "table_background_file": "bg_table.png",
+            "front_value": str(Path("token_fronts") / "egonya.png"),
+            "back_value": str(Path("token_backs") / "back.png"),
+        },
+        {
+            "table_background_file": saved["settings"].get("table_background_file"),
+            "front_value": saved_token.get("front_value"),
+            "back_value": saved_token.get("back_value"),
+        },
+    )
+
+    assert saved["settings"]["table_background_file"] == str(Path("bg_table.png"))
+    assert saved_token["front_value"] == str(Path("token_fronts") / "egonya.png")
+    assert saved_token["back_value"] == str(Path("token_backs") / "back.png")
 
 
 def test_load_tokens_sanitizes_invalid_front_image_paths(window, tmp_path):
     source_file = Path("config/default_tokens_20.json")
-    payload = json.loads(source_file.read_text(encoding="utf-8"))
+    payload = _tokens_from_json_payload(json.loads(source_file.read_text(encoding="utf-8")))
 
     payload[0]["front_type"] = TokenFrontType.IMAGE.value
     payload[0]["front_value"] = str(tmp_path / "missing_front_image_0.png")
@@ -934,6 +1112,35 @@ def test_front_text_name_extraction_rules(window):
     token_plain = window.controller._tokens_by_id[token_uuid]
     assert token_plain.name == plain_text
     assert token_plain.front_value == plain_text
+
+
+def test_image_token_uses_metadata_front_text_as_popup_default(window, tmp_path):
+    source_file = Path("config/default_tokens_20.json")
+    payload = _tokens_from_json_payload(json.loads(source_file.read_text(encoding="utf-8")))
+
+    payload[0]["name"] = "Egonya"
+    payload[0]["front_type"] = TokenFrontType.IMAGE.value
+    payload[0]["front_value"] = str(tmp_path / "missing_egonya_front.png")
+    payload[0].setdefault("metadata", {})["front_text"] = "<Egonya>|Consapevolezza del Se"
+
+    custom_file = tmp_path / "tokens_image_popup_default.json"
+    custom_file.write_text(json.dumps(payload, indent=2), encoding="utf-8")
+
+    window._on_load_tokens(str(custom_file))
+
+    from uuid import UUID
+
+    token_id = UUID(payload[0]["id"])
+    popup_default_text = window.controller.front_text_for_token(token_id)
+
+    _debug_case(
+        "IMAGE token keeps metadata front_text as popup default",
+        {"token_name": "Egonya", "front_text": "<Egonya>|Consapevolezza del Se"},
+        {"popup_default_text": "<Egonya>|Consapevolezza del Se"},
+        {"popup_default_text": popup_default_text},
+    )
+
+    assert popup_default_text == "<Egonya>|Consapevolezza del Se"
 
 
 def test_checkbox_selection_updates_scene_highlight(window):

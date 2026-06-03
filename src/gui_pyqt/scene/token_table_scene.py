@@ -1,4 +1,5 @@
 from PyQt6.QtCore import QPointF, pyqtSignal
+from PyQt6.QtGui import QBrush, QColor, QPixmap
 from PyQt6.QtWidgets import QGraphicsScene
 
 from src.core.models.table_token import TableToken
@@ -15,7 +16,45 @@ class TokenTableScene(QGraphicsScene):
     def __init__(self, scene_width: float = 1200.0, scene_height: float = 760.0) -> None:
         super().__init__(0, 0, scene_width, scene_height)
         self._token_items: dict[str, TokenGraphicsItem] = {}
+        self._token_radius_px = 42.0
+        self._table_grid_margin_px = 42.0
+        self._hover_preview_enabled = True
+        self._table_background_file = ""
+        self.setBackgroundBrush(QBrush(QColor("#dfe5eb")))
         self.selectionChanged.connect(self._emit_selection_changed)
+
+    def apply_visual_settings(
+        self,
+        *,
+        token_radius_px: float | None = None,
+        table_grid_margin_px: float | None = None,
+        hover_preview_enabled: bool | None = None,
+        table_background_file: str | None = None,
+    ) -> None:
+        if token_radius_px is not None:
+            self._token_radius_px = max(16.0, min(180.0, float(token_radius_px)))
+        if table_grid_margin_px is not None:
+            self._table_grid_margin_px = max(12.0, min(240.0, float(table_grid_margin_px)))
+        if hover_preview_enabled is not None:
+            self._hover_preview_enabled = bool(hover_preview_enabled)
+
+        if table_background_file is not None:
+            self._table_background_file = str(table_background_file)
+            bg_path = self._table_background_file.strip()
+            if bg_path:
+                pixmap = QPixmap(bg_path)
+                if not pixmap.isNull():
+                    self.setBackgroundBrush(QBrush(pixmap))
+                else:
+                    self.setBackgroundBrush(QBrush(QColor("#dfe5eb")))
+            else:
+                self.setBackgroundBrush(QBrush(QColor("#dfe5eb")))
+
+    def token_radius_px(self) -> float:
+        return self._token_radius_px
+
+    def table_background_file(self) -> str:
+        return self._table_background_file
 
     def update_viewport_rect(self, width: float, height: float) -> None:
         safe_width = max(120.0, float(width))
@@ -33,7 +72,12 @@ class TokenTableScene(QGraphicsScene):
         self.clear()
 
         for token, table_token in entries:
-            item = TokenGraphicsItem(token=token, table_token=table_token)
+            item = TokenGraphicsItem(
+                token=token,
+                table_token=table_token,
+                size=self._token_radius_px * 2.0,
+                hover_preview_enabled=self._hover_preview_enabled,
+            )
             pos = self._map_core_coordinates(table_token.x, table_token.y)
             item.setPos(pos)
             item.setRotation(table_token.rotation)
@@ -64,7 +108,7 @@ class TokenTableScene(QGraphicsScene):
 
     def _map_core_coordinates(self, x: float, y: float) -> QPointF:
         rect = self.sceneRect()
-        margin = 42.0
+        margin = self._table_grid_margin_px
         width = rect.width() - margin * 2
         height = rect.height() - margin * 2
 
@@ -74,7 +118,7 @@ class TokenTableScene(QGraphicsScene):
 
     def _map_scene_to_core_coordinates(self, px: float, py: float) -> tuple[float, float]:
         rect = self.sceneRect()
-        margin = 42.0
+        margin = self._table_grid_margin_px
         width = rect.width() - margin * 2
         height = rect.height() - margin * 2
 

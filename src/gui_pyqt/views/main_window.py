@@ -70,10 +70,13 @@ class TokenEditDialog(QDialog):
     ) -> None:
         super().__init__(parent)
         self.setWindowTitle("Modifica Token Selezionati")
+        self.setMinimumWidth(720)
 
         form = QFormLayout(self)
+        form.setFieldGrowthPolicy(QFormLayout.FieldGrowthPolicy.ExpandingFieldsGrow)
 
         self.text_edit = QLineEdit(default_text)
+        self.text_edit.setMinimumWidth(520)
         form.addRow("Testo:", self.text_edit)
 
         self.tags_edit = QLineEdit("; ".join(default_tags))
@@ -297,6 +300,7 @@ class MainWindow(QMainWindow):
                     return
 
             tokens = self.controller.load_tokens(chosen_file)
+            self._apply_table_visual_settings_from_tokens_config()
             self._last_inserted_token_ids.clear()
             self.status_label.setText(f"Token caricati: {len(tokens)}")
             self._refresh_list()
@@ -643,10 +647,11 @@ class MainWindow(QMainWindow):
         return selected
 
     def _pick_image_file(self, title: str) -> str | None:
+        initial_dir = self._default_assets_root_directory()
         file_path, _ = QFileDialog.getOpenFileName(
             self,
             title,
-            "",
+            initial_dir,
             "Images (*.png *.jpg *.jpeg *.bmp *.gif *.webp);;All files (*.*)",
         )
         if not file_path:
@@ -676,6 +681,16 @@ class MainWindow(QMainWindow):
 
         fallback = Path.cwd() / "config"
         return str(fallback if fallback.exists() else Path.cwd())
+
+    def _default_assets_root_directory(self) -> str:
+        settings = self.controller.token_file_settings
+        raw_assets_root = settings.get("assets_root_path")
+        if isinstance(raw_assets_root, str) and raw_assets_root.strip():
+            candidate = Path(raw_assets_root)
+            if candidate.exists():
+                return str(candidate)
+
+        return self._default_tokens_directory()
 
     @staticmethod
     def _parse_tags_input(raw_tags: str) -> list[str]:
@@ -753,6 +768,16 @@ class MainWindow(QMainWindow):
     def _sync_table_scene_to_viewport(self) -> None:
         viewport = self.table_view.viewport().size()
         self.table_scene.update_viewport_rect(viewport.width(), viewport.height())
+
+    def _apply_table_visual_settings_from_tokens_config(self) -> None:
+        settings = self.controller.token_file_settings
+        self.table_scene.apply_visual_settings(
+            token_radius_px=settings.get("token_radius_px"),
+            table_grid_margin_px=settings.get("table_grid_margin_px"),
+            hover_preview_enabled=settings.get("hover_preview_enabled"),
+            table_background_file=settings.get("table_background_file"),
+        )
+        self._sync_table_scene_to_viewport()
 
     def _insert_selected_into_bag(self, selected_ids: list, *, status_prefix: str) -> None:
         session = self.controller.create_session_from_selection(selected_ids)
