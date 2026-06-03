@@ -301,6 +301,7 @@ class MainWindow(QMainWindow):
 
             tokens = self.controller.load_tokens(chosen_file)
             self._apply_table_visual_settings_from_tokens_config()
+            self._resize_window_for_table_background()
             self._last_inserted_token_ids.clear()
             self.status_label.setText(f"Token caricati: {len(tokens)}")
             self._refresh_list()
@@ -778,6 +779,29 @@ class MainWindow(QMainWindow):
             table_background_file=settings.get("table_background_file"),
         )
         self._sync_table_scene_to_viewport()
+
+    def _resize_window_for_table_background(self) -> None:
+        bg_width, bg_height = self.table_scene.table_background_size()
+        if bg_width <= 0 or bg_height <= 0:
+            return
+
+        min_window_width = max(self.minimumWidth(), 520)
+        min_window_height = max(self.minimumHeight(), 360)
+        for _ in range(3):
+            QApplication.processEvents()
+            viewport = self.table_view.viewport().size()
+            hidden_table_panel_width = self.content_splitter.width()
+            if viewport.width() <= 0 or viewport.height() <= 0:
+                return
+
+            width_delta = bg_width - hidden_table_panel_width
+            height_delta = bg_height - viewport.height()
+            if abs(width_delta) <= 1 and abs(height_delta) <= 1:
+                break
+
+            target_width = max(min_window_width, self.width() + width_delta)
+            target_height = max(min_window_height, self.height() + height_delta)
+            self.resize(int(target_width), int(target_height))
 
     def _insert_selected_into_bag(self, selected_ids: list, *, status_prefix: str) -> None:
         session = self.controller.create_session_from_selection(selected_ids)

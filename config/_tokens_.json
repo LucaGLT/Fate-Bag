@@ -1,140 +1,149 @@
-[
-  {
-    "id": "8c969662-3147-4227-a1a1-7e6f8855593b",
-    "name": "Logoy-Nomon|Ordine,Legge, Processo",
-    "shape": "PENTAGON",
-    "front_type": "TEXT",
-    "front_value": ">Logoy-Nomon>|Ordine,Legge, Processo",
-    "back_value": "C:\\_GLT_\\Qt Prj\\Fate-Bag\\Fate-Bag\\assets\\images\\token_backs\\Dio_simple_green_Back.png",
-    "categories": [
-      "holy"
-    ],
-    "tags": [
-      "Dio"
-    ],
-    "metadata": {
-      "source": "bootstrap"
+{
+  "settings": {
+    "assets_root_path": "C:\\_GLT_\\Qt Prj\\Fate-Bag\\Fate-Bag\\config",
+    "table_background_file": "",
+    "token_radius_px": 42,
+    "table_grid_margin_px": 42,
+    "hover_preview_enabled": true
+  },
+  "tokens": [
+    {
+      "id": "8c969662-3147-4227-a1a1-7e6f8855593b",
+      "name": "Logoy-Nomon|Ordine,Legge, Processo",
+      "shape": "PENTAGON",
+      "front_type": "TEXT",
+      "front_value": ">Logoy-Nomon>|Ordine,Legge, Processo",
+      "back_value": "C:\\_GLT_\\Qt Prj\\Fate-Bag\\Fate-Bag\\assets\\images\\token_backs\\Dio_simple_green_Back.png",
+      "categories": [
+        "holy"
+      ],
+      "tags": [
+        "Dio"
+      ],
+      "metadata": {
+        "source": "bootstrap"
+      },
+      "weight": 2.8,
+      "rarity": "common"
     },
-    "weight": 2.8,
-    "rarity": "common"
-  },
-  {
-    "id": "ac27022d-9449-4bdf-9503-4f54d1559041",
-    "name": "Egonya",
-    "shape": "PENTAGON",
-    "front_type": "IMAGE",
-    "front_value": "C:\\_GLT_\\Qt Prj\\Fate-Bag\\Fate-Bag\\assets\\images\\token_fronts\\Egonya.png",
-    "back_value": "C:\\_GLT_\\Qt Prj\\Fate-Bag\\Fate-Bag\\assets\\images\\token_backs\\Dio_simple_green_Back.png",
-    "categories": [
-      "shadow"
-    ],
-    "tags": [
-      "Dio"
-    ],
-    "metadata": {
-      "source": "bootstrap"
+    {
+      "id": "ac27022d-9449-4bdf-9503-4f54d1559041",
+      "name": "Egonya",
+      "shape": "PENTAGON",
+      "front_type": "IMAGE",
+      "front_value": "C:\\_GLT_\\Qt Prj\\Fate-Bag\\Fate-Bag\\assets\\images\\token_fronts\\Egonya.png",
+      "back_value": "C:\\_GLT_\\Qt Prj\\Fate-Bag\\Fate-Bag\\assets\\images\\token_backs\\Dio_simple_green_Back.png",
+      "categories": [
+        "shadow"
+      ],
+      "tags": [
+        "Dio"
+      ],
+      "metadata": {
+        "source": "bootstrap"
+      },
+      "weight": 1.3,
+      "rarity": "rare"
     },
-    "weight": 1.3,
-    "rarity": "rare"
-  },
-  {
-    "id": "54b4796e-a514-49df-8e1b-cd0d58455e2e",
-    "name": "Mnemora",
-    "shape": "PENTAGON",
-    "front_type": "IMAGE",
-    "front_value": "C:\\_GLT_\\Qt Prj\\Fate-Bag\\Fate-Bag\\assets\\images\\token_fronts\\Mnemora.png",
-    "back_value": "C:\\_GLT_\\Qt Prj\\Fate-Bag\\Fate-Bag\\assets\\images\\token_backs\\Dio_simple_green_Back.png",
-    "categories": [
-      "holy"
-    ],
-    "tags": [
-      "Dio"
-    ],
-    "metadata": {
-      "source": "bootstrap"
+    {
+      "id": "54b4796e-a514-49df-8e1b-cd0d58455e2e",
+      "name": "Mnemora",
+      "shape": "PENTAGON",
+      "front_type": "IMAGE",
+      "front_value": "C:\\_GLT_\\Qt Prj\\Fate-Bag\\Fate-Bag\\assets\\images\\token_fronts\\Mnemora.png",
+      "back_value": "C:\\_GLT_\\Qt Prj\\Fate-Bag\\Fate-Bag\\assets\\images\\token_backs\\Dio_simple_green_Back.png",
+      "categories": [
+        "holy"
+      ],
+      "tags": [
+        "Dio"
+      ],
+      "metadata": {
+        "source": "bootstrap"
+      },
+      "weight": 2.7,
+      "rarity": "rare"
     },
-    "weight": 2.7,
-    "rarity": "rare"
-  },
-  {
-    "id": "36269690-0e31-4ad2-86d4-d178a260f62c",
-    "name": "Dyresys",
-    "shape": "PENTAGON",
-    "front_type": "IMAGE",
-    "front_value": "C:\\_GLT_\\Qt Prj\\Fate-Bag\\Fate-Bag\\assets\\images\\token_fronts\\Dyresys.png",
-    "back_value": "C:\\_GLT_\\Qt Prj\\Fate-Bag\\Fate-Bag\\assets\\images\\token_backs\\Dio_simple_green_Back.png",
-    "categories": [
-      "shadow"
-    ],
-    "tags": [
-      "Dio"
-    ],
-    "metadata": {
-      "source": "bootstrap"
+    {
+      "id": "36269690-0e31-4ad2-86d4-d178a260f62c",
+      "name": "Dyresys",
+      "shape": "PENTAGON",
+      "front_type": "IMAGE",
+      "front_value": "C:\\_GLT_\\Qt Prj\\Fate-Bag\\Fate-Bag\\assets\\images\\token_fronts\\Dyresys.png",
+      "back_value": "C:\\_GLT_\\Qt Prj\\Fate-Bag\\Fate-Bag\\assets\\images\\token_backs\\Dio_simple_green_Back.png",
+      "categories": [
+        "shadow"
+      ],
+      "tags": [
+        "Dio"
+      ],
+      "metadata": {
+        "source": "bootstrap"
+      },
+      "weight": 0.7,
+      "rarity": "legendary"
     },
-    "weight": 0.7,
-    "rarity": "legendary"
-  },
-  {
-    "id": "e031e690-10d5-4a36-b1a0-f5d8f8733698",
-    "name": "Lak\u00f9na",
-    "shape": "PENTAGON",
-    "front_type": "IMAGE",
-    "front_value": "C:\\_GLT_\\Qt Prj\\Fate-Bag\\Fate-Bag\\assets\\images\\token_fronts\\Lakuna.png",
-    "back_value": "C:\\_GLT_\\Qt Prj\\Fate-Bag\\Fate-Bag\\assets\\images\\token_backs\\Dio_simple_green_Back.png",
-    "categories": [],
-    "tags": [
-      "Dio"
-    ],
-    "metadata": {},
-    "weight": 1.0,
-    "rarity": null
-  },
-  {
-    "id": "55c84d2b-d454-480a-ab55-a6817b8e5b0e",
-    "name": "Novizio di Egonya",
-    "shape": "CIRCLE",
-    "front_type": "TEXT",
-    "front_value": "<Novizio di Egonya>|",
-    "back_value": "C:\\_GLT_\\Qt Prj\\Fate-Bag\\Fate-Bag\\assets\\images\\token_backs\\PG_Nariel_Veyr.PNG",
-    "categories": [],
-    "tags": [
-      "Nariel",
-      "Caratteristica"
-    ],
-    "metadata": {},
-    "weight": 1.0,
-    "rarity": null
-  },
-  {
-    "id": "4c606014-ad43-4ebe-aa85-6b0f9a5ae405",
-    "name": "Esperienza in Mare",
-    "shape": "CIRCLE",
-    "front_type": "TEXT",
-    "front_value": "<Esperienza in Mare>|da anni di pesca d'altura",
-    "back_value": "C:\\_GLT_\\Qt Prj\\Fate-Bag\\Fate-Bag\\assets\\images\\token_backs\\PG_Nariel_Veyr.PNG",
-    "categories": [],
-    "tags": [
-      "Nariel",
-      "Abilit\u00e0"
-    ],
-    "metadata": {},
-    "weight": 1.0,
-    "rarity": null
-  },
-  {
-    "id": "d5172257-9298-46b5-9969-5a2e64048f5b",
-    "name": "PERICOLO",
-    "shape": "HEXAGON",
-    "front_type": "TEXT",
-    "front_value": "PERICOLO",
-    "back_value": "C:\\_GLT_\\Qt Prj\\Fate-Bag\\Fate-Bag\\assets\\images\\token_backs\\Purple_Back.PNG",
-    "categories": [],
-    "tags": [
-      "Pericolo"
-    ],
-    "metadata": {},
-    "weight": 1.0,
-    "rarity": null
-  }
-]
+    {
+      "id": "e031e690-10d5-4a36-b1a0-f5d8f8733698",
+      "name": "Lak\u00f9na",
+      "shape": "PENTAGON",
+      "front_type": "IMAGE",
+      "front_value": "C:\\_GLT_\\Qt Prj\\Fate-Bag\\Fate-Bag\\assets\\images\\token_fronts\\Lakuna.png",
+      "back_value": "C:\\_GLT_\\Qt Prj\\Fate-Bag\\Fate-Bag\\assets\\images\\token_backs\\Dio_simple_green_Back.png",
+      "categories": [],
+      "tags": [
+        "Dio"
+      ],
+      "metadata": {},
+      "weight": 1.0,
+      "rarity": null
+    },
+    {
+      "id": "55c84d2b-d454-480a-ab55-a6817b8e5b0e",
+      "name": "Novizio di Egonya",
+      "shape": "CIRCLE",
+      "front_type": "TEXT",
+      "front_value": "<Novizio di Egonya>|",
+      "back_value": "C:\\_GLT_\\Qt Prj\\Fate-Bag\\Fate-Bag\\assets\\images\\token_backs\\PG_Nariel_Veyr.PNG",
+      "categories": [],
+      "tags": [
+        "Nariel",
+        "Caratteristica"
+      ],
+      "metadata": {},
+      "weight": 1.0,
+      "rarity": null
+    },
+    {
+      "id": "4c606014-ad43-4ebe-aa85-6b0f9a5ae405",
+      "name": "Esperienza in Mare",
+      "shape": "CIRCLE",
+      "front_type": "TEXT",
+      "front_value": "<Esperienza in Mare>|da anni di pesca d'altura",
+      "back_value": "C:\\_GLT_\\Qt Prj\\Fate-Bag\\Fate-Bag\\assets\\images\\token_backs\\PG_Nariel_Veyr.PNG",
+      "categories": [],
+      "tags": [
+        "Nariel",
+        "Abilit\u00e0"
+      ],
+      "metadata": {},
+      "weight": 1.0,
+      "rarity": null
+    },
+    {
+      "id": "d5172257-9298-46b5-9969-5a2e64048f5b",
+      "name": "PERICOLO",
+      "shape": "HEXAGON",
+      "front_type": "TEXT",
+      "front_value": "PERICOLO",
+      "back_value": "C:\\_GLT_\\Qt Prj\\Fate-Bag\\Fate-Bag\\assets\\images\\token_backs\\Purple_Back.PNG",
+      "categories": [],
+      "tags": [
+        "Pericolo"
+      ],
+      "metadata": {},
+      "weight": 1.0,
+      "rarity": null
+    }
+  ]
+}

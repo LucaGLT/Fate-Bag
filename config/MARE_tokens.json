@@ -1,7 +1,7 @@
 {
   "settings": {
     "assets_root_path": "C:\\_GLT_\\Qt Prj\\Fate-Bag\\Fate-Bag\\assets\\images",
-    "table_background_file": "01_Isola di Elyra_blu.png",
+    "table_background_file": "token_backs\\Table_BG.PNG",
     "token_radius_px": 50,
     "table_grid_margin_px": 40,
     "hover_preview_enabled": true
@@ -13,7 +13,7 @@
       "shape": "PENTAGON",
       "front_type": "IMAGE",
       "front_value": "token_fronts\\LogoyNomon_lime.PNG",
-      "back_value": "token_backs\\Dio_simple_green_Back.png",
+      "back_value": "token_backs\\Dio_simple_blu_Back.png",
       "categories": [
         "holy"
       ],
@@ -33,7 +33,7 @@
       "shape": "PENTAGON",
       "front_type": "IMAGE",
       "front_value": "token_fronts\\Egonya_lime.png",
-      "back_value": "token_backs\\Dio_simple_green_Back.png",
+      "back_value": "token_backs\\Dio_simple_blu_Back.png",
       "categories": [
         "shadow"
       ],
@@ -53,7 +53,7 @@
       "shape": "PENTAGON",
       "front_type": "IMAGE",
       "front_value": "token_fronts\\Mnemora_lime.png",
-      "back_value": "token_backs\\Dio_simple_green_Back.png",
+      "back_value": "token_backs\\Dio_simple_blu_Back.png",
       "categories": [
         "holy"
       ],
@@ -73,7 +73,7 @@
       "shape": "PENTAGON",
       "front_type": "IMAGE",
       "front_value": "token_fronts\\Dyresys_lime.png",
-      "back_value": "token_backs\\Dio_simple_green_Back.png",
+      "back_value": "token_backs\\Dio_simple_blu_Back.png",
       "categories": [
         "shadow"
       ],
@@ -93,7 +93,7 @@
       "shape": "PENTAGON",
       "front_type": "IMAGE",
       "front_value": "token_fronts\\Lakuna_lime.png",
-      "back_value": "token_backs\\Dio_simple_green_Back.png",
+      "back_value": "token_backs\\Dio_simple_blu_Back.png",
       "categories": [],
       "tags": [
         "Dio"
@@ -127,7 +127,7 @@
       "name": "Esperienza in Mare",
       "shape": "CIRCLE",
       "front_type": "TEXT_IMAGE",
-      "front_value": "token_backs\\PG_Nariel_Veyr_Gray.png",
+      "front_value": "token_fronts\\PG_Nariel_Veyr_Ligh-Gray.png",
       "back_value": "token_backs\\PG_Nariel_Veyr.PNG",
       "categories": [],
       "tags": [
@@ -144,16 +144,15 @@
       "id": "d5172257-9298-46b5-9969-5a2e64048f5b",
       "name": "P E R I C O L O",
       "shape": "HEXAGON",
-      "front_type": "TEXT_IMAGE",
-      "front_value": "token_backs\\Red_Back.PNG",
-      "back_value": "token_backs\\Dio_simple_green_Back.png",
+      "front_type": "IMAGE",
+      "front_value": "token_fronts\\Pericolo.PNG",
+      "back_value": "token_backs\\Dio_simple_red_Back.png",
       "categories": [],
       "tags": [
         "Pericolo"
       ],
       "metadata": {
-        "front_text": "<P E R I C O L O>",
-        "front_text_color_mode": "white"
+        "front_text": "<P E R I C O L O>"
       },
       "weight": 1.0,
       "rarity": null
@@ -163,7 +162,7 @@
       "name": "Navigazione Esperta",
       "shape": "CIRCLE",
       "front_type": "TEXT_IMAGE",
-      "front_value": "token_backs\\PG_Yedid_Gray.png",
+      "front_value": "token_fronts\\PG_Yedid_light-Gray.png",
       "back_value": "token_backs\\PG_Yedid.PNG",
       "categories": [],
       "tags": [

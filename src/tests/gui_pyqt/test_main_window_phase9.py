@@ -4,6 +4,7 @@ from pathlib import Path
 
 import pytest
 from PyQt6.QtCore import Qt
+from PyQt6.QtGui import QImage, QColor
 from PyQt6.QtWidgets import QApplication, QFileDialog
 
 from src.core.models.enums import TokenFrontType, TokenShape
@@ -951,6 +952,86 @@ def test_image_picker_defaults_to_assets_root_path(window, tmp_path, monkeypatch
 
     assert selected is None
     assert captured.get("directory") == str(assets_root)
+
+
+def test_load_tokens_resizes_window_once_so_hidden_list_shows_full_background(window, tmp_path):
+    window.show()
+    QApplication.processEvents()
+
+    assets_root = tmp_path / "assets" / "images"
+    assets_root.mkdir(parents=True)
+
+    background_path = assets_root / "sea_table.png"
+    image = QImage(930, 610, QImage.Format.Format_ARGB32)
+    image.fill(QColor(20, 80, 140))
+    assert image.save(str(background_path))
+
+    payload = {
+        "settings": {
+            "assets_root_path": str(assets_root),
+            "table_background_file": str(background_path),
+        },
+        "tokens": [],
+    }
+    token_file = tmp_path / "tokens_resize_to_bg.json"
+    token_file.write_text(json.dumps(payload, indent=2), encoding="utf-8")
+
+    window.resize(760, 480)
+    QApplication.processEvents()
+    width_before = window.width()
+    height_before = window.height()
+    window._on_load_tokens(str(token_file))
+    QApplication.processEvents()
+
+    viewport_with_list = window.table_view.viewport().size()
+    table_view_size_with_list = window.table_view.size()
+    scene_rect_after_load = window.table_scene.sceneRect()
+    width_after_load = window.width()
+    height_after_load = window.height()
+
+    window._toggle_token_list_visibility()
+    QApplication.processEvents()
+
+    viewport_hidden = window.table_view.viewport().size()
+    table_view_size_hidden = window.table_view.size()
+    width_after_toggle = window.width()
+    height_after_toggle = window.height()
+
+    _debug_case(
+        "Window resize happens only on load; hidden list reveals full background",
+        {"background_size": (930, 610)},
+        {
+            "table_with_list_narrower_than_background": True,
+            "scene_matches_viewport_with_list": True,
+            "scene_matches_viewport_hidden": True,
+            "viewport_hidden_height_close_to": 610,
+            "window_size_stable_after_toggle": True,
+        },
+        {
+            "viewport_with_list": (viewport_with_list.width(), viewport_with_list.height()),
+            "table_with_list": (table_view_size_with_list.width(), table_view_size_with_list.height()),
+            "scene_rect_after_load": (scene_rect_after_load.width(), scene_rect_after_load.height()),
+            "viewport_hidden": (viewport_hidden.width(), viewport_hidden.height()),
+            "table_hidden": (table_view_size_hidden.width(), table_view_size_hidden.height()),
+            "scene_rect_after_toggle": (
+                window.table_scene.sceneRect().width(),
+                window.table_scene.sceneRect().height(),
+            ),
+            "window_before": (width_before, height_before),
+            "window_after_load": (width_after_load, height_after_load),
+            "window_after_toggle": (width_after_toggle, height_after_toggle),
+        },
+    )
+
+    assert table_view_size_with_list.width() < 930
+    assert scene_rect_after_load.width() == pytest.approx(float(viewport_with_list.width()), abs=2.0)
+    assert scene_rect_after_load.height() == pytest.approx(float(viewport_with_list.height()), abs=2.0)
+
+    scene_rect_after_toggle = window.table_scene.sceneRect()
+    assert scene_rect_after_toggle.width() == pytest.approx(float(viewport_hidden.width()), abs=2.0)
+    assert scene_rect_after_toggle.height() == pytest.approx(float(viewport_hidden.height()), abs=2.0)
+    assert abs(viewport_hidden.height() - 610) <= 24
+    assert (width_after_load, height_after_load) == (width_after_toggle, height_after_toggle)
 
 
 def test_load_tokens_rewrites_image_paths_relative_to_assets_root(window, tmp_path):

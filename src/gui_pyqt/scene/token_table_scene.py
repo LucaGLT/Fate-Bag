@@ -1,4 +1,4 @@
-from PyQt6.QtCore import QPointF, pyqtSignal
+from PyQt6.QtCore import QPointF, Qt, pyqtSignal
 from PyQt6.QtGui import QBrush, QColor, QPixmap
 from PyQt6.QtWidgets import QGraphicsScene
 
@@ -20,6 +20,8 @@ class TokenTableScene(QGraphicsScene):
         self._table_grid_margin_px = 42.0
         self._hover_preview_enabled = True
         self._table_background_file = ""
+        self._table_background_size = (0, 0)
+        self._table_background_pixmap: QPixmap | None = None
         self.setBackgroundBrush(QBrush(QColor("#dfe5eb")))
         self.selectionChanged.connect(self._emit_selection_changed)
 
@@ -44,10 +46,16 @@ class TokenTableScene(QGraphicsScene):
             if bg_path:
                 pixmap = QPixmap(bg_path)
                 if not pixmap.isNull():
-                    self.setBackgroundBrush(QBrush(pixmap))
+                    self._table_background_pixmap = pixmap
+                    self._table_background_size = (pixmap.width(), pixmap.height())
+                    self._refresh_background_brush_for_scene_rect()
                 else:
+                    self._table_background_pixmap = None
+                    self._table_background_size = (0, 0)
                     self.setBackgroundBrush(QBrush(QColor("#dfe5eb")))
             else:
+                self._table_background_pixmap = None
+                self._table_background_size = (0, 0)
                 self.setBackgroundBrush(QBrush(QColor("#dfe5eb")))
 
     def token_radius_px(self) -> float:
@@ -56,16 +64,37 @@ class TokenTableScene(QGraphicsScene):
     def table_background_file(self) -> str:
         return self._table_background_file
 
+    def table_background_size(self) -> tuple[int, int]:
+        return self._table_background_size
+
     def update_viewport_rect(self, width: float, height: float) -> None:
         safe_width = max(120.0, float(width))
         safe_height = max(120.0, float(height))
 
         current = self.sceneRect()
         if abs(current.width() - safe_width) < 0.1 and abs(current.height() - safe_height) < 0.1:
+            self._refresh_background_brush_for_scene_rect()
             return
 
         self.setSceneRect(0.0, 0.0, safe_width, safe_height)
+        self._refresh_background_brush_for_scene_rect()
         self._reposition_items_from_core_coordinates()
+
+    def _refresh_background_brush_for_scene_rect(self) -> None:
+        if self._table_background_pixmap is None or self._table_background_pixmap.isNull():
+            self.setBackgroundBrush(QBrush(QColor("#dfe5eb")))
+            return
+
+        rect = self.sceneRect()
+        width = max(1, int(round(rect.width())))
+        height = max(1, int(round(rect.height())))
+        scaled = self._table_background_pixmap.scaled(
+            width,
+            height,
+            Qt.AspectRatioMode.IgnoreAspectRatio,
+            Qt.TransformationMode.SmoothTransformation,
+        )
+        self.setBackgroundBrush(QBrush(scaled))
 
     def load_from_session(self, entries: list[tuple[Token, TableToken]]) -> None:
         self._token_items.clear()
