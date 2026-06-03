@@ -3,7 +3,7 @@ from pathlib import Path
 import re
 import time
 
-from PyQt6.QtCore import Qt
+from PyQt6.QtCore import QTimer, Qt
 from PyQt6.QtGui import QColor, QIcon, QPainter, QPen, QPixmap
 from PyQt6.QtWidgets import (
     QApplication,
@@ -132,6 +132,11 @@ class MainWindow(QMainWindow):
         self._flip_debounce_seconds = 0.120
         self._last_flip_request_at: dict[str, float] = {}
         self._flip_duration_ms = 220
+        self._move_duration_ms = 260
+        self._auto_sort_delay_seconds = 0.0
+        self._auto_sort_timer = QTimer(self)
+        self._auto_sort_timer.setSingleShot(True)
+        self._auto_sort_timer.timeout.connect(self._on_auto_sort_timeout)
 
         self.setWindowTitle("Fate-Bag - GUI Tecnica Minima")
         self.resize(760, 480)
@@ -379,6 +384,7 @@ class MainWindow(QMainWindow):
             status = self._draw_status_text("Pesca 1", drawn)
             self._refresh_list()
             self._animate_tokens_flip_visual(drawn, status_text=status)
+            self._schedule_auto_sort_after_draw(trigger_label="Pesca 1")
         except Exception as exc:
             self.status_label.setText(f"Errore draw 1: {exc}")
 
@@ -397,24 +403,51 @@ class MainWindow(QMainWindow):
             status = self._draw_status_text("Pesca N", drawn)
             self._refresh_list()
             self._animate_tokens_flip_visual(drawn, status_text=status)
+            self._schedule_auto_sort_after_draw(trigger_label="Pesca N")
         except Exception as exc:
             self.status_label.setText(f"Errore draw N: {exc}")
 
     def _on_shuffle(self) -> None:
         try:
             self.controller.shuffle()
+            self._refresh_token_list_only()
+            self.table_scene.animate_tokens_to_core_positions(
+                self.controller.scene_entries(),
+                duration_ms=self._move_duration_ms,
+            )
             self.status_label.setText("Shuffle eseguito")
-            self._refresh_list()
         except Exception as exc:
             self.status_label.setText(f"Errore shuffle: {exc}")
 
     def _on_sort(self) -> None:
         try:
+            if self._auto_sort_timer.isActive():
+                self._auto_sort_timer.stop()
             self.controller.sort_face_up_first()
+            self._refresh_token_list_only()
+            self.table_scene.animate_tokens_to_core_positions(
+                self.controller.scene_entries(),
+                duration_ms=self._move_duration_ms,
+            )
             self.status_label.setText("Sort eseguito (FACE_UP -> FACE_DOWN)")
-            self._refresh_list()
         except Exception as exc:
             self.status_label.setText(f"Errore sort: {exc}")
+
+    def _on_auto_sort_timeout(self) -> None:
+        self._on_sort()
+
+    def _schedule_auto_sort_after_draw(self, *, trigger_label: str) -> None:
+        delay_seconds = max(0.0, float(self._auto_sort_delay_seconds))
+        if delay_seconds <= 0.0:
+            if self._auto_sort_timer.isActive():
+                self._auto_sort_timer.stop()
+            return
+
+        delay_ms = max(1, int(round(delay_seconds * 1000.0)))
+        self._auto_sort_timer.start(delay_ms)
+        self.status_label.setText(
+            f"{trigger_label}: sort automatico tra {delay_seconds:g}s"
+        )
 
     def _on_front_img_upload(self, image_path: str | None = None) -> None:
         try:
@@ -646,6 +679,31 @@ class MainWindow(QMainWindow):
 
         self._refresh_scene_preserve_checkbox_selection()
 
+    def _refresh_token_list_only(self) -> None:
+        selected_ids = self._checked_token_ids_from_ui()
+        entries = self.controller.token_status_entries(selected_ids)
+
+        self.token_list.clear()
+        self.token_list.blockSignals(True)
+        for entry in entries:
+            display_name = self._display_name_for_list(str(entry["name"]))
+            tags = entry.get("tags", [])
+            tags_text = ", ".join(tags) if tags else "-"
+            row_text = (
+                f"{display_name} | {entry['status']} | "
+                f"{entry.get('shape', '-')} | #: {tags_text}"
+            )
+            item = QListWidgetItem(row_text)
+            item.setData(Qt.ItemDataRole.UserRole, str(entry["token_id"]))
+            item.setFlags(item.flags() | Qt.ItemFlag.ItemIsUserCheckable)
+
+            is_checked = entry["token_id"] in selected_ids
+            item.setCheckState(Qt.CheckState.Checked if is_checked else Qt.CheckState.Unchecked)
+            self.token_list.addItem(item)
+        self.token_list.blockSignals(False)
+
+        self._sync_scene_selection_from_checkboxes()
+
     def _refresh_scene(self) -> None:
         self._sync_table_scene_to_viewport()
         self.table_scene.load_from_session(self.controller.scene_entries())
@@ -800,6 +858,12 @@ class MainWindow(QMainWindow):
             table_background_file=settings.get("table_background_file"),
         )
         self._flip_duration_ms = self._flip_duration_from_speed(settings.get("flip_speed"))
+        self._move_duration_ms = self._move_duration_from_speed(settings.get("move_speed"))
+        self._auto_sort_delay_seconds = self._auto_sort_delay_seconds_from_value(
+            settings.get("auto_sort_delay_seconds")
+        )
+        if self._auto_sort_delay_seconds <= 0.0 and self._auto_sort_timer.isActive():
+            self._auto_sort_timer.stop()
         self._sync_table_scene_to_viewport()
 
     def _resize_window_for_table_background(self) -> None:
@@ -824,6 +888,19 @@ class MainWindow(QMainWindow):
             target_width = max(min_window_width, self.width() + width_delta)
             target_height = max(min_window_height, self.height() + height_delta)
             self.resize(int(target_width), int(target_height))
+
+        self._center_window_on_screen()
+
+    def _center_window_on_screen(self) -> None:
+        screen = self.screen() or QApplication.primaryScreen()
+        if screen is None:
+            return
+
+        available = screen.availableGeometry()
+        frame = self.frameGeometry()
+        target_x = available.left() + max(0, (available.width() - frame.width()) // 2)
+        target_y = available.top() + max(0, (available.height() - frame.height()) // 2)
+        self.move(target_x, target_y)
 
     def _insert_selected_into_bag(self, selected_ids: list, *, status_prefix: str) -> None:
         session = self.controller.create_session_from_selection(selected_ids)
@@ -876,6 +953,26 @@ class MainWindow(QMainWindow):
         span = max_duration - min_duration
         ratio = (speed_value - 1) / 99
         return int(round(max_duration - (span * ratio)))
+
+    @staticmethod
+    def _move_duration_from_speed(raw_speed: object) -> int:
+        speed_value = 60
+        if isinstance(raw_speed, (int, float)):
+            speed_value = int(round(float(raw_speed)))
+        speed_value = max(1, min(100, speed_value))
+
+        # 1 => slowest movement, 100 => fastest movement.
+        min_duration = 90
+        max_duration = 900
+        span = max_duration - min_duration
+        ratio = (speed_value - 1) / 99
+        return int(round(max_duration - (span * ratio)))
+
+    @staticmethod
+    def _auto_sort_delay_seconds_from_value(raw_value: object) -> float:
+        if isinstance(raw_value, (int, float)):
+            return max(0.0, float(raw_value))
+        return 0.0
 
     @staticmethod
     def _display_mode_for_token(token) -> str:

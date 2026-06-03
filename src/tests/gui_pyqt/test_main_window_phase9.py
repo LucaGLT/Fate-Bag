@@ -5,6 +5,7 @@ from pathlib import Path
 import pytest
 from PyQt6.QtCore import Qt
 from PyQt6.QtGui import QImage, QColor
+from PyQt6.QtCore import QRect
 from PyQt6.QtWidgets import QApplication, QFileDialog
 
 from src.core.models.enums import TokenFrontType, TokenShape
@@ -153,6 +154,28 @@ def test_flip_duration_mapping_from_speed_setting(window):
     )
 
     assert fast < medium < slow
+
+
+def test_move_duration_mapping_from_speed_setting(window):
+    fast = window._move_duration_from_speed(100)
+    medium = window._move_duration_from_speed(60)
+    slow = window._move_duration_from_speed(1)
+
+    _debug_case(
+        "Move speed setting maps to duration",
+        {"speed_values": [1, 60, 100]},
+        {"fast_lt_medium_lt_slow": True},
+        {"fast_ms": fast, "medium_ms": medium, "slow_ms": slow},
+    )
+
+    assert fast < medium < slow
+
+
+def test_auto_sort_delay_mapping_from_setting(window):
+    assert window._auto_sort_delay_seconds_from_value(2.5) == pytest.approx(2.5)
+    assert window._auto_sort_delay_seconds_from_value(0) == pytest.approx(0.0)
+    assert window._auto_sort_delay_seconds_from_value(-3) == pytest.approx(0.0)
+    assert window._auto_sort_delay_seconds_from_value("abc") == pytest.approx(0.0)
 
 
 def test_gui_flow_load_create_draw_reveal_hide_reset(window):
@@ -952,6 +975,148 @@ def test_load_tokens_applies_flip_speed_setting(window, tmp_path):
     )
 
     assert window._flip_duration_ms == window._flip_duration_from_speed(100)
+
+
+def test_load_tokens_applies_move_speed_setting(window, tmp_path):
+    payload = {
+        "settings": {
+            "assets_root_path": str(tmp_path),
+            "move_speed": 100,
+        },
+        "tokens": [],
+    }
+    configured_file = tmp_path / "tokens_with_move_speed.json"
+    configured_file.write_text(json.dumps(payload, indent=2), encoding="utf-8")
+
+    window._on_load_tokens(str(configured_file))
+
+    _debug_case(
+        "Load tokens applies move speed",
+        {"move_speed": 100},
+        {"move_duration_ms": window._move_duration_from_speed(100)},
+        {"move_duration_ms": window._move_duration_ms},
+    )
+
+    assert window._move_duration_ms == window._move_duration_from_speed(100)
+
+
+def test_load_tokens_applies_auto_sort_delay_setting(window, tmp_path):
+    payload = {
+        "settings": {
+            "assets_root_path": str(tmp_path),
+            "auto_sort_delay_seconds": 1.75,
+        },
+        "tokens": [],
+    }
+    configured_file = tmp_path / "tokens_with_auto_sort_delay.json"
+    configured_file.write_text(json.dumps(payload, indent=2), encoding="utf-8")
+
+    window._on_load_tokens(str(configured_file))
+
+    _debug_case(
+        "Load tokens applies auto sort delay",
+        {"auto_sort_delay_seconds": 1.75},
+        {"window_delay": 1.75},
+        {"window_delay": window._auto_sort_delay_seconds},
+    )
+
+    assert window._auto_sort_delay_seconds == pytest.approx(1.75)
+
+
+def test_schedule_auto_sort_disabled_when_delay_zero(window, monkeypatch):
+    window._auto_sort_delay_seconds = 0.0
+    calls: list[int] = []
+
+    def _capture_start(interval_ms: int) -> None:
+        calls.append(interval_ms)
+
+    monkeypatch.setattr(window._auto_sort_timer, "start", _capture_start)
+    window._schedule_auto_sort_after_draw(trigger_label="Pesca 1")
+
+    _debug_case(
+        "Auto sort disabled with delay 0",
+        {"delay_seconds": 0.0},
+        {"timer_start_calls": 0},
+        {"timer_start_calls": len(calls)},
+    )
+
+    assert calls == []
+
+
+def test_schedule_auto_sort_uses_delay_seconds(window, monkeypatch):
+    window._auto_sort_delay_seconds = 1.2
+    calls: list[int] = []
+
+    def _capture_start(interval_ms: int) -> None:
+        calls.append(interval_ms)
+
+    monkeypatch.setattr(window._auto_sort_timer, "start", _capture_start)
+    window._schedule_auto_sort_after_draw(trigger_label="Pesca N")
+
+    _debug_case(
+        "Auto sort enabled with delay > 0",
+        {"delay_seconds": 1.2},
+        {"timer_start_ms": 1200},
+        {"timer_start_calls": calls},
+    )
+
+    assert calls == [1200]
+
+
+def test_draw_one_schedules_auto_sort(window, monkeypatch):
+    window._on_load_tokens()
+    window._on_select_all_tokens()
+    window._on_create_session_from_selection()
+    window._auto_sort_delay_seconds = 2.0
+
+    labels: list[str] = []
+
+    def _capture_schedule(*, trigger_label: str) -> None:
+        labels.append(trigger_label)
+
+    monkeypatch.setattr(window, "_schedule_auto_sort_after_draw", _capture_schedule)
+    window._on_draw_one()
+
+    _debug_case(
+        "Draw one schedules auto sort",
+        {"delay_seconds": 2.0},
+        {"scheduled_label": "Pesca 1"},
+        {"scheduled_labels": labels},
+    )
+
+    assert labels == ["Pesca 1"]
+
+
+def test_resize_window_for_table_background_centers_window(window, monkeypatch):
+    moved_positions: list[tuple[int, int]] = []
+
+    class _ScreenStub:
+        @staticmethod
+        def availableGeometry() -> QRect:
+            return QRect(0, 0, 1400, 1000)
+
+    monkeypatch.setattr(window, "screen", lambda: _ScreenStub())
+
+    def _capture_move(x: int, y: int) -> None:
+        moved_positions.append((x, y))
+
+    monkeypatch.setattr(window, "move", _capture_move)
+
+    window.resize(700, 500)
+    window._center_window_on_screen()
+
+    expected_x = (1400 - window.frameGeometry().width()) // 2
+    expected_y = (1000 - window.frameGeometry().height()) // 2
+
+    _debug_case(
+        "Center window on screen",
+        {"screen": [1400, 1000], "window": [window.width(), window.height()]},
+        {"position": [expected_x, expected_y]},
+        {"positions": moved_positions},
+    )
+
+    assert moved_positions
+    assert moved_positions[-1] == (expected_x, expected_y)
 
 
 def test_image_picker_defaults_to_assets_root_path(window, tmp_path, monkeypatch):

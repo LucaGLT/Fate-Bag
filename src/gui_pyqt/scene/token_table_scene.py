@@ -1,4 +1,4 @@
-from PyQt6.QtCore import QPointF, Qt, pyqtSignal
+from PyQt6.QtCore import QEasingCurve, QPointF, QPropertyAnimation, QParallelAnimationGroup, Qt, pyqtSignal
 from PyQt6.QtGui import QBrush, QColor, QPixmap
 from PyQt6.QtWidgets import QGraphicsScene
 
@@ -22,6 +22,7 @@ class TokenTableScene(QGraphicsScene):
         self._table_background_file = ""
         self._table_background_size = (0, 0)
         self._table_background_pixmap: QPixmap | None = None
+        self._move_animation_group: QParallelAnimationGroup | None = None
         self.setBackgroundBrush(QBrush(QColor("#dfe5eb")))
         self.selectionChanged.connect(self._emit_selection_changed)
 
@@ -141,6 +142,60 @@ class TokenTableScene(QGraphicsScene):
             )
         except RuntimeError:
             return False
+
+    def animate_tokens_to_core_positions(
+        self,
+        entries: list[tuple[Token, TableToken]],
+        *,
+        duration_ms: int = 260,
+    ) -> bool:
+        target_by_id: dict[str, tuple[QPointF, TableToken]] = {}
+        for token, table_token in entries:
+            token_id = str(token.id)
+            target_by_id[token_id] = (
+                self._map_core_coordinates(table_token.x, table_token.y),
+                table_token,
+            )
+
+        if self._move_animation_group is not None:
+            self._move_animation_group.stop()
+            self._move_animation_group = None
+
+        group = QParallelAnimationGroup(self)
+        moved = 0
+        for token_id, item in self._token_items.items():
+            target = target_by_id.get(token_id)
+            if target is None:
+                continue
+
+            target_pos, target_table_token = target
+            item.table_token = target_table_token
+            item.setZValue(target_table_token.z)
+            item.setRotation(target_table_token.rotation)
+
+            current = item.pos()
+            if abs(current.x() - target_pos.x()) <= 0.1 and abs(current.y() - target_pos.y()) <= 0.1:
+                item.setPos(target_pos)
+                continue
+
+            anim = QPropertyAnimation(item, b"pos")
+            anim.setDuration(max(40, int(duration_ms)))
+            anim.setStartValue(current)
+            anim.setEndValue(target_pos)
+            anim.setEasingCurve(QEasingCurve.Type.InOutCubic)
+            group.addAnimation(anim)
+            moved += 1
+
+        if moved <= 0:
+            return False
+
+        def _on_done() -> None:
+            self._move_animation_group = None
+
+        group.finished.connect(_on_done)
+        self._move_animation_group = group
+        group.start()
+        return True
 
     def set_selected_token_ids(self, token_ids: set[str]) -> None:
         for token_id, item in self._token_items.items():

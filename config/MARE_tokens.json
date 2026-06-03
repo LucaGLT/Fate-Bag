@@ -5,7 +5,9 @@
     "token_radius_px": 50,
     "table_grid_margin_px": 40,
     "hover_preview_enabled": true,
-    "flip_speed": 100
+    "flip_speed": 10,
+    "move_speed": 10,
+    "auto_sort_delay_seconds": 2.0
   },
   "tokens": [
     {
@@ -143,7 +145,7 @@
     },
     {
       "id": "d5172257-9298-46b5-9969-5a2e64048f5b",
-      "name": "P E R I C O L O",
+      "name": "PERICOLO",
       "shape": "HEXAGON",
       "front_type": "IMAGE",
       "front_value": "token_fronts\\Pericolo.PNG",
@@ -153,7 +155,7 @@
         "Pericolo"
       ],
       "metadata": {
-        "front_text": "<P E R I C O L O>"
+        "front_text": "<PERICOLO>"
       },
       "weight": 1.0,
       "rarity": null

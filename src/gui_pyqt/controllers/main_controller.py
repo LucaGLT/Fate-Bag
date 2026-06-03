@@ -657,6 +657,8 @@ class MainController:
             "table_grid_margin_px": 42,
             "hover_preview_enabled": True,
             "flip_speed": 60,
+            "move_speed": 60,
+            "auto_sort_delay_seconds": 0.0,
         }
 
     def _normalize_token_file_settings(self, raw_settings: object, source_file: Path) -> dict:
@@ -712,6 +714,22 @@ class MainController:
         )
         if isinstance(raw_flip_speed, (int, float)):
             normalized["flip_speed"] = int(max(1, min(100, round(float(raw_flip_speed)))))
+
+        raw_move_speed = (
+            raw_settings.get("move_speed")
+            or raw_settings.get("move-speed")
+            or raw_settings.get("move_speed_percent")
+        )
+        if isinstance(raw_move_speed, (int, float)):
+            normalized["move_speed"] = int(max(1, min(100, round(float(raw_move_speed)))))
+
+        raw_auto_sort_delay = (
+            raw_settings.get("auto_sort_delay_seconds")
+            or raw_settings.get("auto-sort-delay-seconds")
+            or raw_settings.get("auto_sort_delay_s")
+        )
+        if isinstance(raw_auto_sort_delay, (int, float)):
+            normalized["auto_sort_delay_seconds"] = max(0.0, float(raw_auto_sort_delay))
 
         return normalized
 
