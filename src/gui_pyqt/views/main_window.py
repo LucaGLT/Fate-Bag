@@ -25,6 +25,7 @@ from PyQt6.QtWidgets import (
     QSpinBox,
     QSplitter,
     QSplitterHandle,
+    QTextEdit,
     QVBoxLayout,
     QWidget,
 )
@@ -65,6 +66,7 @@ class TokenEditDialog(QDialog):
         self,
         *,
         default_text: str,
+        default_tip_text: str,
         default_tags: list[str],
         default_shape: TokenShape,
         default_mode: str,
@@ -80,6 +82,12 @@ class TokenEditDialog(QDialog):
         self.text_edit = QLineEdit(default_text)
         self.text_edit.setMinimumWidth(520)
         form.addRow("Testo:", self.text_edit)
+
+        self.tip_text_edit = QTextEdit()
+        self.tip_text_edit.setPlainText(default_tip_text)
+        self.tip_text_edit.setMinimumHeight(120)
+        self.tip_text_edit.setPlaceholderText("Testo overlay sotto il token al passaggio mouse")
+        form.addRow("Tip Text:", self.tip_text_edit)
 
         self.tags_edit = QLineEdit("; ".join(default_tags))
         self.tags_edit.setPlaceholderText("tag1; tag2 oppure tag1, tag2")
@@ -111,14 +119,20 @@ class TokenEditDialog(QDialog):
         self.button_box.rejected.connect(self.reject)
         form.addRow(self.button_box)
 
-    def values(self) -> tuple[str, str, TokenShape, str]:
+    def values(self) -> tuple[str, str, str, TokenShape, str]:
         shape = self.shape_combo.currentData()
         if not isinstance(shape, TokenShape):
             shape = TokenShape.CIRCLE
         mode = self.mode_combo.currentData()
         if not isinstance(mode, str):
             mode = self.MODE_TEXT_ONLY
-        return self.text_edit.text(), self.tags_edit.text(), shape, mode
+        return (
+            self.text_edit.text(),
+            self.tip_text_edit.toPlainText(),
+            self.tags_edit.text(),
+            shape,
+            mode,
+        )
 
 
 class MainWindow(QMainWindow):
@@ -516,6 +530,7 @@ class MainWindow(QMainWindow):
         self,
         item: QListWidgetItem,
         text: str | None = None,
+        tip_text: str | None = None,
         tags_text: str | None = None,
         shape: TokenShape | None = None,
         display_mode: str | None = None,
@@ -536,14 +551,22 @@ class MainWindow(QMainWindow):
             clicked_token = self.controller.token_for_id(clicked_uuid)
 
             name_value = text
+            tip_text_value = tip_text
             tags_value = tags_text
             shape_value = shape
             mode_value = display_mode
 
-            if name_value is None and tags_value is None and shape_value is None and mode_value is None:
+            if (
+                name_value is None
+                and tip_text_value is None
+                and tags_value is None
+                and shape_value is None
+                and mode_value is None
+            ):
                 default_mode = self._display_mode_for_token(clicked_token)
                 dialog = TokenEditDialog(
                     default_text=self.controller.front_text_for_token(clicked_uuid),
+                    default_tip_text=self.controller.tip_text_for_token(clicked_uuid),
                     default_tags=clicked_token.tags,
                     default_shape=clicked_token.shape,
                     default_mode=default_mode,
@@ -553,9 +576,11 @@ class MainWindow(QMainWindow):
                     self.status_label.setText("Modifica token annullata")
                     return
 
-                dialog_name, dialog_tags, dialog_shape, dialog_mode = dialog.values()
+                dialog_name, dialog_tip_text, dialog_tags, dialog_shape, dialog_mode = dialog.values()
                 if name_value is None:
                     name_value = dialog_name
+                if tip_text_value is None:
+                    tip_text_value = dialog_tip_text
                 if tags_value is None:
                     tags_value = dialog_tags
                 if shape_value is None:
@@ -565,6 +590,8 @@ class MainWindow(QMainWindow):
 
             if name_value is None:
                 name_value = clicked_token.name
+            if tip_text_value is None:
+                tip_text_value = self.controller.tip_text_for_token(clicked_uuid)
             if tags_value is None:
                 tags_value = "; ".join(clicked_token.tags)
             if shape_value is None:
@@ -578,6 +605,7 @@ class MainWindow(QMainWindow):
             updated_count = self.controller.apply_token_metadata_to_tokens(
                 target_ids,
                 text=name_value or clicked_token.name,
+                tip_text=tip_text_value,
                 tags=parsed_tags,
                 shape=chosen_shape,
                 display_mode=mode_value,
@@ -856,6 +884,8 @@ class MainWindow(QMainWindow):
             token_radius_px=settings.get("token_radius_px"),
             table_grid_margin_px=settings.get("table_grid_margin_px"),
             hover_preview_enabled=settings.get("hover_preview_enabled"),
+            front_text_font_px=settings.get("front_text_font_px"),
+            tip_text_font_px=settings.get("tip_text_font_px"),
             table_background_file=settings.get("table_background_file"),
         )
         self._flip_duration_ms = self._flip_duration_from_speed(settings.get("flip_speed"))

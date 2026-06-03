@@ -19,6 +19,8 @@ class TokenTableScene(QGraphicsScene):
         self._token_radius_px = 42.0
         self._table_grid_margin_px = 42.0
         self._hover_preview_enabled = True
+        self._front_text_font_px = 7
+        self._tip_text_font_px = 8
         self._table_background_file = ""
         self._table_background_size = (0, 0)
         self._table_background_pixmap: QPixmap | None = None
@@ -32,6 +34,8 @@ class TokenTableScene(QGraphicsScene):
         token_radius_px: float | None = None,
         table_grid_margin_px: float | None = None,
         hover_preview_enabled: bool | None = None,
+        front_text_font_px: int | None = None,
+        tip_text_font_px: int | None = None,
         table_background_file: str | None = None,
     ) -> None:
         if token_radius_px is not None:
@@ -40,6 +44,10 @@ class TokenTableScene(QGraphicsScene):
             self._table_grid_margin_px = max(12.0, min(240.0, float(table_grid_margin_px)))
         if hover_preview_enabled is not None:
             self._hover_preview_enabled = bool(hover_preview_enabled)
+        if front_text_font_px is not None:
+            self._front_text_font_px = max(5, min(24, int(front_text_font_px)))
+        if tip_text_font_px is not None:
+            self._tip_text_font_px = max(6, min(28, int(tip_text_font_px)))
 
         if table_background_file is not None:
             self._table_background_file = str(table_background_file)
@@ -107,6 +115,8 @@ class TokenTableScene(QGraphicsScene):
                 table_token=table_token,
                 size=self._token_radius_px * 2.0,
                 hover_preview_enabled=self._hover_preview_enabled,
+                front_text_font_px=self._front_text_font_px,
+                tip_text_font_px=self._tip_text_font_px,
             )
             pos = self._map_core_coordinates(table_token.x, table_token.y)
             item.setPos(pos)

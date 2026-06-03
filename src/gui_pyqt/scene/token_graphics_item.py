@@ -19,6 +19,7 @@ from PyQt6.QtGui import (
     QBrush,
     QColor,
     QFont,
+    QPainter,
     QPainterPath,
     QPen,
     QPixmap,
@@ -45,12 +46,16 @@ class TokenGraphicsItem(QGraphicsObject):
         size: float = 84.0,
         *,
         hover_preview_enabled: bool = True,
+        front_text_font_px: int = 7,
+        tip_text_font_px: int = 8,
     ) -> None:
         super().__init__()
         self.token = token
         self.table_token = table_token
         self.size = size
         self._hover_preview_enabled = bool(hover_preview_enabled)
+        self._front_text_font_px = max(5, min(24, int(front_text_font_px)))
+        self._tip_text_font_px = max(6, min(28, int(tip_text_font_px)))
         self._bounds = QRectF(-size / 2, -size / 2, size, size)
         self.setFlag(self.GraphicsItemFlag.ItemIsSelectable, True)
         self.setFlag(self.GraphicsItemFlag.ItemIsMovable, True)
@@ -62,7 +67,11 @@ class TokenGraphicsItem(QGraphicsObject):
         self._flip_animation_group: QSequentialAnimationGroup | None = None
 
     def boundingRect(self) -> QRectF:
-        return self._bounds
+        rect = QRectF(self._bounds)
+        overlay_rect = self._tip_overlay_rect()
+        if overlay_rect is not None:
+            rect = rect.united(overlay_rect)
+        return rect
 
     def paint(
         self,
@@ -93,6 +102,8 @@ class TokenGraphicsItem(QGraphicsObject):
             painter.drawPath(path)
 
         painter.restore()
+
+        self._draw_tip_overlay(painter)
 
     def mousePressEvent(self, event) -> None:
         self._press_pos = QPointF(self.pos())
@@ -127,6 +138,7 @@ class TokenGraphicsItem(QGraphicsObject):
         next_state = bool(enabled)
         if self._hover_preview_active == next_state:
             return
+        self.prepareGeometryChange()
         self._hover_preview_active = next_state
         self.update()
 
@@ -377,18 +389,57 @@ class TokenGraphicsItem(QGraphicsObject):
             return text
         return self.token.name
 
+    def _tip_text(self) -> str:
+        return str(self.token.metadata.get("tip_text", "")).strip()
+
+    def _tip_overlay_rect(self) -> QRectF | None:
+        if not self._hover_preview_enabled or not self._hover_preview_active:
+            return None
+
+        tip_text = self._tip_text()
+        if not tip_text:
+            return None
+
+        document = self._create_text_document(
+            tip_text,
+            color="#f4f7fb",
+            width=max(180.0, self.size * 2.75),
+            font_px=self._tip_text_font_px,
+        )
+        document_height = document.size().height()
+        width = document.textWidth() + 20.0
+        height = document_height + 50
+        top = self._bounds.bottom() + 8.0
+        left = -width / 2.0
+        return QRectF(left, top, width, height)
+
+    def _draw_tip_overlay(self, painter) -> None:
+        overlay_rect = self._tip_overlay_rect()
+        if overlay_rect is None:
+            return
+
+        tip_text = self._tip_text().replace("|", "\n")
+        inner_rect = overlay_rect.adjusted(10.0, 9.0, -10.0, -9.0)
+        document = self._create_text_document(
+            tip_text,
+            color="#f4f7fb",
+            width=inner_rect.width(),
+            font_px=self._tip_text_font_px,
+        )
+        vertical_offset = max(0.0, (inner_rect.height() - document.size().height()) / 2.0)
+
+        painter.save()
+        painter.setRenderHint(QPainter.RenderHint.Antialiasing, True)
+        painter.setPen(QPen(QColor(24, 31, 40, 220), 1.2))
+        painter.setBrush(QBrush(QColor(20, 27, 35, 228)))
+        painter.drawRoundedRect(overlay_rect, 10.0, 10.0)
+        painter.translate(inner_rect.left(), inner_rect.top() + vertical_offset)
+        document.drawContents(painter)
+        painter.restore()
+
     def _draw_formatted_front_text(self, painter, text: str, color: str) -> None:
         rect = self._bounds.adjusted(6, 6, -6, -6)
-        rich_text = self._to_rich_text(text, color)
-
-        document = QTextDocument()
-        document.setDefaultFont(QFont("Segoe UI", 7, QFont.Weight.DemiBold))
-        option = QTextOption()
-        option.setWrapMode(QTextOption.WrapMode.WordWrap)
-        option.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        document.setDefaultTextOption(option)
-        document.setHtml(rich_text)
-        document.setTextWidth(rect.width())
+        document = self._create_text_document(text, color=color, width=rect.width(), font_px=self._front_text_font_px)
 
         vertical_offset = max(0.0, (rect.height() - document.size().height()) / 2.0)
 
@@ -397,14 +448,30 @@ class TokenGraphicsItem(QGraphicsObject):
         document.drawContents(painter)
         painter.restore()
 
+    @classmethod
+    def _create_text_document(cls, text: str, *, color: str, width: float, font_px: int) -> QTextDocument:
+        title_font_px = max(1, int(font_px) + 2)
+        rich_text = cls._to_rich_text(text, color, title_font_px=title_font_px)
+        document = QTextDocument()
+        document.setDocumentMargin(0)
+        point_size = max(1, int(round(font_px * 0.75)))
+        document.setDefaultFont(QFont("Segoe UI", point_size, QFont.Weight.DemiBold))
+        option = QTextOption()
+        option.setWrapMode(QTextOption.WrapMode.WordWrap)
+        option.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        document.setDefaultTextOption(option)
+        document.setHtml(rich_text)
+        document.setTextWidth(width)
+        return document
+
     @staticmethod
-    def _to_rich_text(text: str, color: str) -> str:
+    def _to_rich_text(text: str, color: str, *, title_font_px: int) -> str:
         escaped = html.escape(text)
         escaped = escaped.replace("\n", "<br/>")
 
         escaped = re.sub(
             r"&lt;\s*([^&<>]+?)\s*&gt;",
-            r'<span style="font-size:8pt; font-weight:700;"><b>\1</b></span>',
+            rf'<span style="font-size:{title_font_px}px; font-weight:700;"><b>\1</b></span>',
             escaped,
         )
         escaped = re.sub(r"\*\*(.+?)\*\*", r"<b>\1</b>", escaped)

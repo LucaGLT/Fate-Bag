@@ -360,6 +360,82 @@ def test_release1_graphics_item_supports_shapes_and_front_back(tmp_path):
     assert image_item.boundingRect().height() > 0
 
 
+def test_release1_hover_tip_overlay_expands_bounding_rect(tmp_path):
+    back_path = _create_test_image(tmp_path / "back_tip.png", (40, 60, 90))
+    front_image_path = _create_test_image(tmp_path / "front_tip.png", (200, 200, 60))
+
+    token = Token(
+        name="TipToken",
+        shape=TokenShape.CIRCLE,
+        front_type=TokenFrontType.IMAGE,
+        front_value=front_image_path,
+        back_value=back_path,
+        metadata={
+            "front_text": "<TipToken>|Front hover text",
+            "tip_text": "<Dettagli>|riga uno|riga due",
+        },
+    )
+
+    from src.core.models.table_token import TableToken
+
+    table_token = TableToken(token_id=token.id, state=TokenState.FACE_UP, x=0.0, y=0.0)
+    item = TokenGraphicsItem(token=token, table_token=table_token)
+
+    base_rect = item.boundingRect()
+    item._set_hover_preview_enabled(True)
+    hover_rect = item.boundingRect()
+
+    print("\n[GIVEN] token IMAGE con front_text e tip_text in hover")
+    print("[EXPECTED] hover amplia il bounding rect verso il basso per overlay tip")
+
+    assert hover_rect.height() > base_rect.height()
+    assert hover_rect.bottom() > base_rect.bottom()
+
+
+def test_release1_token_graphics_item_uses_configurable_font_sizes(tmp_path):
+    back_path = _create_test_image(tmp_path / "back_font.png", (40, 60, 90))
+    front_image_path = _create_test_image(tmp_path / "front_font.png", (200, 200, 60))
+
+    token = Token(
+        name="FontToken",
+        shape=TokenShape.CIRCLE,
+        front_type=TokenFrontType.TEXT_IMAGE,
+        front_value=front_image_path,
+        back_value=back_path,
+        metadata={
+            "front_text": "<FontToken>|Front",
+            "tip_text": "<FontToken>|Tip|Riga 2",
+        },
+    )
+
+    from src.core.models.table_token import TableToken
+
+    table_token = TableToken(token_id=token.id, state=TokenState.FACE_UP, x=0.0, y=0.0)
+    item = TokenGraphicsItem(
+        token=token,
+        table_token=table_token,
+        front_text_font_px=12,
+        tip_text_font_px=14,
+    )
+
+    print("\n[GIVEN] item grafico con font size configurabili")
+    print("[EXPECTED] font px salvati sull'item")
+    assert item._front_text_font_px == 12
+    assert item._tip_text_font_px == 14
+
+
+def test_release1_title_font_is_base_plus_two():
+    rich = TokenGraphicsItem._to_rich_text(
+        "<Titolo>|riga",
+        "#ffffff",
+        title_font_px=12,
+    )
+
+    print("\n[GIVEN] front_text_font_px=10 (title font 12)")
+    print("[EXPECTED] titolo tra <> renderizzato con font-size:12px")
+    assert "font-size:12px" in rich
+
+
 def test_release1_graphics_item_supports_all_requested_shapes(tmp_path):
     back_path = _create_test_image(tmp_path / "back_shapes.png", (20, 30, 40))
 

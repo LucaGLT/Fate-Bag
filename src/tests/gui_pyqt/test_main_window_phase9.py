@@ -122,6 +122,7 @@ def test_main_window_has_required_controls(window):
 def test_token_edit_dialog_is_wider_for_long_text(qapp):
     dialog = TokenEditDialog(
         default_text="<Token Lungo>|Descrizione molto lunga da vedere meglio nel popup",
+        default_tip_text="<Tip>|Riga 1|Riga 2",
         default_tags=["uno", "due"],
         default_shape=TokenShape.CIRCLE,
         default_mode=TokenEditDialog.MODE_TEXT_ONLY,
@@ -139,6 +140,7 @@ def test_token_edit_dialog_is_wider_for_long_text(qapp):
 
     assert dialog.minimumWidth() >= 720
     assert dialog.text_edit.minimumWidth() >= 520
+    assert dialog.tip_text_edit.toPlainText() == "<Tip>|Riga 1|Riga 2"
 
 
 def test_flip_duration_mapping_from_speed_setting(window):
@@ -738,6 +740,54 @@ def test_token_popup_edit_updates_name_tags_shape_for_selected_tokens(window):
     assert token2.name != "Token Multi Edit"
 
 
+def test_token_popup_edit_updates_tip_text_for_selected_tokens(window):
+    window._on_load_tokens()
+
+    for index in range(window.token_list.count()):
+        window.token_list.item(index).setCheckState(Qt.CheckState.Unchecked)
+
+    window.token_list.item(0).setCheckState(Qt.CheckState.Checked)
+    window.token_list.item(1).setCheckState(Qt.CheckState.Checked)
+
+    from uuid import UUID
+
+    token0_id = UUID(window.token_list.item(0).data(Qt.ItemDataRole.UserRole))
+    token1_id = UUID(window.token_list.item(1).data(Qt.ItemDataRole.UserRole))
+    token2_id = UUID(window.token_list.item(2).data(Qt.ItemDataRole.UserRole))
+
+    clicked_item = window.token_list.item(0)
+    window._on_token_list_item_double_clicked(
+        clicked_item,
+        text="<Token Tip>|Descrizione",
+        tip_text="<Dettagli>|riga uno|riga due",
+        tags_text="alpha",
+        shape=TokenShape.CIRCLE,
+    )
+
+    token0 = window.controller._tokens_by_id[token0_id]
+    token1 = window.controller._tokens_by_id[token1_id]
+    token2 = window.controller._tokens_by_id[token2_id]
+
+    _debug_case(
+        "Popup token edit updates tip_text metadata",
+        {"selected_count": 2, "tip_text": "<Dettagli>|riga uno|riga due"},
+        {
+            "token0_tip_text": "<Dettagli>|riga uno|riga due",
+            "token1_tip_text": "<Dettagli>|riga uno|riga due",
+            "token2_tip_text_unchanged": True,
+        },
+        {
+            "token0_tip_text": token0.metadata.get("tip_text"),
+            "token1_tip_text": token1.metadata.get("tip_text"),
+            "token2_tip_text": token2.metadata.get("tip_text"),
+        },
+    )
+
+    assert token0.metadata.get("tip_text") == "<Dettagli>|riga uno|riga due"
+    assert token1.metadata.get("tip_text") == "<Dettagli>|riga uno|riga due"
+    assert token2.metadata.get("tip_text") != "<Dettagli>|riga uno|riga due"
+
+
 def test_select_and_deselect_all_buttons(window):
     window._on_load_tokens()
 
@@ -1051,6 +1101,34 @@ def test_load_tokens_applies_auto_shuffle_count_setting(window, tmp_path):
     )
 
     assert window._auto_shuffle_after_insert_count == 5
+
+
+def test_load_tokens_applies_front_and_tip_font_sizes(window, tmp_path):
+    payload = {
+        "settings": {
+            "assets_root_path": str(tmp_path),
+            "front_text_font_px": 11,
+            "tip_text_font_px": 13,
+        },
+        "tokens": [],
+    }
+    configured_file = tmp_path / "tokens_with_font_sizes.json"
+    configured_file.write_text(json.dumps(payload, indent=2), encoding="utf-8")
+
+    window._on_load_tokens(str(configured_file))
+
+    _debug_case(
+        "Load tokens applies font sizes",
+        {"front_text_font_px": 11, "tip_text_font_px": 13},
+        {"front_text_font_px": 11, "tip_text_font_px": 13},
+        {
+            "front_text_font_px": window.table_scene._front_text_font_px,
+            "tip_text_font_px": window.table_scene._tip_text_font_px,
+        },
+    )
+
+    assert window.table_scene._front_text_font_px == 11
+    assert window.table_scene._tip_text_font_px == 13
 
 
 def test_insert_into_bag_auto_shuffle_runs_n_times(window, monkeypatch):

@@ -504,6 +504,12 @@ class MainController:
             raise ValueError(f"Token non trovato: {token_id}")
         return self._current_front_text(token)
 
+    def tip_text_for_token(self, token_id: UUID) -> str:
+        token = self._tokens_by_id.get(token_id)
+        if token is None:
+            raise ValueError(f"Token non trovato: {token_id}")
+        return str(token.metadata.get("tip_text", "")).strip()
+
     def token_for_id(self, token_id: UUID) -> Token:
         token = self._tokens_by_id.get(token_id)
         if token is None:
@@ -515,6 +521,7 @@ class MainController:
         token_ids: list[UUID],
         *,
         text: str,
+        tip_text: str | None,
         tags: list[str],
         shape: TokenShape,
         display_mode: str,
@@ -529,6 +536,9 @@ class MainController:
             raise ValueError("Il nome token deve essere non vuoto")
 
         normalized_tags = [tag.strip() for tag in tags if str(tag).strip()]
+        normalized_tip_text = ""
+        if isinstance(tip_text, str):
+            normalized_tip_text = tip_text.strip()
 
         updated_count = 0
         for token_id in selected_ids:
@@ -541,6 +551,10 @@ class MainController:
             payload["tags"] = normalized_tags
             payload["shape"] = shape.value
             metadata = dict(payload.get("metadata", {}))
+            if normalized_tip_text:
+                metadata["tip_text"] = normalized_tip_text
+            else:
+                metadata.pop("tip_text", None)
 
             if display_mode == "text_only":
                 payload["front_type"] = TokenFrontType.TEXT.value
@@ -656,6 +670,8 @@ class MainController:
             "token_radius_px": 42,
             "table_grid_margin_px": 42,
             "hover_preview_enabled": True,
+            "front_text_font_px": 7,
+            "tip_text_font_px": 8,
             "flip_speed": 60,
             "move_speed": 60,
             "auto_sort_delay_seconds": 0.0,
@@ -705,6 +721,14 @@ class MainController:
         raw_hover = raw_settings.get("hover_preview_enabled")
         if isinstance(raw_hover, bool):
             normalized["hover_preview_enabled"] = raw_hover
+
+        raw_front_text_font = _first_present("front_text_font_px", "front_text_font", "front_text_size_px")
+        if isinstance(raw_front_text_font, (int, float)):
+            normalized["front_text_font_px"] = int(max(5, min(24, round(float(raw_front_text_font)))))
+
+        raw_tip_text_font = _first_present("tip_text_font_px", "tip_text_font", "tip_text_size_px")
+        if isinstance(raw_tip_text_font, (int, float)):
+            normalized["tip_text_font_px"] = int(max(6, min(28, round(float(raw_tip_text_font)))))
 
         raw_flip_speed = _first_present("flip_speed", "flip-speed", "flip_speed_percent")
         if isinstance(raw_flip_speed, (int, float)):

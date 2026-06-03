@@ -2,9 +2,11 @@
   "settings": {
     "assets_root_path": "C:\\_GLT_\\Qt Prj\\Fate-Bag\\Fate-Bag\\assets\\images",
     "table_background_file": "token_backs\\Table_BG.PNG",
-    "token_radius_px": 50,
+    "token_radius_px": 70,
     "table_grid_margin_px": 40,
     "hover_preview_enabled": true,
+    "front_text_font_px": 10,
+    "tip_text_font_px": 14,
     "flip_speed": 40,
     "move_speed": 3,
     "auto_sort_delay_seconds": 1.5,
@@ -18,18 +20,17 @@
       "front_type": "IMAGE",
       "front_value": "token_fronts\\LogoyNomon_lime.PNG",
       "back_value": "token_backs\\Dio_simple_blu_Back.png",
-      "categories": [
-        "holy"
-      ],
+      "categories": [],
       "tags": [
         "Dio"
       ],
       "metadata": {
         "source": "bootstrap",
-        "front_text": "<Logoy-Nomon>|Ordine, Legge, Processo"
+        "front_text": "<Logoy-Nomon>|Ordine, Legge, Processo",
+        "tip_text": "<Logoy-Nomon>|Dio dell'Ordine e della Legge|Governa i processi e le strutture del mondo.|Ogni schema ha una sua ragione."
       },
-      "weight": 2.8,
-      "rarity": "common"
+      "weight": 1.0,
+      "rarity": "legendary"
     },
     {
       "id": "ac27022d-9449-4bdf-9503-4f54d1559041",
@@ -38,18 +39,17 @@
       "front_type": "IMAGE",
       "front_value": "token_fronts\\Egonya_lime.png",
       "back_value": "token_backs\\Dio_simple_blu_Back.png",
-      "categories": [
-        "shadow"
-      ],
+      "categories": [],
       "tags": [
         "Dio"
       ],
       "metadata": {
         "source": "bootstrap",
-        "front_text": "<Egonya>|Consapevolezza del S\u00e8"
+        "front_text": "<Egonya>|Consapevolezza del S\u00e9",
+        "tip_text": "<Egonya>|Dea e del S\u00e9|Risveglia la coscienza nascosta.|Chi la invoca si guarda dentro."
       },
-      "weight": 1.3,
-      "rarity": "rare"
+      "weight": 1.0,
+      "rarity": "legendary"
     },
     {
       "id": "54b4796e-a514-49df-8e1b-cd0d58455e2e",
@@ -58,18 +58,17 @@
       "front_type": "IMAGE",
       "front_value": "token_fronts\\Mnemora_lime.png",
       "back_value": "token_backs\\Dio_simple_blu_Back.png",
-      "categories": [
-        "holy"
-      ],
+      "categories": [],
       "tags": [
         "Dio"
       ],
       "metadata": {
         "source": "bootstrap",
-        "front_text": "<Mnemora>|Conservazione, Ricordo"
+        "front_text": "<Mnemora>|Conservazione, Ricordo",
+        "tip_text": "<Mnemora>|Dea della Memoria|Custodisce ci\u00f2 che \u00e8 stato.|Il passato non scompare, si trasforma."
       },
-      "weight": 2.7,
-      "rarity": "rare"
+      "weight": 1.0,
+      "rarity": "legendary"
     },
     {
       "id": "36269690-0e31-4ad2-86d4-d178a260f62c",
@@ -78,17 +77,16 @@
       "front_type": "IMAGE",
       "front_value": "token_fronts\\Dyresys_lime.png",
       "back_value": "token_backs\\Dio_simple_blu_Back.png",
-      "categories": [
-        "shadow"
-      ],
+      "categories": [],
       "tags": [
         "Dio"
       ],
       "metadata": {
         "source": "bootstrap",
-        "front_text": "<Dyresys>|Scelta, Deviazione, Anomalia"
+        "front_text": "<Dyresys>|Scelta, Deviazione, Anomalia",
+        "tip_text": "<Dyresys>|Dio della Scelta|Incarna ogni imprevisto, deviazione, anomalia."
       },
-      "weight": 0.7,
+      "weight": 1.0,
       "rarity": "legendary"
     },
     {
@@ -103,10 +101,11 @@
         "Dio"
       ],
       "metadata": {
-        "front_text": "<Lak\u00f9na>|Dimenticanza, Oblio"
+        "front_text": "<Lak\u00f9na>|Dimenticanza, Oblio",
+        "tip_text": "<Lak\u00f9na>|Dea dell'Oblio|Porta con s\u00e9 ci\u00f2 che \u00e8 stato dimenticato.|La sua presenza cancella le tracce."
       },
       "weight": 1.0,
-      "rarity": null
+      "rarity": "legendary"
     },
     {
       "id": "55c84d2b-d454-480a-ab55-a6817b8e5b0e",
@@ -115,13 +114,16 @@
       "front_type": "TEXT_IMAGE",
       "front_value": "token_fronts\\PG_Nariel_Veyr_Ligh-Gray.png",
       "back_value": "token_backs\\PG_Nariel_Veyr.PNG",
-      "categories": [],
+      "categories": [
+        "PG"
+      ],
       "tags": [
         "Nariel",
         "Caratteristica"
       ],
       "metadata": {
-        "front_text": "<Novizio di Egonya>|"
+        "front_text": "<Novizio di Egonya>|",
+        "tip_text": "<Novizio di Egonya>|Caratteristica \u2014 Nariel|Conosce i riti e le leggende legate al culto di Egonya."
       },
       "weight": 1.0,
       "rarity": null
@@ -133,30 +135,16 @@
       "front_type": "TEXT_IMAGE",
       "front_value": "token_fronts\\PG_Nariel_Veyr_Ligh-Gray.png",
       "back_value": "token_backs\\PG_Nariel_Veyr.PNG",
-      "categories": [],
+      "categories": [
+        "PG"
+      ],
       "tags": [
         "Nariel",
         "Abilit\u00e0"
       ],
       "metadata": {
-        "front_text": "<Esperienza in Mare>|da anni di pesca d'altura"
-      },
-      "weight": 1.0,
-      "rarity": null
-    },
-    {
-      "id": "d5172257-9298-46b5-9969-5a2e64048f5b",
-      "name": "PERICOLO",
-      "shape": "HEXAGON",
-      "front_type": "IMAGE",
-      "front_value": "token_fronts\\Pericolo.PNG",
-      "back_value": "token_backs\\Dio_simple_red_Back.png",
-      "categories": [],
-      "tags": [
-        "Pericolo"
-      ],
-      "metadata": {
-        "front_text": "<PERICOLO>"
+        "front_text": "<Esperienza in Mare>|da anni di pesca d'altura",
+        "tip_text": "<Esperienza in Mare>|Abilit\u00e0 \u2014 Nariel|Anni di navigazione e pesca d'altura lo rendono adatto alla sopravvivenza in mare.|Riconosce correnti e tempeste."
       },
       "weight": 1.0,
       "rarity": null
@@ -174,7 +162,8 @@
         "Abilit\u00e0"
       ],
       "metadata": {
-        "front_text": "<Navigazione Esperta>"
+        "front_text": "<Navigazione Esperta>",
+        "tip_text": "<Navigazione Esperta>|Abilit\u00e0 \u2014 Yedid|Maestria nella guida di imbarcazioni con tecnologia.|Pu\u00f2 stimare distanze in mare aperto."
       },
       "weight": 1.0,
       "rarity": null
@@ -192,7 +181,62 @@
         "Caratteristica"
       ],
       "metadata": {
-        "front_text": "<Ex Novizio della Manta>"
+        "front_text": "<Ex Novizio della Manta>",
+        "tip_text": "<Ex Novizio della Manta>|Caratteristica \u2014 Yedid|Ex appartenente all'ordine della Manta.|Conosce riti e segreti dell'ordine.|Talvolta il passato torna a reclamare."
+      },
+      "weight": 1.0,
+      "rarity": null
+    },
+    {
+      "id": "d5172257-9298-46b5-9969-5a2e64048f5b",
+      "name": "PERICOLO",
+      "shape": "HEXAGON",
+      "front_type": "IMAGE",
+      "front_value": "token_fronts\\Pericolo.PNG",
+      "back_value": "token_backs\\Dio_simple_red_Back.png",
+      "categories": [],
+      "tags": [
+        "Pericolo"
+      ],
+      "metadata": {
+        "front_text": "<PERICOLO>",
+        "tip_text": "<PERICOLO>|Evento critico!|Una minaccia incombe sul gruppo.|Agisci subito o affronta le conseguenze."
+      },
+      "weight": 1.0,
+      "rarity": null
+    },
+    {
+      "id": "d5172257-9298-46b5-9969-5a2e64048f5b",
+      "name": "PERICOLO",
+      "shape": "HEXAGON",
+      "front_type": "IMAGE",
+      "front_value": "token_fronts\\Pericolo.PNG",
+      "back_value": "token_backs\\Dio_simple_red_Back.png",
+      "categories": [],
+      "tags": [
+        "Pericolo"
+      ],
+      "metadata": {
+        "front_text": "<PERICOLO>",
+        "tip_text": "<PERICOLO>|Evento critico!|Una minaccia incombe sul gruppo.|Agisci subito o affronta le conseguenze."
+      },
+      "weight": 1.0,
+      "rarity": null
+    },
+    {
+      "id": "d5172257-9298-46b5-9969-5a2e64048f5b",
+      "name": "PERICOLO",
+      "shape": "HEXAGON",
+      "front_type": "IMAGE",
+      "front_value": "token_fronts\\Pericolo.PNG",
+      "back_value": "token_backs\\Dio_simple_red_Back.png",
+      "categories": [],
+      "tags": [
+        "Pericolo"
+      ],
+      "metadata": {
+        "front_text": "<PERICOLO>",
+        "tip_text": "<PERICOLO>|Evento critico!|Una minaccia incombe sul gruppo.|Agisci subito o affronta le conseguenze."
       },
       "weight": 1.0,
       "rarity": null
