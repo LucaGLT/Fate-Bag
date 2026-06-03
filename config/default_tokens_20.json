@@ -7,7 +7,8 @@
     "hover_preview_enabled": true,
     "flip_speed": 60,
     "move_speed": 60,
-    "auto_sort_delay_seconds": 0.0
+    "auto_sort_delay_seconds": 0.0,
+    "auto_shuffle_after_insert_count": 3
   },
   "tokens": [
     {

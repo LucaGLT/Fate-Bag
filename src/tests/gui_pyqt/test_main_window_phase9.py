@@ -178,6 +178,13 @@ def test_auto_sort_delay_mapping_from_setting(window):
     assert window._auto_sort_delay_seconds_from_value("abc") == pytest.approx(0.0)
 
 
+def test_auto_shuffle_count_mapping_from_setting(window):
+    assert window._auto_shuffle_count_from_value(3) == 3
+    assert window._auto_shuffle_count_from_value(0) == 0
+    assert window._auto_shuffle_count_from_value(-4) == 0
+    assert window._auto_shuffle_count_from_value("abc") == 3
+
+
 def test_gui_flow_load_create_draw_reveal_hide_reset(window):
     window._on_load_tokens()
     after_load_status = window.status_label.text()
@@ -1021,6 +1028,80 @@ def test_load_tokens_applies_auto_sort_delay_setting(window, tmp_path):
     )
 
     assert window._auto_sort_delay_seconds == pytest.approx(1.75)
+
+
+def test_load_tokens_applies_auto_shuffle_count_setting(window, tmp_path):
+    payload = {
+        "settings": {
+            "assets_root_path": str(tmp_path),
+            "auto_shuffle_after_insert_count": 5,
+        },
+        "tokens": [],
+    }
+    configured_file = tmp_path / "tokens_with_auto_shuffle_count.json"
+    configured_file.write_text(json.dumps(payload, indent=2), encoding="utf-8")
+
+    window._on_load_tokens(str(configured_file))
+
+    _debug_case(
+        "Load tokens applies auto shuffle count",
+        {"auto_shuffle_after_insert_count": 5},
+        {"window_count": 5},
+        {"window_count": window._auto_shuffle_after_insert_count},
+    )
+
+    assert window._auto_shuffle_after_insert_count == 5
+
+
+def test_insert_into_bag_auto_shuffle_runs_n_times(window, monkeypatch):
+    window._on_load_tokens()
+    window._on_select_all_tokens()
+    window._auto_shuffle_after_insert_count = 3
+
+    calls = {"count": 0}
+    original_shuffle = window.controller.shuffle
+
+    def _counted_shuffle():
+        calls["count"] += 1
+        return original_shuffle()
+
+    monkeypatch.setattr(window.controller, "shuffle", _counted_shuffle)
+    window._on_create_session_from_selection()
+
+    _debug_case(
+        "Insert into bag triggers auto shuffle count",
+        {"configured_count": 3},
+        {"shuffle_calls": 3},
+        {"shuffle_calls": calls["count"], "status": window.status_label.text()},
+    )
+
+    assert calls["count"] == 3
+    assert "Auto Shuffle x3" in window.status_label.text()
+
+
+def test_insert_into_bag_auto_shuffle_disabled_with_zero(window, monkeypatch):
+    window._on_load_tokens()
+    window._on_select_all_tokens()
+    window._auto_shuffle_after_insert_count = 0
+
+    calls = {"count": 0}
+    original_shuffle = window.controller.shuffle
+
+    def _counted_shuffle():
+        calls["count"] += 1
+        return original_shuffle()
+
+    monkeypatch.setattr(window.controller, "shuffle", _counted_shuffle)
+    window._on_create_session_from_selection()
+
+    _debug_case(
+        "Insert into bag no auto shuffle when count is zero",
+        {"configured_count": 0},
+        {"shuffle_calls": 0},
+        {"shuffle_calls": calls["count"], "status": window.status_label.text()},
+    )
+
+    assert calls["count"] == 0
 
 
 def test_schedule_auto_sort_disabled_when_delay_zero(window, monkeypatch):

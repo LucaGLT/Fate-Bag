@@ -659,6 +659,7 @@ class MainController:
             "flip_speed": 60,
             "move_speed": 60,
             "auto_sort_delay_seconds": 0.0,
+            "auto_shuffle_after_insert_count": 3,
         }
 
     def _normalize_token_file_settings(self, raw_settings: object, source_file: Path) -> dict:
@@ -668,21 +669,23 @@ class MainController:
 
         normalized = dict(defaults)
 
-        raw_assets_root = (
-            raw_settings.get("assets_root_path")
-            or raw_settings.get("root_path")
-            or raw_settings.get("root-path")
-        )
+        def _first_present(*keys: str) -> object:
+            for key in keys:
+                if key in raw_settings:
+                    return raw_settings.get(key)
+            return None
+
+        raw_assets_root = _first_present("assets_root_path", "root_path", "root-path")
         if isinstance(raw_assets_root, str) and raw_assets_root.strip():
             root_candidate = Path(raw_assets_root.strip())
             if not root_candidate.is_absolute():
                 root_candidate = (source_file.parent / root_candidate).resolve()
             normalized["assets_root_path"] = str(root_candidate)
 
-        raw_background = (
-            raw_settings.get("table_background_file")
-            or raw_settings.get("table_background")
-            or raw_settings.get("table-background-file")
+        raw_background = _first_present(
+            "table_background_file",
+            "table_background",
+            "table-background-file",
         )
         resolved_background = self._resolve_existing_image_path(
             raw_background,
@@ -691,11 +694,7 @@ class MainController:
         )
         normalized["table_background_file"] = resolved_background or ""
 
-        raw_radius = (
-            raw_settings.get("token_radius_px")
-            or raw_settings.get("token_radius")
-            or raw_settings.get("token-radius-px")
-        )
+        raw_radius = _first_present("token_radius_px", "token_radius", "token-radius-px")
         if isinstance(raw_radius, (int, float)):
             normalized["token_radius_px"] = int(max(16, min(180, round(float(raw_radius)))))
 
@@ -707,29 +706,29 @@ class MainController:
         if isinstance(raw_hover, bool):
             normalized["hover_preview_enabled"] = raw_hover
 
-        raw_flip_speed = (
-            raw_settings.get("flip_speed")
-            or raw_settings.get("flip-speed")
-            or raw_settings.get("flip_speed_percent")
-        )
+        raw_flip_speed = _first_present("flip_speed", "flip-speed", "flip_speed_percent")
         if isinstance(raw_flip_speed, (int, float)):
             normalized["flip_speed"] = int(max(1, min(100, round(float(raw_flip_speed)))))
 
-        raw_move_speed = (
-            raw_settings.get("move_speed")
-            or raw_settings.get("move-speed")
-            or raw_settings.get("move_speed_percent")
-        )
+        raw_move_speed = _first_present("move_speed", "move-speed", "move_speed_percent")
         if isinstance(raw_move_speed, (int, float)):
             normalized["move_speed"] = int(max(1, min(100, round(float(raw_move_speed)))))
 
-        raw_auto_sort_delay = (
-            raw_settings.get("auto_sort_delay_seconds")
-            or raw_settings.get("auto-sort-delay-seconds")
-            or raw_settings.get("auto_sort_delay_s")
+        raw_auto_sort_delay = _first_present(
+            "auto_sort_delay_seconds",
+            "auto-sort-delay-seconds",
+            "auto_sort_delay_s",
         )
         if isinstance(raw_auto_sort_delay, (int, float)):
             normalized["auto_sort_delay_seconds"] = max(0.0, float(raw_auto_sort_delay))
+
+        raw_auto_shuffle_count = _first_present(
+            "auto_shuffle_after_insert_count",
+            "auto-shuffle-after-insert-count",
+            "auto_shuffle_count",
+        )
+        if isinstance(raw_auto_shuffle_count, (int, float)):
+            normalized["auto_shuffle_after_insert_count"] = max(0, int(round(float(raw_auto_shuffle_count))))
 
         return normalized
 

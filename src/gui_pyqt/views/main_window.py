@@ -134,6 +134,7 @@ class MainWindow(QMainWindow):
         self._flip_duration_ms = 220
         self._move_duration_ms = 260
         self._auto_sort_delay_seconds = 0.0
+        self._auto_shuffle_after_insert_count = 3
         self._auto_sort_timer = QTimer(self)
         self._auto_sort_timer.setSingleShot(True)
         self._auto_sort_timer.timeout.connect(self._on_auto_sort_timeout)
@@ -862,6 +863,9 @@ class MainWindow(QMainWindow):
         self._auto_sort_delay_seconds = self._auto_sort_delay_seconds_from_value(
             settings.get("auto_sort_delay_seconds")
         )
+        self._auto_shuffle_after_insert_count = self._auto_shuffle_count_from_value(
+            settings.get("auto_shuffle_after_insert_count")
+        )
         if self._auto_sort_delay_seconds <= 0.0 and self._auto_sort_timer.isActive():
             self._auto_sort_timer.stop()
         self._sync_table_scene_to_viewport()
@@ -909,9 +913,25 @@ class MainWindow(QMainWindow):
             for table_token in session.table_tokens
         }
         self._refresh_list()
+
+        shuffle_count = max(0, int(self._auto_shuffle_after_insert_count))
+        if shuffle_count > 0:
+            for _ in range(shuffle_count):
+                self.controller.shuffle()
+
+            self._refresh_token_list_only()
+            self.table_scene.animate_tokens_to_core_positions(
+                self.controller.scene_entries(),
+                duration_ms=self._move_duration_ms,
+            )
+
+        status_text = f"{status_prefix}: {session.session_id}"
+        if shuffle_count > 0:
+            status_text = f"{status_text} | Auto Shuffle x{shuffle_count}"
+
         self._animate_tokens_flip_visual(
             list(self._last_inserted_token_ids),
-            status_text=f"{status_prefix}: {session.session_id}",
+            status_text=status_text,
         )
 
     def _animate_tokens_flip_visual(self, token_ids: list[str], *, status_text: str) -> None:
@@ -973,6 +993,12 @@ class MainWindow(QMainWindow):
         if isinstance(raw_value, (int, float)):
             return max(0.0, float(raw_value))
         return 0.0
+
+    @staticmethod
+    def _auto_shuffle_count_from_value(raw_value: object) -> int:
+        if isinstance(raw_value, (int, float)):
+            return max(0, int(round(float(raw_value))))
+        return 3
 
     @staticmethod
     def _display_mode_for_token(token) -> str:
