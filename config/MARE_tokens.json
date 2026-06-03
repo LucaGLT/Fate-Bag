@@ -4,7 +4,8 @@
     "table_background_file": "token_backs\\Table_BG.PNG",
     "token_radius_px": 50,
     "table_grid_margin_px": 40,
-    "hover_preview_enabled": true
+    "hover_preview_enabled": true,
+    "flip_speed": 100
   },
   "tokens": [
     {
@@ -109,7 +110,7 @@
       "name": "Novizio di Egonya",
       "shape": "CIRCLE",
       "front_type": "TEXT_IMAGE",
-      "front_value": "token_backs\\PG_Nariel_Veyr_Gray.png",
+      "front_value": "token_fronts\\PG_Nariel_Veyr_Ligh-Gray.png",
       "back_value": "token_backs\\PG_Nariel_Veyr.PNG",
       "categories": [],
       "tags": [
@@ -180,7 +181,7 @@
       "name": "Ex Novizio della Manta",
       "shape": "CIRCLE",
       "front_type": "TEXT_IMAGE",
-      "front_value": "token_backs\\PG_Yedid_Gray.png",
+      "front_value": "token_fronts\\PG_Yedid_light-Gray.png",
       "back_value": "token_backs\\PG_Yedid.PNG",
       "categories": [],
       "tags": [

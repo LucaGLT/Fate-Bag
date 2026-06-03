@@ -4,7 +4,8 @@
     "table_background_file": "",
     "token_radius_px": 42,
     "table_grid_margin_px": 42,
-    "hover_preview_enabled": true
+    "hover_preview_enabled": true,
+    "flip_speed": 60
   },
   "tokens": [
     {
@@ -13,7 +14,7 @@
       "shape": "CIRCLE",
       "front_type": "TEXT",
       "front_value": "Blessing",
-      "back_value": "C:\\Users\\Gianluca.TATA\\AppData\\Local\\Temp\\pytest-of-Gianluca.TATA\\pytest-155\\test_reload_tokens_file_replac0\\gui-runtime\\assets\\back.png",
+      "back_value": "C:\\Users\\Gianluca.TATA\\AppData\\Local\\Temp\\pytest-of-Gianluca.TATA\\pytest-163\\test_reload_tokens_file_replac0\\gui-runtime\\assets\\back.png",
       "categories": [
         "holy"
       ],
@@ -32,7 +33,7 @@
       "shape": "HEXAGON",
       "front_type": "TEXT",
       "front_value": "Curse",
-      "back_value": "C:\\Users\\Gianluca.TATA\\AppData\\Local\\Temp\\pytest-of-Gianluca.TATA\\pytest-155\\test_reload_tokens_file_replac0\\gui-runtime\\assets\\back.png",
+      "back_value": "C:\\Users\\Gianluca.TATA\\AppData\\Local\\Temp\\pytest-of-Gianluca.TATA\\pytest-163\\test_reload_tokens_file_replac0\\gui-runtime\\assets\\back.png",
       "categories": [
         "shadow"
       ],
@@ -51,7 +52,7 @@
       "shape": "CIRCLE",
       "front_type": "TEXT",
       "front_value": "Shield",
-      "back_value": "C:\\Users\\Gianluca.TATA\\AppData\\Local\\Temp\\pytest-of-Gianluca.TATA\\pytest-155\\test_reload_tokens_file_replac0\\gui-runtime\\assets\\back.png",
+      "back_value": "C:\\Users\\Gianluca.TATA\\AppData\\Local\\Temp\\pytest-of-Gianluca.TATA\\pytest-163\\test_reload_tokens_file_replac0\\gui-runtime\\assets\\back.png",
       "categories": [
         "holy"
       ],
@@ -70,7 +71,7 @@
       "shape": "HEXAGON",
       "front_type": "TEXT",
       "front_value": "Wrath",
-      "back_value": "C:\\Users\\Gianluca.TATA\\AppData\\Local\\Temp\\pytest-of-Gianluca.TATA\\pytest-155\\test_reload_tokens_file_replac0\\gui-runtime\\assets\\back.png",
+      "back_value": "C:\\Users\\Gianluca.TATA\\AppData\\Local\\Temp\\pytest-of-Gianluca.TATA\\pytest-163\\test_reload_tokens_file_replac0\\gui-runtime\\assets\\back.png",
       "categories": [
         "shadow"
       ],
@@ -89,7 +90,7 @@
       "shape": "CIRCLE",
       "front_type": "TEXT",
       "front_value": "Mercy",
-      "back_value": "C:\\Users\\Gianluca.TATA\\AppData\\Local\\Temp\\pytest-of-Gianluca.TATA\\pytest-155\\test_reload_tokens_file_replac0\\gui-runtime\\assets\\back.png",
+      "back_value": "C:\\Users\\Gianluca.TATA\\AppData\\Local\\Temp\\pytest-of-Gianluca.TATA\\pytest-163\\test_reload_tokens_file_replac0\\gui-runtime\\assets\\back.png",
       "categories": [
         "holy"
       ],
@@ -108,7 +109,7 @@
       "shape": "HEXAGON",
       "front_type": "TEXT",
       "front_value": "Ruin",
-      "back_value": "C:\\Users\\Gianluca.TATA\\AppData\\Local\\Temp\\pytest-of-Gianluca.TATA\\pytest-155\\test_reload_tokens_file_replac0\\gui-runtime\\assets\\back.png",
+      "back_value": "C:\\Users\\Gianluca.TATA\\AppData\\Local\\Temp\\pytest-of-Gianluca.TATA\\pytest-163\\test_reload_tokens_file_replac0\\gui-runtime\\assets\\back.png",
       "categories": [
         "shadow"
       ],
@@ -127,7 +128,7 @@
       "shape": "CIRCLE",
       "front_type": "TEXT",
       "front_value": "Aegis",
-      "back_value": "C:\\Users\\Gianluca.TATA\\AppData\\Local\\Temp\\pytest-of-Gianluca.TATA\\pytest-155\\test_reload_tokens_file_replac0\\gui-runtime\\assets\\back.png",
+      "back_value": "C:\\Users\\Gianluca.TATA\\AppData\\Local\\Temp\\pytest-of-Gianluca.TATA\\pytest-163\\test_reload_tokens_file_replac0\\gui-runtime\\assets\\back.png",
       "categories": [
         "holy"
       ],
@@ -146,7 +147,7 @@
       "shape": "HEXAGON",
       "front_type": "TEXT",
       "front_value": "Blight",
-      "back_value": "C:\\Users\\Gianluca.TATA\\AppData\\Local\\Temp\\pytest-of-Gianluca.TATA\\pytest-155\\test_reload_tokens_file_replac0\\gui-runtime\\assets\\back.png",
+      "back_value": "C:\\Users\\Gianluca.TATA\\AppData\\Local\\Temp\\pytest-of-Gianluca.TATA\\pytest-163\\test_reload_tokens_file_replac0\\gui-runtime\\assets\\back.png",
       "categories": [
         "shadow"
       ],
@@ -165,7 +166,7 @@
       "shape": "CIRCLE",
       "front_type": "TEXT",
       "front_value": "Beacon",
-      "back_value": "C:\\Users\\Gianluca.TATA\\AppData\\Local\\Temp\\pytest-of-Gianluca.TATA\\pytest-155\\test_reload_tokens_file_replac0\\gui-runtime\\assets\\back.png",
+      "back_value": "C:\\Users\\Gianluca.TATA\\AppData\\Local\\Temp\\pytest-of-Gianluca.TATA\\pytest-163\\test_reload_tokens_file_replac0\\gui-runtime\\assets\\back.png",
       "categories": [
         "holy"
       ],
@@ -184,7 +185,7 @@
       "shape": "HEXAGON",
       "front_type": "TEXT",
       "front_value": "Fang",
-      "back_value": "C:\\Users\\Gianluca.TATA\\AppData\\Local\\Temp\\pytest-of-Gianluca.TATA\\pytest-155\\test_reload_tokens_file_replac0\\gui-runtime\\assets\\back.png",
+      "back_value": "C:\\Users\\Gianluca.TATA\\AppData\\Local\\Temp\\pytest-of-Gianluca.TATA\\pytest-163\\test_reload_tokens_file_replac0\\gui-runtime\\assets\\back.png",
       "categories": [
         "shadow"
       ],
@@ -203,7 +204,7 @@
       "shape": "CIRCLE",
       "front_type": "TEXT",
       "front_value": "Ward",
-      "back_value": "C:\\Users\\Gianluca.TATA\\AppData\\Local\\Temp\\pytest-of-Gianluca.TATA\\pytest-155\\test_reload_tokens_file_replac0\\gui-runtime\\assets\\back.png",
+      "back_value": "C:\\Users\\Gianluca.TATA\\AppData\\Local\\Temp\\pytest-of-Gianluca.TATA\\pytest-163\\test_reload_tokens_file_replac0\\gui-runtime\\assets\\back.png",
       "categories": [
         "holy"
       ],
@@ -222,7 +223,7 @@
       "shape": "HEXAGON",
       "front_type": "TEXT",
       "front_value": "Gloom",
-      "back_value": "C:\\Users\\Gianluca.TATA\\AppData\\Local\\Temp\\pytest-of-Gianluca.TATA\\pytest-155\\test_reload_tokens_file_replac0\\gui-runtime\\assets\\back.png",
+      "back_value": "C:\\Users\\Gianluca.TATA\\AppData\\Local\\Temp\\pytest-of-Gianluca.TATA\\pytest-163\\test_reload_tokens_file_replac0\\gui-runtime\\assets\\back.png",
       "categories": [
         "shadow"
       ],
@@ -241,7 +242,7 @@
       "shape": "CIRCLE",
       "front_type": "TEXT",
       "front_value": "Valor",
-      "back_value": "C:\\Users\\Gianluca.TATA\\AppData\\Local\\Temp\\pytest-of-Gianluca.TATA\\pytest-155\\test_reload_tokens_file_replac0\\gui-runtime\\assets\\back.png",
+      "back_value": "C:\\Users\\Gianluca.TATA\\AppData\\Local\\Temp\\pytest-of-Gianluca.TATA\\pytest-163\\test_reload_tokens_file_replac0\\gui-runtime\\assets\\back.png",
       "categories": [
         "holy"
       ],
@@ -260,7 +261,7 @@
       "shape": "HEXAGON",
       "front_type": "TEXT",
       "front_value": "Rift",
-      "back_value": "C:\\Users\\Gianluca.TATA\\AppData\\Local\\Temp\\pytest-of-Gianluca.TATA\\pytest-155\\test_reload_tokens_file_replac0\\gui-runtime\\assets\\back.png",
+      "back_value": "C:\\Users\\Gianluca.TATA\\AppData\\Local\\Temp\\pytest-of-Gianluca.TATA\\pytest-163\\test_reload_tokens_file_replac0\\gui-runtime\\assets\\back.png",
       "categories": [
         "shadow"
       ],
@@ -279,7 +280,7 @@
       "shape": "CIRCLE",
       "front_type": "TEXT",
       "front_value": "Halo",
-      "back_value": "C:\\Users\\Gianluca.TATA\\AppData\\Local\\Temp\\pytest-of-Gianluca.TATA\\pytest-155\\test_reload_tokens_file_replac0\\gui-runtime\\assets\\back.png",
+      "back_value": "C:\\Users\\Gianluca.TATA\\AppData\\Local\\Temp\\pytest-of-Gianluca.TATA\\pytest-163\\test_reload_tokens_file_replac0\\gui-runtime\\assets\\back.png",
       "categories": [
         "holy"
       ],
@@ -298,7 +299,7 @@
       "shape": "HEXAGON",
       "front_type": "TEXT",
       "front_value": "Dread",
-      "back_value": "C:\\Users\\Gianluca.TATA\\AppData\\Local\\Temp\\pytest-of-Gianluca.TATA\\pytest-155\\test_reload_tokens_file_replac0\\gui-runtime\\assets\\back.png",
+      "back_value": "C:\\Users\\Gianluca.TATA\\AppData\\Local\\Temp\\pytest-of-Gianluca.TATA\\pytest-163\\test_reload_tokens_file_replac0\\gui-runtime\\assets\\back.png",
       "categories": [
         "shadow"
       ],
@@ -317,7 +318,7 @@
       "shape": "CIRCLE",
       "front_type": "TEXT",
       "front_value": "Grace",
-      "back_value": "C:\\Users\\Gianluca.TATA\\AppData\\Local\\Temp\\pytest-of-Gianluca.TATA\\pytest-155\\test_reload_tokens_file_replac0\\gui-runtime\\assets\\back.png",
+      "back_value": "C:\\Users\\Gianluca.TATA\\AppData\\Local\\Temp\\pytest-of-Gianluca.TATA\\pytest-163\\test_reload_tokens_file_replac0\\gui-runtime\\assets\\back.png",
       "categories": [
         "holy"
       ],
@@ -336,7 +337,7 @@
       "shape": "HEXAGON",
       "front_type": "TEXT",
       "front_value": "Thorn",
-      "back_value": "C:\\Users\\Gianluca.TATA\\AppData\\Local\\Temp\\pytest-of-Gianluca.TATA\\pytest-155\\test_reload_tokens_file_replac0\\gui-runtime\\assets\\back.png",
+      "back_value": "C:\\Users\\Gianluca.TATA\\AppData\\Local\\Temp\\pytest-of-Gianluca.TATA\\pytest-163\\test_reload_tokens_file_replac0\\gui-runtime\\assets\\back.png",
       "categories": [
         "shadow"
       ],
@@ -355,7 +356,7 @@
       "shape": "CIRCLE",
       "front_type": "TEXT",
       "front_value": "Crown",
-      "back_value": "C:\\Users\\Gianluca.TATA\\AppData\\Local\\Temp\\pytest-of-Gianluca.TATA\\pytest-155\\test_reload_tokens_file_replac0\\gui-runtime\\assets\\back.png",
+      "back_value": "C:\\Users\\Gianluca.TATA\\AppData\\Local\\Temp\\pytest-of-Gianluca.TATA\\pytest-163\\test_reload_tokens_file_replac0\\gui-runtime\\assets\\back.png",
       "categories": [
         "holy"
       ],
@@ -374,7 +375,7 @@
       "shape": "HEXAGON",
       "front_type": "TEXT",
       "front_value": "Abyss",
-      "back_value": "C:\\Users\\Gianluca.TATA\\AppData\\Local\\Temp\\pytest-of-Gianluca.TATA\\pytest-155\\test_reload_tokens_file_replac0\\gui-runtime\\assets\\back.png",
+      "back_value": "C:\\Users\\Gianluca.TATA\\AppData\\Local\\Temp\\pytest-of-Gianluca.TATA\\pytest-163\\test_reload_tokens_file_replac0\\gui-runtime\\assets\\back.png",
       "categories": [
         "shadow"
       ],

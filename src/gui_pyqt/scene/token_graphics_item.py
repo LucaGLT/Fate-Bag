@@ -2,9 +2,19 @@ import math
 import html
 import re
 from pathlib import Path
+from typing import Callable
 from uuid import UUID
 
-from PyQt6.QtCore import QPointF, QRectF, Qt, pyqtSignal
+from PyQt6.QtCore import (
+    QEasingCurve,
+    QPointF,
+    QPropertyAnimation,
+    QRectF,
+    QSequentialAnimationGroup,
+    Qt,
+    pyqtProperty,
+    pyqtSignal,
+)
 from PyQt6.QtGui import (
     QBrush,
     QColor,
@@ -47,6 +57,9 @@ class TokenGraphicsItem(QGraphicsObject):
         self.setAcceptHoverEvents(True)
         self._press_pos = QPointF(0.0, 0.0)
         self._hover_preview_active = False
+        self._flip_scale_x = 1.0
+        self._is_flip_animating = False
+        self._flip_animation_group: QSequentialAnimationGroup | None = None
 
     def boundingRect(self) -> QRectF:
         return self._bounds
@@ -58,6 +71,9 @@ class TokenGraphicsItem(QGraphicsObject):
         widget: QWidget | None = None,
     ) -> None:
         del option, widget
+
+        painter.save()
+        painter.scale(self._flip_scale_x, 1.0)
 
         path = self._shape_path()
         painter.setRenderHint(painter.RenderHint.Antialiasing, True)
@@ -75,6 +91,8 @@ class TokenGraphicsItem(QGraphicsObject):
             painter.setPen(QPen(QColor("#ffcc00"), 3, Qt.PenStyle.DashLine))
             painter.setBrush(Qt.BrushStyle.NoBrush)
             painter.drawPath(path)
+
+        painter.restore()
 
     def mousePressEvent(self, event) -> None:
         self._press_pos = QPointF(self.pos())
@@ -111,6 +129,75 @@ class TokenGraphicsItem(QGraphicsObject):
             return
         self._hover_preview_active = next_state
         self.update()
+
+    def start_flip_animation(
+        self,
+        *,
+        on_half_flip: Callable[[], None] | None = None,
+        on_finished: Callable[[], None] | None = None,
+        duration_ms: int = 220,
+    ) -> bool:
+        if self._is_flip_animating:
+            return False
+
+        self._is_flip_animating = True
+        self._flip_scale_x = 1.0
+        self.update()
+
+        close_anim = QPropertyAnimation(self, b"flipScaleX")
+        close_anim.setDuration(max(40, duration_ms // 2))
+        close_anim.setStartValue(1.0)
+        close_anim.setEndValue(0.08)
+        close_anim.setEasingCurve(QEasingCurve.Type.InCubic)
+
+        open_anim = QPropertyAnimation(self, b"flipScaleX")
+        open_anim.setDuration(max(40, duration_ms // 2))
+        open_anim.setStartValue(0.08)
+        open_anim.setEndValue(1.0)
+        open_anim.setEasingCurve(QEasingCurve.Type.OutCubic)
+
+        sequence = QSequentialAnimationGroup(self)
+        sequence.addAnimation(close_anim)
+        sequence.addAnimation(open_anim)
+
+        half_called = {"value": False}
+
+        def _on_half() -> None:
+            if half_called["value"]:
+                return
+            half_called["value"] = True
+            if on_half_flip is not None:
+                on_half_flip()
+
+        close_anim.finished.connect(_on_half)
+
+        def _on_done() -> None:
+            self._flip_scale_x = 1.0
+            self._is_flip_animating = False
+            self._flip_animation_group = None
+            self.update()
+            if on_finished is not None:
+                on_finished()
+
+        sequence.finished.connect(_on_done)
+        self._flip_animation_group = sequence
+        sequence.start()
+        return True
+
+    def is_flip_animating(self) -> bool:
+        return self._is_flip_animating
+
+    def _get_flip_scale_x(self) -> float:
+        return self._flip_scale_x
+
+    def _set_flip_scale_x(self, value: float) -> None:
+        bounded = max(0.05, min(1.0, float(value)))
+        if abs(self._flip_scale_x - bounded) < 0.001:
+            return
+        self._flip_scale_x = bounded
+        self.update()
+
+    flipScaleX = pyqtProperty(float, fget=_get_flip_scale_x, fset=_set_flip_scale_x)
 
     def _shape_path(self) -> QPainterPath:
         path = QPainterPath()

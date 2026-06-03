@@ -1,5 +1,7 @@
+import os
 from pathlib import Path
 import re
+import time
 
 from PyQt6.QtCore import Qt
 from PyQt6.QtGui import QColor, QIcon, QPainter, QPen, QPixmap
@@ -126,6 +128,10 @@ class MainWindow(QMainWindow):
         self._is_refreshing_scene = False
         self._last_inserted_token_ids: set[str] = set()
         self._last_list_panel_size = 260
+        self._flip_animation_enabled = os.environ.get("QT_QPA_PLATFORM", "").lower() != "offscreen"
+        self._flip_debounce_seconds = 0.120
+        self._last_flip_request_at: dict[str, float] = {}
+        self._flip_duration_ms = 220
 
         self.setWindowTitle("Fate-Bag - GUI Tecnica Minima")
         self.resize(760, 480)
@@ -370,24 +376,27 @@ class MainWindow(QMainWindow):
     def _on_draw_one(self) -> None:
         try:
             drawn = self.controller.draw_one()
-            self.status_label.setText(self._draw_status_text("Pesca 1", drawn))
+            status = self._draw_status_text("Pesca 1", drawn)
             self._refresh_list()
+            self._animate_tokens_flip_visual(drawn, status_text=status)
         except Exception as exc:
             self.status_label.setText(f"Errore draw 1: {exc}")
 
     def _on_draw_all(self) -> None:
         try:
             drawn = self.controller.draw_all()
-            self.status_label.setText(self._draw_status_text("Pesca Tutte", drawn))
+            status = self._draw_status_text("Pesca Tutte", drawn)
             self._refresh_list()
+            self._animate_tokens_flip_visual(drawn, status_text=status)
         except Exception as exc:
             self.status_label.setText(f"Errore pesca tutte: {exc}")
 
     def _on_draw_n(self) -> None:
         try:
             drawn = self.controller.draw_many(self.draw_n_spin.value())
-            self.status_label.setText(self._draw_status_text("Pesca N", drawn))
+            status = self._draw_status_text("Pesca N", drawn)
             self._refresh_list()
+            self._animate_tokens_flip_visual(drawn, status_text=status)
         except Exception as exc:
             self.status_label.setText(f"Errore draw N: {exc}")
 
@@ -574,10 +583,22 @@ class MainWindow(QMainWindow):
 
     def _on_scene_token_flip(self, token_id: str) -> None:
         try:
+            now = time.monotonic()
+            last_time = self._last_flip_request_at.get(token_id)
+            if last_time is not None and (now - last_time) < self._flip_debounce_seconds:
+                self.status_label.setText("Flip ignorato (debounce)")
+                return
+            self._last_flip_request_at[token_id] = now
+
             self._set_checkbox_checked(token_id)
+            if self._flip_animation_enabled and self.table_scene.is_token_flip_animating(token_id):
+                self.status_label.setText("Flip in corso")
+                return
+
             new_state = self.controller.flip_token(token_id)
-            self.status_label.setText(f"Flip token: {token_id} -> {new_state}")
+            status = f"Flip token: {token_id} -> {new_state}"
             self._refresh_list()
+            self._animate_tokens_flip_visual([token_id], status_text=status)
         except Exception as exc:
             self.status_label.setText(f"Errore flip: {exc}")
 
@@ -778,6 +799,7 @@ class MainWindow(QMainWindow):
             hover_preview_enabled=settings.get("hover_preview_enabled"),
             table_background_file=settings.get("table_background_file"),
         )
+        self._flip_duration_ms = self._flip_duration_from_speed(settings.get("flip_speed"))
         self._sync_table_scene_to_viewport()
 
     def _resize_window_for_table_background(self) -> None:
@@ -809,13 +831,51 @@ class MainWindow(QMainWindow):
             str(table_token.token_id)
             for table_token in session.table_tokens
         }
-        self.status_label.setText(f"{status_prefix}: {session.session_id}")
         self._refresh_list()
+        self._animate_tokens_flip_visual(
+            list(self._last_inserted_token_ids),
+            status_text=f"{status_prefix}: {session.session_id}",
+        )
+
+    def _animate_tokens_flip_visual(self, token_ids: list[str], *, status_text: str) -> None:
+        self.status_label.setText(status_text)
+        if not self._flip_animation_enabled:
+            return
+
+        pending = 0
+        seen: set[str] = set()
+        for token_id in token_ids:
+            token_key = str(token_id)
+            if token_key in seen:
+                continue
+            seen.add(token_key)
+            if self.table_scene.is_token_flip_animating(token_key):
+                continue
+            started = self.table_scene.animate_token_flip(token_key, duration_ms=self._flip_duration_ms)
+            if started:
+                pending += 1
+
+        if pending <= 0:
+            return
 
     @staticmethod
     def _draw_status_text(prefix: str, drawn_ids: list[str]) -> str:
         count = len(drawn_ids)
         return f"{prefix}: {count} token"
+
+    @staticmethod
+    def _flip_duration_from_speed(raw_speed: object) -> int:
+        speed_value = 60
+        if isinstance(raw_speed, (int, float)):
+            speed_value = int(round(float(raw_speed)))
+        speed_value = max(1, min(100, speed_value))
+
+        # 1 => slowest, 100 => fastest.
+        min_duration = 1
+        max_duration = 100
+        span = max_duration - min_duration
+        ratio = (speed_value - 1) / 99
+        return int(round(max_duration - (span * ratio)))
 
     @staticmethod
     def _display_mode_for_token(token) -> str:

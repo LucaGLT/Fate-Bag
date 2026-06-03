@@ -656,6 +656,7 @@ class MainController:
             "token_radius_px": 42,
             "table_grid_margin_px": 42,
             "hover_preview_enabled": True,
+            "flip_speed": 60,
         }
 
     def _normalize_token_file_settings(self, raw_settings: object, source_file: Path) -> dict:
@@ -703,6 +704,14 @@ class MainController:
         raw_hover = raw_settings.get("hover_preview_enabled")
         if isinstance(raw_hover, bool):
             normalized["hover_preview_enabled"] = raw_hover
+
+        raw_flip_speed = (
+            raw_settings.get("flip_speed")
+            or raw_settings.get("flip-speed")
+            or raw_settings.get("flip_speed_percent")
+        )
+        if isinstance(raw_flip_speed, (int, float)):
+            normalized["flip_speed"] = int(max(1, min(100, round(float(raw_flip_speed)))))
 
         return normalized
 

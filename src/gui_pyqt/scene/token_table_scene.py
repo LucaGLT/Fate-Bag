@@ -120,6 +120,28 @@ class TokenTableScene(QGraphicsScene):
     def token_items(self) -> dict[str, TokenGraphicsItem]:
         return dict(self._token_items)
 
+    def is_token_flip_animating(self, token_id: str) -> bool:
+        item = self._token_items.get(token_id)
+        if item is None:
+            return False
+        try:
+            return item.is_flip_animating()
+        except RuntimeError:
+            return False
+
+    def animate_token_flip(self, token_id: str, on_half_flip=None, on_finished=None, duration_ms: int = 220) -> bool:
+        item = self._token_items.get(token_id)
+        if item is None:
+            return False
+        try:
+            return item.start_flip_animation(
+                on_half_flip=on_half_flip,
+                on_finished=on_finished,
+                duration_ms=duration_ms,
+            )
+        except RuntimeError:
+            return False
+
     def set_selected_token_ids(self, token_ids: set[str]) -> None:
         for token_id, item in self._token_items.items():
             item.setSelected(token_id in token_ids)

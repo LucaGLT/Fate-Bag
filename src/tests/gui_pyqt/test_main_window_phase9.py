@@ -140,6 +140,21 @@ def test_token_edit_dialog_is_wider_for_long_text(qapp):
     assert dialog.text_edit.minimumWidth() >= 520
 
 
+def test_flip_duration_mapping_from_speed_setting(window):
+    fast = window._flip_duration_from_speed(100)
+    medium = window._flip_duration_from_speed(60)
+    slow = window._flip_duration_from_speed(1)
+
+    _debug_case(
+        "Flip speed setting maps to duration",
+        {"speed_values": [1, 60, 100]},
+        {"fast_lt_medium_lt_slow": True},
+        {"fast_ms": fast, "medium_ms": medium, "slow_ms": slow},
+    )
+
+    assert fast < medium < slow
+
+
 def test_gui_flow_load_create_draw_reveal_hide_reset(window):
     window._on_load_tokens()
     after_load_status = window.status_label.text()
@@ -914,6 +929,29 @@ def test_load_tokens_applies_visual_settings_from_json(window, tmp_path):
     assert window.status_label.text().startswith("Token caricati")
     assert window.table_scene.token_radius_px() == pytest.approx(58.0)
     assert window.table_scene.table_background_file() == str(background_path)
+
+
+def test_load_tokens_applies_flip_speed_setting(window, tmp_path):
+    payload = {
+        "settings": {
+            "assets_root_path": str(tmp_path),
+            "flip_speed": 100,
+        },
+        "tokens": [],
+    }
+    configured_file = tmp_path / "tokens_with_flip_speed.json"
+    configured_file.write_text(json.dumps(payload, indent=2), encoding="utf-8")
+
+    window._on_load_tokens(str(configured_file))
+
+    _debug_case(
+        "Load tokens applies flip speed",
+        {"flip_speed": 100},
+        {"flip_duration_ms": window._flip_duration_from_speed(100)},
+        {"flip_duration_ms": window._flip_duration_ms},
+    )
+
+    assert window._flip_duration_ms == window._flip_duration_from_speed(100)
 
 
 def test_image_picker_defaults_to_assets_root_path(window, tmp_path, monkeypatch):
