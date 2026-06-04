@@ -6,7 +6,7 @@ import pytest
 from PyQt6.QtCore import Qt
 from PyQt6.QtGui import QImage, QColor
 from PyQt6.QtCore import QRect
-from PyQt6.QtWidgets import QApplication, QFileDialog
+from PyQt6.QtWidgets import QApplication, QFileDialog, QInputDialog
 
 from src.core.models.enums import TokenFrontType, TokenShape
 from src.gui_pyqt.controllers.main_controller import MainController
@@ -55,8 +55,10 @@ def test_main_window_has_required_controls(window):
         "new_token_btn": window.new_token_btn.text(),
         "delete_token_btn": window.delete_token_btn.text(),
         "reinsert_bag_btn": window.reinsert_bag_btn.text(),
-        "select_all_btn": window.select_all_btn.text(),
-        "deselect_all_btn": window.deselect_all_btn.text(),
+        "duplicate_token_btn": window.duplicate_token_btn.text(),
+        "move_token_btn": window.move_token_btn.text(),
+        "create_group_btn": window.create_group_btn.text(),
+        "delete_group_btn": window.delete_group_btn.text(),
         "draw_one_btn": window.draw_one_btn.text(),
         "draw_all_btn": window.draw_all_btn.text(),
         "draw_n_btn": window.draw_n_btn.text(),
@@ -79,8 +81,10 @@ def test_main_window_has_required_controls(window):
                 "(icona add token)",
                 "(icona delete token)",
                 "Rimetti in Bag",
-                "(icona seleziona tutto)",
-                "(icona deseleziona tutto)",
+                "(icona duplica token)",
+                "(icona sposta token)",
+                "(icona crea gruppo)",
+                "(icona elimina gruppo)",
                 "Pesca 1",
                 "Pesca Tutte",
                 "Pesca N",
@@ -103,10 +107,14 @@ def test_main_window_has_required_controls(window):
     assert window.new_token_btn.toolTip() == "New Token (1)"
     assert window.delete_token_btn.toolTip() == "Delete Token selezionati"
     assert controls["reinsert_bag_btn"] == "Rimetti in Bag"
-    assert controls["select_all_btn"] == ""
-    assert controls["deselect_all_btn"] == ""
-    assert window.select_all_btn.toolTip() == "Seleziona Tutto"
-    assert window.deselect_all_btn.toolTip() == "Deseleziona Tutto"
+    assert controls["duplicate_token_btn"] == ""
+    assert controls["move_token_btn"] == ""
+    assert controls["create_group_btn"] == ""
+    assert controls["delete_group_btn"] == ""
+    assert window.duplicate_token_btn.toolTip() == "Duplica Token Selezionati"
+    assert window.move_token_btn.toolTip() == "Sposta Token Selezionati"
+    assert window.create_group_btn.toolTip() == "Crea Gruppo o Sottogruppo"
+    assert window.delete_group_btn.toolTip() == "Elimina Gruppo Selezionato"
     assert controls["draw_one_btn"] == "Pesca 1"
     assert controls["draw_all_btn"] == "Pesca Tutte"
     assert controls["draw_n_btn"] == "Pesca N"
@@ -117,6 +125,41 @@ def test_main_window_has_required_controls(window):
     assert controls["back_img_upload_btn"] == "Back-Img Upload"
     assert controls["back_img_delete_btn"] == "Back-Img Delete"
     assert controls["reset_btn"] == "Svuota Bag"
+
+
+def test_all_main_window_buttons_have_tooltip(window):
+    buttons = [
+        window.load_tokens_btn,
+        window.create_selected_session_btn,
+        window.duplicate_token_btn,
+        window.move_token_btn,
+        window.create_group_btn,
+        window.delete_group_btn,
+        window.new_token_btn,
+        window.delete_token_btn,
+        window.front_img_upload_btn,
+        window.front_img_delete_btn,
+        window.back_img_upload_btn,
+        window.back_img_delete_btn,
+        window.shuffle_btn,
+        window.sort_btn,
+        window.draw_n_btn,
+        window.draw_one_btn,
+        window.draw_all_btn,
+        window.reinsert_bag_btn,
+        window.reset_btn,
+    ]
+
+    missing = [btn.objectName() for btn in buttons if not btn.toolTip().strip()]
+
+    _debug_case(
+        "All buttons expose tooltip",
+        {"button_count": len(buttons)},
+        {"missing": []},
+        {"missing": missing},
+    )
+
+    assert not missing
 
 
 def test_token_edit_dialog_is_wider_for_long_text(qapp):
@@ -269,15 +312,15 @@ def test_gui_flow_load_create_draw_reveal_hide_reset(window):
     assert after_load_status.startswith("Token caricati")
     assert after_select_all_status.startswith("Tutti i token selezionati")
     assert after_create_selected_status.startswith("Inseriti in Bag")
-    assert any("Deselezionato" in row for row in rows_after_create_selected)
+    assert any("| ○ |" in row for row in rows_after_create_selected)
     assert "Pesca 1" in after_draw_one_status
     assert "Pesca Tutte" in after_draw_all_status
     assert "Pesca N" in after_draw_n_status
     assert after_shuffle_status.startswith("Shuffle")
     assert len(session_rows_after_create) == loaded_count
     assert any(color == "#008000" for color in colors_after_reveal)
-    assert all((color == "#8b0000") or ("Deselezionato" in row) for row, color in zip(rows_after_hide, colors_after_hide))
-    assert all("Deselezionato" in row for row in rows_after_reset)
+    assert all((color == "#8b0000") or ("| ○ |" in row) for row, color in zip(rows_after_hide, colors_after_hide))
+    assert all("| ○ |" in row for row in rows_after_reset)
 
 
 def test_create_session_from_selection_requires_at_least_one_token(window):
@@ -895,6 +938,176 @@ def test_new_and_delete_token_buttons(window):
 
     assert after_delete_count == initial_count
     assert window.status_label.text().startswith("Token eliminati")
+
+
+def test_duplicate_selected_tokens_button(window):
+    window._on_load_tokens()
+
+    for index in range(window.token_list.count()):
+        window.token_list.item(index).setCheckState(Qt.CheckState.Unchecked)
+
+    from uuid import UUID
+
+    original_id = UUID(window.token_list.item(0).data(Qt.ItemDataRole.UserRole))
+    original_name = window.controller._tokens_by_id[original_id].name
+    window.token_list.item(0).setCheckState(Qt.CheckState.Checked)
+    before_count = len(window.controller._tokens)
+    before_ids = {token.id for token in window.controller._tokens}
+
+    window._on_duplicate_selected_tokens()
+
+    after_count = len(window.controller._tokens)
+    after_ids = {token.id for token in window.controller._tokens}
+    new_ids = after_ids - before_ids
+    assert len(new_ids) == 1
+    duplicated_token = window.controller._tokens_by_id[next(iter(new_ids))]
+
+    _debug_case(
+        "Duplicate selected tokens button",
+        {"before_count": before_count, "original_name": original_name, "original_id": str(original_id)},
+        {
+            "after_count": before_count + 1,
+            "status_starts_with": "Token duplicati",
+            "new_uuid_generated": True,
+            "name_has_suffix": True,
+        },
+        {
+            "after_count": after_count,
+            "status": window.status_label.text(),
+            "duplicated_id": str(duplicated_token.id),
+            "duplicated_name": duplicated_token.name,
+        },
+    )
+
+    assert after_count == before_count + 1
+    assert window.status_label.text().startswith("Token duplicati")
+    assert duplicated_token.id != original_id
+    assert duplicated_token.name.startswith(f"{original_name} (")
+
+
+def test_move_selected_tokens_button_opens_group_popup_and_moves(window, tmp_path, monkeypatch):
+    payload = {
+        "tokens": [
+            {
+                "name": "Token A",
+                "shape": "CIRCLE",
+                "front_type": "TEXT",
+                "front_value": "A",
+                "back_value": str(Path(window.controller._default_back_image_path())),
+                "categories": ["PG"],
+                "tags": ["t1"],
+            },
+            {
+                "name": "Token B",
+                "shape": "CIRCLE",
+                "front_type": "TEXT",
+                "front_value": "B",
+                "back_value": str(Path(window.controller._default_back_image_path())),
+                "categories": ["PG>Nariel"],
+                "tags": ["t2"],
+            },
+        ]
+    }
+
+    json_path = tmp_path / "move_group_tokens.json"
+    json_path.write_text(json.dumps(payload, indent=2), encoding="utf-8")
+    window._on_load_tokens(str(json_path))
+
+    for index in range(window.token_list.count()):
+        window.token_list.item(index).setCheckState(Qt.CheckState.Unchecked)
+
+    selected_item = window.token_list.item(0)
+    selected_item.setCheckState(Qt.CheckState.Checked)
+
+    from uuid import UUID
+
+    token_id = UUID(selected_item.data(Qt.ItemDataRole.UserRole))
+
+    def _fake_get_item(*args, **kwargs):
+        del args, kwargs
+        return ("Token > PG > Nariel", True)
+
+    monkeypatch.setattr(QInputDialog, "getItem", _fake_get_item)
+
+    window._on_move_selected_tokens()
+    updated = window.controller._tokens_by_id[token_id]
+
+    _debug_case(
+        "Move selected tokens button",
+        {"selected_token": str(token_id)},
+        {"new_category": ["PG>Nariel"], "status_starts_with": "Token spostati"},
+        {"categories": updated.categories, "status": window.status_label.text()},
+    )
+
+    assert updated.categories == ["PG>Nariel"]
+    assert window.status_label.text().startswith("Token spostati")
+
+
+def test_create_subgroup_button_creates_child_group(window, monkeypatch):
+    window._on_load_tokens()
+
+    token_root = window.token_list.topLevelItem(0)
+    window.token_list.setCurrentItem(token_root)
+
+    def _fake_get_text(*args, **kwargs):
+        del args, kwargs
+        return ("PG", True)
+
+    monkeypatch.setattr(QInputDialog, "getText", _fake_get_text)
+    window._on_create_subgroup()
+
+    token_root = window.token_list.topLevelItem(0)
+    labels = [token_root.child(i).text(0) for i in range(token_root.childCount())]
+
+    _debug_case(
+        "Create subgroup button",
+        {"selected_group": "Token", "new_subgroup": "PG"},
+        {"group_present": True, "status_starts_with": "Gruppo creato"},
+        {"labels": labels, "status": window.status_label.text()},
+    )
+
+    assert "PG" in labels
+    assert window.status_label.text().startswith("Gruppo creato")
+
+
+def test_delete_group_button_moves_tokens_to_parent(window, tmp_path):
+    payload = {
+        "tokens": [
+            {
+                "name": "Token A",
+                "shape": "CIRCLE",
+                "front_type": "TEXT",
+                "front_value": "A",
+                "back_value": str(Path(window.controller._default_back_image_path())),
+                "categories": ["PG>Nariel"],
+                "tags": ["t1"],
+            }
+        ]
+    }
+
+    json_path = tmp_path / "delete_group_tokens.json"
+    json_path.write_text(json.dumps(payload, indent=2), encoding="utf-8")
+    window._on_load_tokens(str(json_path))
+
+    token_root = window.token_list.topLevelItem(0)
+    pg_node = next((token_root.child(i) for i in range(token_root.childCount()) if token_root.child(i).text(0) == "PG"), None)
+    assert pg_node is not None
+    nariel_node = next((pg_node.child(i) for i in range(pg_node.childCount()) if pg_node.child(i).text(0) == "Nariel"), None)
+    assert nariel_node is not None
+
+    window.token_list.setCurrentItem(nariel_node)
+    window._on_delete_selected_group()
+
+    token = window.controller._tokens[0]
+    _debug_case(
+        "Delete group moves tokens to parent",
+        {"deleted_group": "PG>Nariel"},
+        {"token_category": ["PG"], "status_starts_with": "Gruppo eliminato"},
+        {"token_category": token.categories, "status": window.status_label.text()},
+    )
+
+    assert token.categories == ["PG"]
+    assert window.status_label.text().startswith("Gruppo eliminato")
 
 
 def test_reload_tokens_file_replaces_runtime_instead_of_merge(window):

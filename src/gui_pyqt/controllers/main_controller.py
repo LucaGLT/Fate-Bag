@@ -194,6 +194,94 @@ class MainController:
 
         return len(selected_ids)
 
+    def duplicate_tokens(self, token_ids: list[UUID]) -> int:
+        selected_ids = self._normalize_selected_token_ids(token_ids)
+        existing_names = {token.name for token in self._tokens}
+
+        duplicated_count = 0
+        for token_id in selected_ids:
+            token = self._tokens_by_id.get(token_id)
+            if token is None:
+                raise ValueError(f"Token non trovato: {token_id}")
+
+            payload = token.model_dump(mode="json")
+            payload.pop("id", None)
+            duplicated_name = self._build_duplicated_name(token.name, existing_names)
+            payload["name"] = duplicated_name
+            existing_names.add(duplicated_name)
+            duplicated = Token.model_validate(payload)
+            created = self._token_service.create_token(duplicated)
+            self._tokens.append(created)
+            self._tokens_by_id[created.id] = created
+            self._token_name_by_id[created.id] = created.name
+            duplicated_count += 1
+
+        return duplicated_count
+
+    def move_tokens_to_category(self, token_ids: list[UUID], category_path: str) -> int:
+        selected_ids = self._normalize_selected_token_ids(token_ids)
+        normalized_path = str(category_path).strip()
+
+        updated_count = 0
+        for token_id in selected_ids:
+            token = self._tokens_by_id.get(token_id)
+            if token is None:
+                raise ValueError(f"Token non trovato: {token_id}")
+
+            payload = token.model_dump(mode="json")
+            payload["categories"] = [normalized_path] if normalized_path else []
+
+            updated = Token.model_validate(payload)
+            self._token_service.update_token(updated)
+            self._update_token_cache(updated)
+            updated_count += 1
+
+        return updated_count
+
+    def custom_group_paths(self) -> list[str]:
+        raw_groups = self._token_file_settings.get("custom_groups", [])
+        if not isinstance(raw_groups, list):
+            return []
+        return [str(value).strip() for value in raw_groups if isinstance(value, str) and str(value).strip()]
+
+    def add_custom_group_path(self, group_path: str) -> None:
+        normalized = self._normalize_group_path(group_path)
+        if not normalized:
+            raise ValueError("Nome gruppo non valido")
+
+        current = set(self.custom_group_paths())
+        current.add(normalized)
+        self._save_custom_group_paths(sorted(current, key=lambda value: (value.count(">"), value.lower())))
+
+    def delete_group_and_move_tokens_to_parent(self, group_path: str) -> int:
+        normalized = self._normalize_group_path(group_path)
+        if not normalized:
+            raise ValueError("Impossibile eliminare la radice Token")
+
+        target_parts = normalized.split(">")
+        parent_path = ">".join(target_parts[:-1])
+
+        moved_count = 0
+        for token in list(self._tokens):
+            primary = self._primary_category_path(token.categories)
+            if not primary:
+                continue
+            if primary == normalized or primary.startswith(f"{normalized}>"):
+                payload = token.model_dump(mode="json")
+                payload["categories"] = [parent_path] if parent_path else []
+                updated = Token.model_validate(payload)
+                self._token_service.update_token(updated)
+                self._update_token_cache(updated)
+                moved_count += 1
+
+        remaining_groups = [
+            group
+            for group in self.custom_group_paths()
+            if group != normalized and not group.startswith(f"{normalized}>")
+        ]
+        self._save_custom_group_paths(remaining_groups)
+        return moved_count
+
     def draw_one(self) -> list[str]:
         self._ensure_session_ready()
         seed = self._next_seed() if self._deterministic_mode else None
@@ -688,6 +776,7 @@ class MainController:
             "move_speed": 60,
             "auto_sort_delay_seconds": 0.0,
             "auto_shuffle_after_insert_count": 3,
+            "custom_groups": [],
         }
 
     def _normalize_token_file_settings(self, raw_settings: object, source_file: Path) -> dict:
@@ -765,6 +854,15 @@ class MainController:
         )
         if isinstance(raw_auto_shuffle_count, (int, float)):
             normalized["auto_shuffle_after_insert_count"] = max(0, int(round(float(raw_auto_shuffle_count))))
+
+        raw_custom_groups = _first_present("custom_groups", "groups", "group_paths")
+        if isinstance(raw_custom_groups, list):
+            normalized_groups = [
+                self._normalize_group_path(value)
+                for value in raw_custom_groups
+                if isinstance(value, str)
+            ]
+            normalized["custom_groups"] = [value for value in normalized_groups if value]
 
         return normalized
 
@@ -903,6 +1001,36 @@ class MainController:
         if front_text_without_name:
             return f"<{clean_name}>|*{tags_part}*|{front_text_without_name}"
         return f"<{clean_name}>|*{tags_part}*"
+
+    def _save_custom_group_paths(self, groups: list[str]) -> None:
+        cleaned = [self._normalize_group_path(value) for value in groups]
+        self._token_file_settings["custom_groups"] = [value for value in cleaned if value]
+        self._token_repo.update_settings(self._token_file_settings)
+
+    @staticmethod
+    def _normalize_group_path(path: object) -> str:
+        if not isinstance(path, str):
+            return ""
+        chunks = [chunk.strip() for chunk in path.split(">") if chunk.strip()]
+        return ">".join(chunks)
+
+    @staticmethod
+    def _primary_category_path(categories: list[str]) -> str:
+        for raw in categories:
+            normalized = MainController._normalize_group_path(raw)
+            if normalized:
+                return normalized
+        return ""
+
+    @staticmethod
+    def _build_duplicated_name(original_name: str, existing_names: set[str]) -> str:
+        base = str(original_name).strip() or "Token"
+        suffix_index = 2
+        while True:
+            candidate = f"{base} ({suffix_index})"
+            if candidate not in existing_names:
+                return candidate
+            suffix_index += 1
 
     def _update_token_cache(self, updated: Token) -> None:
         self._tokens_by_id[updated.id] = updated

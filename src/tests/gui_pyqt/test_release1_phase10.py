@@ -373,9 +373,13 @@ def test_release1_checkbox_tree_groups_tokens_by_categories(tmp_path, window):
 
     window._on_load_tokens(str(json_path))
 
+    token_root = window.token_list.topLevelItem(0)
+    assert token_root is not None
+    assert token_root.text(0) == "Token"
+
     root_pg = None
-    for i in range(window.token_list.topLevelItemCount()):
-        node = window.token_list.topLevelItem(i)
+    for i in range(token_root.childCount()):
+        node = token_root.child(i)
         if node.text(0) == "PG":
             root_pg = node
             break
@@ -426,9 +430,13 @@ def test_release1_checkbox_tree_parent_check_selects_all_descendants(tmp_path, w
 
     window._on_load_tokens(str(json_path))
 
+    token_root = window.token_list.topLevelItem(0)
+    assert token_root is not None
+    assert token_root.text(0) == "Token"
+
     root_pg = None
-    for i in range(window.token_list.topLevelItemCount()):
-        node = window.token_list.topLevelItem(i)
+    for i in range(token_root.childCount()):
+        node = token_root.child(i)
         if node.text(0) == "PG":
             root_pg = node
             break

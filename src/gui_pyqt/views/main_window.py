@@ -192,6 +192,8 @@ class TokenTreeWidget(QTreeWidget):
 
 
 class MainWindow(QMainWindow):
+    GROUP_PATH_ROLE = Qt.ItemDataRole.UserRole + 1
+
     def __init__(self, controller: MainController | None = None) -> None:
         super().__init__()
         self.controller = controller or MainController()
@@ -206,6 +208,7 @@ class MainWindow(QMainWindow):
         self._auto_sort_delay_seconds = 0.0
         self._auto_shuffle_after_insert_count = 3
         self._is_tree_check_propagating = False
+        self._token_tree_root: QTreeWidgetItem | None = None
         self._auto_sort_timer = QTimer(self)
         self._auto_sort_timer.setSingleShot(True)
         self._auto_sort_timer.timeout.connect(self._on_auto_sort_timeout)
@@ -226,90 +229,120 @@ class MainWindow(QMainWindow):
 
         self.load_tokens_btn = QPushButton("Carica Token")
         self.load_tokens_btn.setObjectName("load_tokens_btn")
+        self.load_tokens_btn.setToolTip("Carica Token da file JSON")
         self.controls_grid.addWidget(self.load_tokens_btn, 0, 0)
 
         self.create_selected_session_btn = QPushButton("Inserisci in Bag")
         self.create_selected_session_btn.setObjectName("create_selected_session_btn")
+        self.create_selected_session_btn.setToolTip("Inserisci in Bag i token selezionati")
         self.controls_grid.addWidget(self.create_selected_session_btn, 1, 0)
 
-        self.select_all_btn = QPushButton("")
-        self.select_all_btn.setObjectName("select_all_btn")
-        self.select_all_btn.setToolTip("Seleziona Tutto")
-        self.select_all_btn.setIcon(
-            self.style().standardIcon(QStyle.StandardPixmap.SP_DialogApplyButton)
-        )
-        self.controls_grid.addWidget(self.select_all_btn, 0, 1)
+        self.duplicate_token_btn = QPushButton("")
+        self.duplicate_token_btn.setObjectName("duplicate_token_btn")
+        self.duplicate_token_btn.setToolTip("Duplica Token Selezionati")
+        self.duplicate_token_btn.setIcon(self._icon_duplicate())
+        self.duplicate_token_btn.setFixedWidth(34)
+        self.controls_grid.addWidget(self.duplicate_token_btn, 0, 1)
 
-        self.deselect_all_btn = QPushButton("")
-        self.deselect_all_btn.setObjectName("deselect_all_btn")
-        self.deselect_all_btn.setToolTip("Deseleziona Tutto")
-        self.deselect_all_btn.setIcon(self._icon_empty_checkbox())
-        self.controls_grid.addWidget(self.deselect_all_btn, 1, 1)
+        self.move_token_btn = QPushButton("")
+        self.move_token_btn.setObjectName("move_token_btn")
+        self.move_token_btn.setToolTip("Sposta Token Selezionati")
+        self.move_token_btn.setIcon(self._icon_move())
+        self.move_token_btn.setFixedWidth(34)
+        self.controls_grid.addWidget(self.move_token_btn, 1, 1)
+
+        self.create_group_btn = QPushButton("")
+        self.create_group_btn.setObjectName("create_group_btn")
+        self.create_group_btn.setToolTip("Crea Gruppo o Sottogruppo")
+        self.create_group_btn.setIcon(self._icon_group_add())
+        self.create_group_btn.setFixedWidth(34)
+        self.controls_grid.addWidget(self.create_group_btn, 0, 2)
+
+        self.delete_group_btn = QPushButton("")
+        self.delete_group_btn.setObjectName("delete_group_btn")
+        self.delete_group_btn.setToolTip("Elimina Gruppo Selezionato")
+        self.delete_group_btn.setIcon(self._icon_group_delete())
+        self.delete_group_btn.setFixedWidth(34)
+        self.controls_grid.addWidget(self.delete_group_btn, 1, 2)
 
         self.new_token_btn = QPushButton("+")
         self.new_token_btn.setObjectName("new_token_btn")
         self.new_token_btn.setToolTip("New Token (1)")
         self.new_token_btn.setText("")
         self.new_token_btn.setIcon(self._icon_plus())
-        self.controls_grid.addWidget(self.new_token_btn, 0, 2)
+        self.new_token_btn.setFixedWidth(34)
+        self.controls_grid.addWidget(self.new_token_btn, 0, 3)
 
         self.delete_token_btn = QPushButton("X")
         self.delete_token_btn.setObjectName("delete_token_btn")
         self.delete_token_btn.setToolTip("Delete Token selezionati")
         self.delete_token_btn.setText("")
         self.delete_token_btn.setIcon(self._icon_red_x())
-        self.controls_grid.addWidget(self.delete_token_btn, 1, 2)
+        self.delete_token_btn.setFixedWidth(34)
+        self.controls_grid.addWidget(self.delete_token_btn, 1, 3)
 
         self.front_img_upload_btn = QPushButton("Front-Img Upload")
         self.front_img_upload_btn.setObjectName("front_img_upload_btn")
-        self.controls_grid.addWidget(self.front_img_upload_btn, 0, 3)
+        self.front_img_upload_btn.setToolTip("Carica immagine Front sui token selezionati")
+        self.controls_grid.addWidget(self.front_img_upload_btn, 0, 4)
 
         self.front_img_delete_btn = QPushButton("Front-Img Delete")
         self.front_img_delete_btn.setObjectName("front_img_delete_btn")
-        self.controls_grid.addWidget(self.front_img_delete_btn, 1, 3)
+        self.front_img_delete_btn.setToolTip("Rimuove immagine Front dai token selezionati")
+        self.controls_grid.addWidget(self.front_img_delete_btn, 1, 4)
 
         self.back_img_upload_btn = QPushButton("Back-Img Upload")
         self.back_img_upload_btn.setObjectName("back_img_upload_btn")
-        self.controls_grid.addWidget(self.back_img_upload_btn, 0, 4)
+        self.back_img_upload_btn.setToolTip("Carica immagine Back sui token selezionati")
+        self.controls_grid.addWidget(self.back_img_upload_btn, 0, 5)
 
         self.back_img_delete_btn = QPushButton("Back-Img Delete")
         self.back_img_delete_btn.setObjectName("back_img_delete_btn")
-        self.controls_grid.addWidget(self.back_img_delete_btn, 1, 4)
+        self.back_img_delete_btn.setToolTip("Rimuove immagine Back dai token selezionati")
+        self.controls_grid.addWidget(self.back_img_delete_btn, 1, 5)
 
         self.shuffle_btn = QPushButton("Shuffle")
         self.shuffle_btn.setObjectName("shuffle_btn")
-        self.controls_grid.addWidget(self.shuffle_btn, 0, 5)
+        self.shuffle_btn.setToolTip("Mescola i token della Bag")
+        self.controls_grid.addWidget(self.shuffle_btn, 0, 6)
 
         self.sort_btn = QPushButton("Sort")
         self.sort_btn.setObjectName("sort_btn")
-        self.controls_grid.addWidget(self.sort_btn, 1, 5)
+        self.sort_btn.setToolTip("Ordina FACE_UP prima di FACE_DOWN")
+        self.controls_grid.addWidget(self.sort_btn, 1, 6)
 
         self.draw_n_spin = QSpinBox()
         self.draw_n_spin.setObjectName("draw_n_spin")
         self.draw_n_spin.setMinimum(1)
         self.draw_n_spin.setMaximum(99)
         self.draw_n_spin.setValue(2)
-        self.controls_grid.addWidget(self.draw_n_spin, 0, 6)
+        self.draw_n_spin.setToolTip("Numero token da pescare")
+        self.controls_grid.addWidget(self.draw_n_spin, 0, 7)
 
         self.draw_n_btn = QPushButton("Pesca N")
         self.draw_n_btn.setObjectName("draw_n_btn")
-        self.controls_grid.addWidget(self.draw_n_btn, 1, 6)
+        self.draw_n_btn.setToolTip("Pesca N token")
+        self.controls_grid.addWidget(self.draw_n_btn, 1, 7)
 
         self.draw_one_btn = QPushButton("Pesca 1")
         self.draw_one_btn.setObjectName("draw_one_btn")
-        self.controls_grid.addWidget(self.draw_one_btn, 0, 7)
+        self.draw_one_btn.setToolTip("Pesca 1 token")
+        self.controls_grid.addWidget(self.draw_one_btn, 0, 8)
 
         self.draw_all_btn = QPushButton("Pesca Tutte")
         self.draw_all_btn.setObjectName("draw_all_btn")
-        self.controls_grid.addWidget(self.draw_all_btn, 1, 7)
+        self.draw_all_btn.setToolTip("Pesca tutte le carte in FACE_DOWN")
+        self.controls_grid.addWidget(self.draw_all_btn, 1, 8)
 
         self.reinsert_bag_btn = QPushButton("Rimetti in Bag")
         self.reinsert_bag_btn.setObjectName("reinsert_bag_btn")
-        self.controls_grid.addWidget(self.reinsert_bag_btn, 0, 8)
+        self.reinsert_bag_btn.setToolTip("Reinserisce l'ultimo insieme inserito")
+        self.controls_grid.addWidget(self.reinsert_bag_btn, 0, 9)
 
         self.reset_btn = QPushButton("Svuota Bag")
         self.reset_btn.setObjectName("reset_btn")
-        self.controls_grid.addWidget(self.reset_btn, 1, 8)
+        self.reset_btn.setToolTip("Svuota completamente la Bag")
+        self.controls_grid.addWidget(self.reset_btn, 1, 9)
 
         layout.addLayout(self.controls_grid)
 
@@ -347,8 +380,10 @@ class MainWindow(QMainWindow):
         self.new_token_btn.clicked.connect(self._on_new_token)
         self.delete_token_btn.clicked.connect(self._on_delete_selected_tokens)
         self.reinsert_bag_btn.clicked.connect(self._on_reinsert_bag)
-        self.select_all_btn.clicked.connect(self._on_select_all_tokens)
-        self.deselect_all_btn.clicked.connect(self._on_deselect_all_tokens)
+        self.duplicate_token_btn.clicked.connect(self._on_duplicate_selected_tokens)
+        self.move_token_btn.clicked.connect(self._on_move_selected_tokens)
+        self.create_group_btn.clicked.connect(self._on_create_subgroup)
+        self.delete_group_btn.clicked.connect(self._on_delete_selected_group)
         self.draw_one_btn.clicked.connect(self._on_draw_one)
         self.draw_all_btn.clicked.connect(self._on_draw_all)
         self.draw_n_btn.clicked.connect(self._on_draw_n)
@@ -449,6 +484,98 @@ class MainWindow(QMainWindow):
         for index in range(self.token_list.count()):
             self.token_list.item(index).setCheckState(0, Qt.CheckState.Unchecked)
         self.status_label.setText("Tutti i token deselezionati")
+
+    def _on_duplicate_selected_tokens(self) -> None:
+        try:
+            selected_ids = list(self._checked_token_ids_from_ui())
+            duplicated_count = self.controller.duplicate_tokens(selected_ids)
+            self.status_label.setText(f"Token duplicati: {duplicated_count}")
+            self._refresh_list()
+        except Exception as exc:
+            self.status_label.setText(f"Errore duplica token: {exc}")
+
+    def _on_move_selected_tokens(self) -> None:
+        try:
+            selected_ids = list(self._checked_token_ids_from_ui())
+            choices = self._category_choices_for_move_popup()
+            if not choices:
+                raise ValueError("Nessun gruppo disponibile")
+
+            selected_label, ok = QInputDialog.getItem(
+                self,
+                "Sposta Token Selezionati",
+                "Gruppo destinazione:",
+                choices,
+                0,
+                False,
+            )
+            if not ok:
+                self.status_label.setText("Sposta token annullato")
+                return
+
+            category_path = self._category_path_from_popup_label(selected_label)
+            moved_count = self.controller.move_tokens_to_category(selected_ids, category_path)
+            status_suffix = category_path if category_path else "Token"
+            self.status_label.setText(f"Token spostati: {moved_count} -> {status_suffix}")
+            self._refresh_list()
+        except Exception as exc:
+            self.status_label.setText(f"Errore sposta token: {exc}")
+
+    def _on_create_subgroup(self) -> None:
+        try:
+            selected_group = self._selected_group_path_for_actions()
+            if selected_group is None:
+                raise ValueError("Seleziona un gruppo")
+
+            group_name, ok = QInputDialog.getText(
+                self,
+                "Crea Sottogruppo",
+                "Nome sottogruppo:",
+            )
+            if not ok:
+                self.status_label.setText("Creazione gruppo annullata")
+                return
+
+            clean_name = self._normalized_group_path(group_name)
+            if not clean_name:
+                raise ValueError("Nome gruppo non valido")
+
+            new_path = f"{selected_group}>{clean_name}" if selected_group else clean_name
+            self.controller.add_custom_group_path(new_path)
+            self.status_label.setText(f"Gruppo creato: {new_path}")
+            self._refresh_list()
+        except Exception as exc:
+            self.status_label.setText(f"Errore crea gruppo: {exc}")
+
+    def _on_delete_selected_group(self) -> None:
+        try:
+            selected_group = self._selected_group_path_for_actions()
+            if selected_group is None:
+                raise ValueError("Seleziona un gruppo")
+            if not selected_group:
+                raise ValueError("Impossibile eliminare la radice Token")
+
+            moved = self.controller.delete_group_and_move_tokens_to_parent(selected_group)
+            parent_group = selected_group.rsplit(">", 1)[0] if ">" in selected_group else "Token"
+            self.status_label.setText(f"Gruppo eliminato: {selected_group} | Token spostati in {parent_group}: {moved}")
+            self._refresh_list()
+        except Exception as exc:
+            self.status_label.setText(f"Errore elimina gruppo: {exc}")
+
+    def _selected_group_path_for_actions(self) -> str | None:
+        selected_item = self.token_list.currentItem()
+        if selected_item is None:
+            return ""
+
+        token_id = selected_item.data(0, Qt.ItemDataRole.UserRole)
+        node = selected_item.parent() if token_id else selected_item
+        if node is None:
+            return ""
+
+        group_path = node.data(0, self.GROUP_PATH_ROLE)
+        if group_path is None:
+            return None
+        return str(group_path)
 
     def _on_draw_one(self) -> None:
         try:
@@ -763,6 +890,16 @@ class MainWindow(QMainWindow):
         self.token_list.blockSignals(True)
 
         category_nodes: dict[tuple[str, ...], QTreeWidgetItem] = {}
+        self._token_tree_root = QTreeWidgetItem(["Token"])
+        self._token_tree_root.setFlags(self._token_tree_root.flags() | Qt.ItemFlag.ItemIsUserCheckable)
+        self._token_tree_root.setCheckState(0, Qt.CheckState.Unchecked)
+        self._token_tree_root.setData(0, self.GROUP_PATH_ROLE, "")
+        self.token_list.addTopLevelItem(self._token_tree_root)
+
+        for custom_group in self.controller.custom_group_paths():
+            custom_path = tuple(part.strip() for part in custom_group.split(">") if part.strip())
+            if custom_path:
+                self._get_or_create_category_node(category_nodes, custom_path)
 
         for entry in entries:
             category_path = self._primary_category_path(entry.get("categories", []))
@@ -799,10 +936,16 @@ class MainWindow(QMainWindow):
         nodes: dict[tuple[str, ...], QTreeWidgetItem],
         path: tuple[str, ...],
     ) -> QTreeWidgetItem:
+        if self._token_tree_root is None:
+            self._token_tree_root = QTreeWidgetItem(["Token"])
+            self._token_tree_root.setFlags(self._token_tree_root.flags() | Qt.ItemFlag.ItemIsUserCheckable)
+            self._token_tree_root.setCheckState(0, Qt.CheckState.Unchecked)
+            self.token_list.addTopLevelItem(self._token_tree_root)
+
         if not path:
             path = ("Senza Categoria",)
 
-        current_parent: QTreeWidgetItem | None = None
+        current_parent: QTreeWidgetItem | None = self._token_tree_root
         for depth in range(1, len(path) + 1):
             current_path = path[:depth]
             existing = nodes.get(current_path)
@@ -812,19 +955,54 @@ class MainWindow(QMainWindow):
                 existing.setFlags(existing.flags() | Qt.ItemFlag.ItemIsUserCheckable)
                 existing.setCheckState(0, Qt.CheckState.Unchecked)
                 nodes[current_path] = existing
-                if current_parent is None:
-                    self.token_list.addTopLevelItem(existing)
-                else:
+                if current_parent is not None:
                     current_parent.addChild(existing)
+                existing.setData(0, self.GROUP_PATH_ROLE, ">".join(current_path))
             current_parent = existing
 
         if current_parent is None:
             fallback = QTreeWidgetItem(["Senza Categoria"])
             fallback.setFlags(fallback.flags() | Qt.ItemFlag.ItemIsUserCheckable)
             fallback.setCheckState(0, Qt.CheckState.Unchecked)
-            self.token_list.addTopLevelItem(fallback)
+            fallback.setData(0, self.GROUP_PATH_ROLE, None)
+            if self._token_tree_root is not None:
+                self._token_tree_root.addChild(fallback)
+            else:
+                self.token_list.addTopLevelItem(fallback)
             return fallback
         return current_parent
+
+    def _category_choices_for_move_popup(self) -> list[str]:
+        choices: set[str] = set()
+        entries = self.controller.token_status_entries()
+        for entry in entries:
+            category_path = self._primary_category_path(entry.get("categories", []))
+            for depth in range(1, len(category_path) + 1):
+                label = "Token > " + " > ".join(category_path[:depth])
+                choices.add(label)
+
+        for group_path in self.controller.custom_group_paths():
+            chunks = [chunk.strip() for chunk in group_path.split(">") if chunk.strip()]
+            for depth in range(1, len(chunks) + 1):
+                choices.add("Token > " + " > ".join(chunks[:depth]))
+
+        ordered = sorted(choices, key=lambda value: (value.count(">"), value.lower()))
+        return ["Token", *ordered]
+
+    @staticmethod
+    def _category_path_from_popup_label(label: str) -> str:
+        raw = str(label).strip()
+        if raw == "Token":
+            return ""
+        if raw.startswith("Token >"):
+            raw = raw[len("Token >"):].strip()
+        chunks = [chunk.strip() for chunk in raw.split(">") if chunk.strip()]
+        return ">".join(chunks)
+
+    @staticmethod
+    def _normalized_group_path(path: str) -> str:
+        chunks = [chunk.strip() for chunk in str(path).split(">") if chunk.strip()]
+        return ">".join(chunks)
 
     @staticmethod
     def _primary_category_path(categories: object) -> tuple[str, ...]:
@@ -1233,7 +1411,68 @@ class MainWindow(QMainWindow):
     def _tree_status_display(status: str) -> str:
         if status in {"FACE_DOWN", "FACE_UP", "EXCLUDED", "LOCKED"}:
             return "●"
+        if status == "Deselezionato":
+            return "○"
         return status
+
+    @staticmethod
+    def _icon_duplicate(size: int = 16) -> QIcon:
+        pixmap = QPixmap(size, size)
+        pixmap.fill(Qt.GlobalColor.transparent)
+        painter = QPainter(pixmap)
+        painter.setRenderHint(QPainter.RenderHint.Antialiasing, True)
+        pen = QPen(QColor("#1565c0"), 2)
+        painter.setPen(pen)
+        painter.drawRect(2, 4, size - 7, size - 7)
+        painter.drawRect(5, 1, size - 7, size - 7)
+        painter.end()
+        return QIcon(pixmap)
+
+    @staticmethod
+    def _icon_move(size: int = 16) -> QIcon:
+        pixmap = QPixmap(size, size)
+        pixmap.fill(Qt.GlobalColor.transparent)
+        painter = QPainter(pixmap)
+        painter.setRenderHint(QPainter.RenderHint.Antialiasing, True)
+        pen = QPen(QColor("#ef6c00"), 2)
+        painter.setPen(pen)
+        y = size // 2
+        painter.drawLine(3, y, size - 5, y)
+        painter.drawLine(size - 9, y - 4, size - 5, y)
+        painter.drawLine(size - 9, y + 4, size - 5, y)
+        painter.end()
+        return QIcon(pixmap)
+
+    @staticmethod
+    def _icon_group_add(size: int = 16) -> QIcon:
+        pixmap = QPixmap(size, size)
+        pixmap.fill(Qt.GlobalColor.transparent)
+        painter = QPainter(pixmap)
+        painter.setRenderHint(QPainter.RenderHint.Antialiasing, True)
+        pen = QPen(QColor("#2e7d32"), 2)
+        painter.setPen(pen)
+        painter.drawRect(2, 4, size - 8, size - 8)
+        mid_x = size - 5
+        mid_y = 5
+        painter.drawLine(mid_x - 2, mid_y, mid_x + 2, mid_y)
+        painter.drawLine(mid_x, mid_y - 2, mid_x, mid_y + 2)
+        painter.end()
+        return QIcon(pixmap)
+
+    @staticmethod
+    def _icon_group_delete(size: int = 16) -> QIcon:
+        pixmap = QPixmap(size, size)
+        pixmap.fill(Qt.GlobalColor.transparent)
+        painter = QPainter(pixmap)
+        painter.setRenderHint(QPainter.RenderHint.Antialiasing, True)
+        pen = QPen(QColor("#c62828"), 2)
+        painter.setPen(pen)
+        painter.drawRect(2, 4, size - 8, size - 8)
+        mid_x = size - 5
+        mid_y = 5
+        painter.drawLine(mid_x - 2, mid_y, mid_x + 2, mid_y)
+        painter.end()
+        return QIcon(pixmap)
 
     @staticmethod
     def _icon_plus(size: int = 16) -> QIcon:
