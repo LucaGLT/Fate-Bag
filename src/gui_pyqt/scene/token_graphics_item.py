@@ -390,7 +390,26 @@ class TokenGraphicsItem(QGraphicsObject):
         return self.token.name
 
     def _tip_text(self) -> str:
-        return str(self.token.metadata.get("tip_text", "")).strip()
+        explicit_tip = str(self.token.metadata.get("tip_text", "")).strip()
+        if explicit_tip:
+            return explicit_tip
+
+        name = self.token.name.strip() or "Token"
+        tags_part = "-".join(str(tag).strip() for tag in self.token.tags if str(tag).strip())
+        if not tags_part:
+            tags_part = "-"
+
+        front_text = self._fallback_front_text().strip()
+        front_text = re.sub(
+            rf"^\s*<\s*{re.escape(name)}\s*>\s*\|?\s*",
+            "",
+            front_text,
+            flags=re.IGNORECASE,
+        ).strip()
+
+        if front_text:
+            return f"<{name}>|*{tags_part}*|{front_text}"
+        return f"<{name}>|*{tags_part}*"
 
     def _tip_overlay_rect(self) -> QRectF | None:
         if not self._hover_preview_enabled or not self._hover_preview_active:

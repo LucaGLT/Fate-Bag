@@ -4,7 +4,7 @@ import re
 import time
 
 from PyQt6.QtCore import QTimer, Qt
-from PyQt6.QtGui import QColor, QIcon, QPainter, QPen, QPixmap
+from PyQt6.QtGui import QBrush, QColor, QIcon, QPainter, QPen, QPixmap
 from PyQt6.QtWidgets import (
     QApplication,
     QComboBox,
@@ -769,16 +769,22 @@ class MainWindow(QMainWindow):
             parent_node = self._get_or_create_category_node(category_nodes, category_path)
 
             display_name = self._display_name_for_list(str(entry["name"]))
+            status_text = str(entry.get("status", "")).strip()
+            status_display = self._tree_status_display(status_text)
             tags = entry.get("tags", [])
             tags_text = ", ".join(tags) if tags else "-"
             row_text = (
-                f"{display_name} | {entry['status']} | "
+                f"{display_name} | {status_display} | "
                 f"{entry.get('shape', '-')} | #: {tags_text}"
             )
 
             item = QTreeWidgetItem([row_text])
             item.setData(0, Qt.ItemDataRole.UserRole, str(entry["token_id"]))
             item.setFlags(item.flags() | Qt.ItemFlag.ItemIsUserCheckable)
+
+            status_color = self._tree_status_color(status_text)
+            if status_color is not None:
+                item.setForeground(0, QBrush(status_color))
 
             is_checked = entry["token_id"] in selected_ids
             item.setCheckState(0, Qt.CheckState.Checked if is_checked else Qt.CheckState.Unchecked)
@@ -1212,6 +1218,22 @@ class MainWindow(QMainWindow):
         if match:
             return match.group(1).strip()
         return raw_name.replace("<", "").replace(">", "").strip()
+
+    @staticmethod
+    def _tree_status_color(status: str) -> QColor | None:
+        status_map = {
+            "FACE_DOWN": QColor("#8b0000"),
+            "FACE_UP": QColor("#008000"),
+            "EXCLUDED": QColor("#000000"),
+            "LOCKED": QColor("#808080"),
+        }
+        return status_map.get(status)
+
+    @staticmethod
+    def _tree_status_display(status: str) -> str:
+        if status in {"FACE_DOWN", "FACE_UP", "EXCLUDED", "LOCKED"}:
+            return "●"
+        return status
 
     @staticmethod
     def _icon_plus(size: int = 16) -> QIcon:

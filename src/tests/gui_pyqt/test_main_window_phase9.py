@@ -219,9 +219,17 @@ def test_gui_flow_load_create_draw_reveal_hide_reset(window):
 
     window._on_reveal_all()
     rows_after_reveal = [window.token_list.item(i).text() for i in range(window.token_list.count())]
+    colors_after_reveal = [
+        window.token_list.item(i).foreground(0).color().name().lower()
+        for i in range(window.token_list.count())
+    ]
 
     window._on_hide_all()
     rows_after_hide = [window.token_list.item(i).text() for i in range(window.token_list.count())]
+    colors_after_hide = [
+        window.token_list.item(i).foreground(0).color().name().lower()
+        for i in range(window.token_list.count())
+    ]
 
     window._on_reset()
     rows_after_reset = [window.token_list.item(i).text() for i in range(window.token_list.count())]
@@ -251,7 +259,9 @@ def test_gui_flow_load_create_draw_reveal_hide_reset(window):
             "after_shuffle_status": after_shuffle_status,
             "rows_after_create": session_rows_after_create,
             "rows_after_reveal": rows_after_reveal,
+            "colors_after_reveal": colors_after_reveal,
             "rows_after_hide": rows_after_hide,
+            "colors_after_hide": colors_after_hide,
             "rows_after_reset": rows_after_reset,
         },
     )
@@ -265,8 +275,8 @@ def test_gui_flow_load_create_draw_reveal_hide_reset(window):
     assert "Pesca N" in after_draw_n_status
     assert after_shuffle_status.startswith("Shuffle")
     assert len(session_rows_after_create) == loaded_count
-    assert any("FACE_UP" in row for row in rows_after_reveal)
-    assert all(("FACE_DOWN" in row) or ("Deselezionato" in row) for row in rows_after_hide)
+    assert any(color == "#008000" for color in colors_after_reveal)
+    assert all((color == "#8b0000") or ("Deselezionato" in row) for row, color in zip(rows_after_hide, colors_after_hide))
     assert all("Deselezionato" in row for row in rows_after_reset)
 
 
@@ -384,13 +394,7 @@ def test_sort_places_face_up_before_face_down(window):
     window._on_draw_n()
     window._on_sort()
 
-    statuses = []
-    for i in range(window.token_list.count()):
-        text = window.token_list.item(i).text()
-        if "|" in text:
-            parts = [part.strip() for part in text.split("|")]
-            if len(parts) >= 2:
-                statuses.append(parts[1])
+    statuses = [entry["status"] for entry in window.controller.token_status_entries() if entry["status"] in {"FACE_UP", "FACE_DOWN"}]
 
     first_face_down_index = next((i for i, status in enumerate(statuses) if status == "FACE_DOWN"), None)
     first_face_up_index = next((i for i, status in enumerate(statuses) if status == "FACE_UP"), None)
@@ -786,6 +790,48 @@ def test_token_popup_edit_updates_tip_text_for_selected_tokens(window):
     assert token0.metadata.get("tip_text") == "<Dettagli>|riga uno|riga due"
     assert token1.metadata.get("tip_text") == "<Dettagli>|riga uno|riga due"
     assert token2.metadata.get("tip_text") != "<Dettagli>|riga uno|riga due"
+
+
+def test_token_popup_edit_generates_auto_tip_text_when_empty(window):
+    window._on_load_tokens()
+
+    for index in range(window.token_list.count()):
+        window.token_list.item(index).setCheckState(Qt.CheckState.Unchecked)
+
+    window.token_list.item(0).setCheckState(Qt.CheckState.Checked)
+    clicked_item = window.token_list.item(0)
+
+    from uuid import UUID
+
+    token_id = UUID(clicked_item.data(Qt.ItemDataRole.UserRole))
+    window._on_token_list_item_double_clicked(
+        clicked_item,
+        text="<Nariel>|da anni di pesca d'altura",
+        tip_text="",
+        tags_text="Nariel; Abilita",
+        shape=TokenShape.CIRCLE,
+    )
+
+    token = window.controller._tokens_by_id[token_id]
+    auto_tip = str(token.metadata.get("tip_text", ""))
+
+    _debug_case(
+        "Auto tip_text when empty",
+        {
+            "text": "<Nariel>|da anni di pesca d'altura",
+            "tags": ["Nariel", "Abilita"],
+        },
+        {
+            "starts_with": "<Nariel>|*Nariel-Abilita*|",
+            "contains_front_without_name": "da anni di pesca d'altura",
+            "no_duplicate_name_title": True,
+        },
+        {"tip_text": auto_tip},
+    )
+
+    assert auto_tip.startswith("<Nariel>|*Nariel-Abilita*|")
+    assert "da anni di pesca d'altura" in auto_tip
+    assert auto_tip.count("<Nariel>") == 1
 
 
 def test_select_and_deselect_all_buttons(window):

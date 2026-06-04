@@ -509,7 +509,14 @@ class MainController:
         token = self._tokens_by_id.get(token_id)
         if token is None:
             raise ValueError(f"Token non trovato: {token_id}")
-        return str(token.metadata.get("tip_text", "")).strip()
+        existing_tip = str(token.metadata.get("tip_text", "")).strip()
+        if existing_tip:
+            return existing_tip
+        return self._build_auto_tip_text(
+            name=token.name,
+            tags=token.tags,
+            front_text=self._current_front_text(token),
+        )
 
     def token_for_id(self, token_id: UUID) -> Token:
         token = self._tokens_by_id.get(token_id)
@@ -555,7 +562,11 @@ class MainController:
             if normalized_tip_text:
                 metadata["tip_text"] = normalized_tip_text
             else:
-                metadata.pop("tip_text", None)
+                metadata["tip_text"] = self._build_auto_tip_text(
+                    name=normalized_name,
+                    tags=normalized_tags,
+                    front_text=normalized_text,
+                )
 
             if display_mode == "text_only":
                 payload["front_type"] = TokenFrontType.TEXT.value
@@ -867,6 +878,31 @@ class MainController:
     def _sanitize_name_text(value: str) -> str:
         cleaned = value.replace("<", "").replace(">", "").strip()
         return cleaned
+
+    @staticmethod
+    def _remove_name_title_from_front_text(front_text: str, name: str) -> str:
+        text = str(front_text or "").strip()
+        if not text:
+            return ""
+
+        escaped_name = re.escape(name.strip())
+        if not escaped_name:
+            return text
+
+        pattern = rf"^\s*<\s*{escaped_name}\s*>\s*\|?\s*"
+        return re.sub(pattern, "", text, flags=re.IGNORECASE).strip()
+
+    @classmethod
+    def _build_auto_tip_text(cls, *, name: str, tags: list[str], front_text: str) -> str:
+        clean_name = cls._sanitize_name_text(name) or "Token"
+        tags_part = "-".join(str(tag).strip() for tag in tags if str(tag).strip())
+        if not tags_part:
+            tags_part = "-"
+
+        front_text_without_name = cls._remove_name_title_from_front_text(front_text, clean_name)
+        if front_text_without_name:
+            return f"<{clean_name}>|*{tags_part}*|{front_text_without_name}"
+        return f"<{clean_name}>|*{tags_part}*"
 
     def _update_token_cache(self, updated: Token) -> None:
         self._tokens_by_id[updated.id] = updated

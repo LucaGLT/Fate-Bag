@@ -24,12 +24,12 @@
         "Divinit\u00e0"
       ],
       "tags": [
-        "Dio"
+        "Divinit\u00e0"
       ],
       "metadata": {
         "source": "bootstrap",
         "front_text": "<Logoy-Nomon>|Ordine, Legge, Processo",
-        "tip_text": "<Logoy-Nomon>|Dio dell'Ordine e della Legge|Governa i processi e le strutture del mondo.|Ogni schema ha una sua ragione."
+        "tip_text": "<Logoy-Nomon>|*Dio dell'Ordine e della Legge*\nGoverna i processi e le strutture del mondo.|Ogni schema ha una sua ragione."
       },
       "weight": 1.0,
       "rarity": "legendary"
@@ -45,12 +45,12 @@
         "Divinit\u00e0"
       ],
       "tags": [
-        "Dio"
+        "Divinit\u00e0"
       ],
       "metadata": {
         "source": "bootstrap",
         "front_text": "<Egonya>|Consapevolezza del S\u00e9",
-        "tip_text": "<Egonya>|Dea e del S\u00e9|Risveglia la coscienza nascosta.|Chi la invoca si guarda dentro."
+        "tip_text": "<Egonya>|*Dea della Consapevolezza del S\u00e9*\nRisveglia la coscienza nascosta.|Chi la invoca si guarda dentro."
       },
       "weight": 1.0,
       "rarity": "legendary"
@@ -66,12 +66,12 @@
         "Divinit\u00e0"
       ],
       "tags": [
-        "Dio"
+        "Divinit\u00e0"
       ],
       "metadata": {
         "source": "bootstrap",
         "front_text": "<Mnemora>|Conservazione, Ricordo",
-        "tip_text": "<Mnemora>|Dea della Memoria|Custodisce ci\u00f2 che \u00e8 stato.|Il passato non scompare, si trasforma."
+        "tip_text": "<Mnemora>|*Dea della Memoria*\nCustodisce ci\u00f2 che \u00e8 stato.|Il passato non scompare, si trasforma."
       },
       "weight": 1.0,
       "rarity": "legendary"
@@ -87,19 +87,19 @@
         "Divinit\u00e0"
       ],
       "tags": [
-        "Dio"
+        "Divinit\u00e0"
       ],
       "metadata": {
         "source": "bootstrap",
         "front_text": "<Dyresys>|Scelta, Deviazione, Anomalia",
-        "tip_text": "<Dyresys>|Dio della Scelta|Incarna ogni imprevisto, deviazione, anomalia."
+        "tip_text": "<Dyresys>|*Dio della Scelta*\nIncarna ogni imprevisto, deviazione, anomalia."
       },
       "weight": 1.0,
       "rarity": "legendary"
     },
     {
       "id": "e031e690-10d5-4a36-b1a0-f5d8f8733698",
-      "name": "Lak\u00f9na",
+      "name": "Lak\u00fcna",
       "shape": "PENTAGON",
       "front_type": "IMAGE",
       "front_value": "token_fronts\\Lakuna_lime.png",
@@ -108,11 +108,11 @@
         "Divinit\u00e0"
       ],
       "tags": [
-        "Dio"
+        "Divinit\u00e0"
       ],
       "metadata": {
-        "front_text": "<Lak\u00f9na>|Dimenticanza, Oblio",
-        "tip_text": "<Lak\u00f9na>|Dea dell'Oblio|Porta con s\u00e9 ci\u00f2 che \u00e8 stato dimenticato.|La sua presenza cancella le tracce."
+        "front_text": "<Lak\u00fcna>|Dimenticanza, Oblio",
+        "tip_text": "<Lak\u00fcna>|*Dea dell'Oblio*\nPorta con s\u00e9 ci\u00f2 che \u00e8 stato dimenticato.\nLa sua presenza cancella le tracce."
       },
       "weight": 1.0,
       "rarity": "legendary"
@@ -204,7 +204,7 @@
     {
       "id": "d5172257-9298-46b5-9969-5a2e64048f5a",
       "name": "PERICOLO",
-      "shape": "HEXAGON",
+      "shape": "EPTAGON",
       "front_type": "IMAGE",
       "front_value": "token_fronts\\Pericolo.PNG",
       "back_value": "token_backs\\Dio_simple_red_Back.png",
@@ -216,7 +216,7 @@
       ],
       "metadata": {
         "front_text": "<PERICOLO>",
-        "tip_text": "<PERICOLO>|Evento critico!|Una minaccia incombe sul gruppo.|Agisci subito o affronta le conseguenze."
+        "tip_text": "<Evento Critico!>\nUna minaccia incombe sul gruppo.\nAgisci subito o affronta le conseguenze."
       },
       "weight": 1.0,
       "rarity": null
@@ -224,7 +224,7 @@
     {
       "id": "d5172257-9298-46b5-9969-5a2e64048f5b",
       "name": "PERICOLO",
-      "shape": "HEXAGON",
+      "shape": "EPTAGON",
       "front_type": "IMAGE",
       "front_value": "token_fronts\\Pericolo.PNG",
       "back_value": "token_backs\\Dio_simple_red_Back.png",
@@ -236,7 +236,7 @@
       ],
       "metadata": {
         "front_text": "<PERICOLO>",
-        "tip_text": "<PERICOLO>|Evento critico!|Una minaccia incombe sul gruppo.|Agisci subito o affronta le conseguenze."
+        "tip_text": "<Evento Critico!>\nUna minaccia incombe sul gruppo.\nAgisci subito o affronta le conseguenze."
       },
       "weight": 1.0,
       "rarity": null
@@ -244,7 +244,7 @@
     {
       "id": "d5172257-9298-46b5-9969-5a2e64048f5c",
       "name": "PERICOLO",
-      "shape": "HEXAGON",
+      "shape": "EPTAGON",
       "front_type": "IMAGE",
       "front_value": "token_fronts\\Pericolo.PNG",
       "back_value": "token_backs\\Dio_simple_red_Back.png",
@@ -256,7 +256,7 @@
       ],
       "metadata": {
         "front_text": "<PERICOLO>",
-        "tip_text": "<PERICOLO>|Evento critico!|Una minaccia incombe sul gruppo.|Agisci subito o affronta le conseguenze."
+        "tip_text": "<Evento Critico!>\nUna minaccia incombe sul gruppo.\nAgisci subito o affronta le conseguenze."
       },
       "weight": 1.0,
       "rarity": null
@@ -264,7 +264,7 @@
     {
       "id": "d5172257-9298-46b5-9969-5a2e64048f5d",
       "name": "PERICOLO",
-      "shape": "HEXAGON",
+      "shape": "EPTAGON",
       "front_type": "IMAGE",
       "front_value": "token_fronts\\Pericolo.PNG",
       "back_value": "token_backs\\Dio_simple_red_Back.png",
@@ -276,7 +276,7 @@
       ],
       "metadata": {
         "front_text": "<PERICOLO>",
-        "tip_text": "<PERICOLO>|Evento critico!|Una minaccia incombe sul gruppo.|Agisci subito o affronta le conseguenze."
+        "tip_text": "<Evento Critico!>\nUna minaccia incombe sul gruppo.\nAgisci subito o affronta le conseguenze."
       },
       "weight": 1.0,
       "rarity": null
@@ -284,7 +284,7 @@
     {
       "id": "d5172257-9298-46b5-9969-5a2e64048f5e",
       "name": "PERICOLO",
-      "shape": "HEXAGON",
+      "shape": "EPTAGON",
       "front_type": "IMAGE",
       "front_value": "token_fronts\\Pericolo.PNG",
       "back_value": "token_backs\\Dio_simple_red_Back.png",
@@ -296,7 +296,7 @@
       ],
       "metadata": {
         "front_text": "<PERICOLO>",
-        "tip_text": "<PERICOLO>|Evento critico!|Una minaccia incombe sul gruppo.|Agisci subito o affronta le conseguenze."
+        "tip_text": "<Evento Critico!>\nUna minaccia incombe sul gruppo.\nAgisci subito o affronta le conseguenze."
       },
       "weight": 1.0,
       "rarity": null

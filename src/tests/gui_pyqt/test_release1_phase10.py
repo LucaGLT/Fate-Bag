@@ -88,16 +88,18 @@ def test_release1_scene_click_flip_updates_state(window):
 
     # EXPECTED
     matching_rows = []
+    matching_colors = []
     for i in range(window.token_list.count()):
         row: QListWidgetItem = window.token_list.item(i)
         row_token_id = row.data(0x0100)
         if row_token_id == first_token_id:
             matching_rows.append(row.text())
+            matching_colors.append(row.foreground(0).color().name().lower())
 
-    print("[EXPECTED] riga token mostra stato FACE_UP dopo flip")
-    print(f"[ACTUAL] rows={matching_rows}")
+    print("[EXPECTED] riga token colorata verde dopo flip")
+    print(f"[ACTUAL] rows={matching_rows} colors={matching_colors}")
     assert matching_rows
-    assert any("FACE_UP" in row_text for row_text in matching_rows)
+    assert any(color == "#008000" for color in matching_colors)
 
 
 def test_release1_scene_single_click_selects_checkbox(window):
@@ -155,9 +157,9 @@ def test_release1_scene_double_click_selects_and_flips(window):
     assert refreshed_row is not None
 
     print("\n[GIVEN] doppio click simulato con select + flip")
-    print("[EXPECTED] checkbox selezionata e stato token FACE_UP")
+    print("[EXPECTED] checkbox selezionata e stato token mostrato a colore (verde)")
     assert refreshed_row.checkState() == Qt.CheckState.Checked
-    assert "FACE_UP" in refreshed_row.text()
+    assert refreshed_row.foreground(0).color().name().lower() == "#008000"
     checked_count = sum(
         1
         for i in range(window.token_list.count())
@@ -561,6 +563,35 @@ def test_release1_title_font_is_base_plus_two():
     print("\n[GIVEN] front_text_font_px=10 (title font 12)")
     print("[EXPECTED] titolo tra <> renderizzato con font-size:12px")
     assert "font-size:12px" in rich
+
+
+def test_release1_tip_text_falls_back_to_auto_when_missing(tmp_path):
+    back_path = _create_test_image(tmp_path / "back_auto_tip.png", (40, 60, 90))
+
+    token = Token(
+        name="Nariel",
+        shape=TokenShape.CIRCLE,
+        front_type=TokenFrontType.TEXT_IMAGE,
+        front_value=back_path,
+        back_value=back_path,
+        tags=["PG", "Abilita"],
+        metadata={
+            "front_text": "<Nariel>|Esperienza in Mare",
+        },
+    )
+
+    from src.core.models.table_token import TableToken
+
+    table_token = TableToken(token_id=token.id, state=TokenState.FACE_UP, x=0.0, y=0.0)
+    item = TokenGraphicsItem(token=token, table_token=table_token)
+
+    tip = item._tip_text()
+
+    print("\n[GIVEN] tip_text mancante e front_text con <name>")
+    print("[EXPECTED] fallback auto con tag in corsivo e senza duplicato <name>")
+    assert tip.startswith("<Nariel>|*PG-Abilita*|")
+    assert "Esperienza in Mare" in tip
+    assert tip.count("<Nariel>") == 1
 
 
 def test_release1_graphics_item_supports_all_requested_shapes(tmp_path):
