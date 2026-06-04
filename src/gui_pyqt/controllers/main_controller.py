@@ -328,6 +328,7 @@ class MainController:
                     "status": status,
                     "shape": token.shape.value,
                     "tags": list(token.tags),
+                    "categories": list(token.categories),
                     "in_session": in_session,
                 }
             )

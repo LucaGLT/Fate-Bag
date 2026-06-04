@@ -1,4 +1,5 @@
 from pathlib import Path
+import json
 
 import pytest
 from PyQt6.QtCore import Qt
@@ -323,6 +324,132 @@ def test_release1_scene_multi_selection_updates_checkbox_list(window):
     print("\n[GIVEN] selezione multipla in scena simulata (come Ctrl+click)")
     print("[EXPECTED] checkbox lista allineate con stessi token selezionati")
     assert checked_ids == selected_ids
+
+
+def test_release1_checkbox_tree_groups_tokens_by_categories(tmp_path, window):
+    back_path = _create_test_image(tmp_path / "back_categories.png", (40, 60, 90))
+
+    token_pg = Token(
+        name="PG-Root",
+        shape=TokenShape.CIRCLE,
+        front_type=TokenFrontType.TEXT,
+        front_value="PG-Root",
+        back_value=back_path,
+        categories=["PG"],
+    )
+    token_n1 = Token(
+        name="Nariel-1",
+        shape=TokenShape.CIRCLE,
+        front_type=TokenFrontType.TEXT,
+        front_value="Nariel-1",
+        back_value=back_path,
+        categories=["PG>Nariel"],
+    )
+    token_n2 = Token(
+        name="Nariel-2",
+        shape=TokenShape.CIRCLE,
+        front_type=TokenFrontType.TEXT,
+        front_value="Nariel-2",
+        back_value=back_path,
+        categories=["PG>Nariel"],
+    )
+
+    json_path = tmp_path / "tree_categories.json"
+    json_path.write_text(
+        json.dumps(
+            {
+                "tokens": [
+                    token_pg.model_dump(mode="json"),
+                    token_n1.model_dump(mode="json"),
+                    token_n2.model_dump(mode="json"),
+                ]
+            },
+            indent=2,
+        ),
+        encoding="utf-8",
+    )
+
+    window._on_load_tokens(str(json_path))
+
+    root_pg = None
+    for i in range(window.token_list.topLevelItemCount()):
+        node = window.token_list.topLevelItem(i)
+        if node.text(0) == "PG":
+            root_pg = node
+            break
+
+    print("\n[GIVEN] token con categories PG e PG>Nariel")
+    print("[EXPECTED] albero con nodo PG e sotto-nodo Nariel")
+    assert root_pg is not None
+
+    nariel = None
+    for i in range(root_pg.childCount()):
+        child = root_pg.child(i)
+        if child.text(0) == "Nariel":
+            nariel = child
+            break
+
+    assert nariel is not None
+    assert nariel.childCount() == 2
+
+
+def test_release1_checkbox_tree_parent_check_selects_all_descendants(tmp_path, window):
+    back_path = _create_test_image(tmp_path / "back_parent_check.png", (40, 60, 90))
+
+    token_a = Token(
+        name="Nariel-A",
+        shape=TokenShape.CIRCLE,
+        front_type=TokenFrontType.TEXT,
+        front_value="Nariel-A",
+        back_value=back_path,
+        categories=["PG>Nariel"],
+    )
+    token_b = Token(
+        name="Nariel-B",
+        shape=TokenShape.CIRCLE,
+        front_type=TokenFrontType.TEXT,
+        front_value="Nariel-B",
+        back_value=back_path,
+        categories=["PG>Nariel"],
+    )
+
+    json_path = tmp_path / "tree_parent_select.json"
+    json_path.write_text(
+        json.dumps(
+            {"tokens": [token_a.model_dump(mode="json"), token_b.model_dump(mode="json")]},
+            indent=2,
+        ),
+        encoding="utf-8",
+    )
+
+    window._on_load_tokens(str(json_path))
+
+    root_pg = None
+    for i in range(window.token_list.topLevelItemCount()):
+        node = window.token_list.topLevelItem(i)
+        if node.text(0) == "PG":
+            root_pg = node
+            break
+    assert root_pg is not None
+
+    root_pg.setCheckState(0, Qt.CheckState.Checked)
+
+    def _collect_token_leaves(node) -> list:
+        leaves = []
+        if node.childCount() <= 0:
+            if node.data(0, Qt.ItemDataRole.UserRole):
+                leaves.append(node)
+            return leaves
+        for idx in range(node.childCount()):
+            leaves.extend(_collect_token_leaves(node.child(idx)))
+        return leaves
+
+    leaves = _collect_token_leaves(root_pg)
+
+    print("\n[GIVEN] check sul nodo padre PG")
+    print("[EXPECTED] tutti i token discendenti risultano selezionati")
+    assert leaves
+    assert all(leaf.checkState(0) == Qt.CheckState.Checked for leaf in leaves)
 
 
 def test_release1_graphics_item_supports_shapes_and_front_back(tmp_path):

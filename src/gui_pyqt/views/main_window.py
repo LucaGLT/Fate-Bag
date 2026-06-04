@@ -17,8 +17,6 @@ from PyQt6.QtWidgets import (
     QInputDialog,
     QLabel,
     QLineEdit,
-    QListWidget,
-    QListWidgetItem,
     QMainWindow,
     QPushButton,
     QStyle,
@@ -26,6 +24,8 @@ from PyQt6.QtWidgets import (
     QSplitter,
     QSplitterHandle,
     QTextEdit,
+    QTreeWidget,
+    QTreeWidgetItem,
     QVBoxLayout,
     QWidget,
 )
@@ -135,6 +135,62 @@ class TokenEditDialog(QDialog):
         )
 
 
+class TokenTreeWidget(QTreeWidget):
+    def __init__(self, parent: QWidget | None = None) -> None:
+        super().__init__(parent)
+        self.setHeaderHidden(True)
+
+    def _leaf_items(self) -> list[QTreeWidgetItem]:
+        leaves: list[QTreeWidgetItem] = []
+
+        def collect(node: QTreeWidgetItem) -> None:
+            if node.childCount() <= 0:
+                token_id = node.data(0, Qt.ItemDataRole.UserRole)
+                if token_id:
+                    leaves.append(node)
+                return
+            for idx in range(node.childCount()):
+                collect(node.child(idx))
+
+        for idx in range(self.topLevelItemCount()):
+            collect(self.topLevelItem(idx))
+        return leaves
+
+    class _LeafAdapter:
+        def __init__(self, item: QTreeWidgetItem) -> None:
+            self._item = item
+
+        def checkState(self, *args):
+            if len(args) <= 0:
+                return self._item.checkState(0)
+            return self._item.checkState(args[0])
+
+        def setCheckState(self, *args) -> None:
+            if len(args) == 1:
+                self._item.setCheckState(0, args[0])
+                return
+            self._item.setCheckState(args[0], args[1])
+
+        def data(self, *args):
+            if len(args) == 1:
+                return self._item.data(0, args[0])
+            return self._item.data(args[0], args[1])
+
+        def text(self, *args):
+            if len(args) <= 0:
+                return self._item.text(0)
+            return self._item.text(args[0])
+
+        def __getattr__(self, attr: str):
+            return getattr(self._item, attr)
+
+    def count(self) -> int:
+        return len(self._leaf_items())
+
+    def item(self, index: int):
+        return self._LeafAdapter(self._leaf_items()[index])
+
+
 class MainWindow(QMainWindow):
     def __init__(self, controller: MainController | None = None) -> None:
         super().__init__()
@@ -149,6 +205,7 @@ class MainWindow(QMainWindow):
         self._move_duration_ms = 260
         self._auto_sort_delay_seconds = 0.0
         self._auto_shuffle_after_insert_count = 3
+        self._is_tree_check_propagating = False
         self._auto_sort_timer = QTimer(self)
         self._auto_sort_timer.setSingleShot(True)
         self._auto_sort_timer.timeout.connect(self._on_auto_sort_timeout)
@@ -266,7 +323,7 @@ class MainWindow(QMainWindow):
         self.content_splitter.setChildrenCollapsible(True)
         self.content_splitter.setHandleWidth(8)
 
-        self.token_list = QListWidget()
+        self.token_list = TokenTreeWidget()
         self.token_list.setObjectName("token_list")
         self.content_splitter.addWidget(self.token_list)
 
@@ -385,12 +442,12 @@ class MainWindow(QMainWindow):
 
     def _on_select_all_tokens(self) -> None:
         for index in range(self.token_list.count()):
-            self.token_list.item(index).setCheckState(Qt.CheckState.Checked)
+            self.token_list.item(index).setCheckState(0, Qt.CheckState.Checked)
         self.status_label.setText("Tutti i token selezionati")
 
     def _on_deselect_all_tokens(self) -> None:
         for index in range(self.token_list.count()):
-            self.token_list.item(index).setCheckState(Qt.CheckState.Unchecked)
+            self.token_list.item(index).setCheckState(0, Qt.CheckState.Unchecked)
         self.status_label.setText("Tutti i token deselezionati")
 
     def _on_draw_one(self) -> None:
@@ -528,23 +585,25 @@ class MainWindow(QMainWindow):
 
     def _on_token_list_item_double_clicked(
         self,
-        item: QListWidgetItem,
+        item: QTreeWidgetItem,
+        column: int = 0,
         text: str | None = None,
         tip_text: str | None = None,
         tags_text: str | None = None,
         shape: TokenShape | None = None,
         display_mode: str | None = None,
     ) -> None:
+        del column
         try:
-            clicked_token_id = item.data(Qt.ItemDataRole.UserRole)
+            clicked_token_id = item.data(0, Qt.ItemDataRole.UserRole)
             if not clicked_token_id:
-                raise ValueError("Token non valido")
+                return
 
             from uuid import UUID
 
             clicked_uuid = UUID(clicked_token_id)
-            if item.checkState() != Qt.CheckState.Checked:
-                item.setCheckState(Qt.CheckState.Checked)
+            if item.checkState(0) != Qt.CheckState.Checked:
+                item.setCheckState(0, Qt.CheckState.Checked)
             selected_ids = list(self._checked_token_ids_from_ui())
             target_ids = selected_ids if selected_ids else [clicked_uuid]
 
@@ -636,7 +695,7 @@ class MainWindow(QMainWindow):
             self.controller.clear_bag()
             self.token_list.blockSignals(True)
             for index in range(self.token_list.count()):
-                self.token_list.item(index).setCheckState(Qt.CheckState.Unchecked)
+                self.token_list.item(index).setCheckState(0, Qt.CheckState.Unchecked)
             self.token_list.blockSignals(False)
             self.status_label.setText("Bag svuotato")
             self._refresh_list()
@@ -687,24 +746,7 @@ class MainWindow(QMainWindow):
         selected_ids = self._checked_token_ids_from_ui()
         entries = self.controller.token_status_entries(selected_ids)
 
-        self.token_list.clear()
-        self.token_list.blockSignals(True)
-        for entry in entries:
-            display_name = self._display_name_for_list(str(entry["name"]))
-            tags = entry.get("tags", [])
-            tags_text = ", ".join(tags) if tags else "-"
-            row_text = (
-                f"{display_name} | {entry['status']} | "
-                f"{entry.get('shape', '-')} | #: {tags_text}"
-            )
-            item = QListWidgetItem(row_text)
-            item.setData(Qt.ItemDataRole.UserRole, str(entry["token_id"]))
-            item.setFlags(item.flags() | Qt.ItemFlag.ItemIsUserCheckable)
-
-            is_checked = entry["token_id"] in selected_ids
-            item.setCheckState(Qt.CheckState.Checked if is_checked else Qt.CheckState.Unchecked)
-            self.token_list.addItem(item)
-        self.token_list.blockSignals(False)
+        self._populate_token_tree(entries, selected_ids)
 
         self._refresh_scene_preserve_checkbox_selection()
 
@@ -712,9 +754,20 @@ class MainWindow(QMainWindow):
         selected_ids = self._checked_token_ids_from_ui()
         entries = self.controller.token_status_entries(selected_ids)
 
+        self._populate_token_tree(entries, selected_ids)
+
+        self._sync_scene_selection_from_checkboxes()
+
+    def _populate_token_tree(self, entries: list[dict], selected_ids: set) -> None:
         self.token_list.clear()
         self.token_list.blockSignals(True)
+
+        category_nodes: dict[tuple[str, ...], QTreeWidgetItem] = {}
+
         for entry in entries:
+            category_path = self._primary_category_path(entry.get("categories", []))
+            parent_node = self._get_or_create_category_node(category_nodes, category_path)
+
             display_name = self._display_name_for_list(str(entry["name"]))
             tags = entry.get("tags", [])
             tags_text = ", ".join(tags) if tags else "-"
@@ -722,16 +775,66 @@ class MainWindow(QMainWindow):
                 f"{display_name} | {entry['status']} | "
                 f"{entry.get('shape', '-')} | #: {tags_text}"
             )
-            item = QListWidgetItem(row_text)
-            item.setData(Qt.ItemDataRole.UserRole, str(entry["token_id"]))
+
+            item = QTreeWidgetItem([row_text])
+            item.setData(0, Qt.ItemDataRole.UserRole, str(entry["token_id"]))
             item.setFlags(item.flags() | Qt.ItemFlag.ItemIsUserCheckable)
 
             is_checked = entry["token_id"] in selected_ids
-            item.setCheckState(Qt.CheckState.Checked if is_checked else Qt.CheckState.Unchecked)
-            self.token_list.addItem(item)
+            item.setCheckState(0, Qt.CheckState.Checked if is_checked else Qt.CheckState.Unchecked)
+            parent_node.addChild(item)
+
+        self._update_all_parent_check_states()
+        self.token_list.expandAll()
         self.token_list.blockSignals(False)
 
-        self._sync_scene_selection_from_checkboxes()
+    def _get_or_create_category_node(
+        self,
+        nodes: dict[tuple[str, ...], QTreeWidgetItem],
+        path: tuple[str, ...],
+    ) -> QTreeWidgetItem:
+        if not path:
+            path = ("Senza Categoria",)
+
+        current_parent: QTreeWidgetItem | None = None
+        for depth in range(1, len(path) + 1):
+            current_path = path[:depth]
+            existing = nodes.get(current_path)
+            if existing is None:
+                label = current_path[-1]
+                existing = QTreeWidgetItem([label])
+                existing.setFlags(existing.flags() | Qt.ItemFlag.ItemIsUserCheckable)
+                existing.setCheckState(0, Qt.CheckState.Unchecked)
+                nodes[current_path] = existing
+                if current_parent is None:
+                    self.token_list.addTopLevelItem(existing)
+                else:
+                    current_parent.addChild(existing)
+            current_parent = existing
+
+        if current_parent is None:
+            fallback = QTreeWidgetItem(["Senza Categoria"])
+            fallback.setFlags(fallback.flags() | Qt.ItemFlag.ItemIsUserCheckable)
+            fallback.setCheckState(0, Qt.CheckState.Unchecked)
+            self.token_list.addTopLevelItem(fallback)
+            return fallback
+        return current_parent
+
+    @staticmethod
+    def _primary_category_path(categories: object) -> tuple[str, ...]:
+        if not isinstance(categories, list):
+            return tuple()
+
+        for raw in categories:
+            if not isinstance(raw, str):
+                continue
+            text = raw.strip()
+            if not text:
+                continue
+            chunks = [part.strip() for part in text.split(">") if part.strip()]
+            if chunks:
+                return tuple(chunks)
+        return tuple()
 
     def _refresh_scene(self) -> None:
         self._sync_table_scene_to_viewport()
@@ -747,8 +850,8 @@ class MainWindow(QMainWindow):
         selected = set()
         for index in range(self.token_list.count()):
             item = self.token_list.item(index)
-            if item.checkState() == Qt.CheckState.Checked:
-                token_id = item.data(Qt.ItemDataRole.UserRole)
+            if item.checkState(0) == Qt.CheckState.Checked:
+                token_id = item.data(0, Qt.ItemDataRole.UserRole)
                 if token_id:
                     from uuid import UUID
 
@@ -809,10 +912,10 @@ class MainWindow(QMainWindow):
     def _set_checkbox_checked(self, token_id: str) -> bool:
         for index in range(self.token_list.count()):
             item = self.token_list.item(index)
-            row_token_id = item.data(Qt.ItemDataRole.UserRole)
+            row_token_id = item.data(0, Qt.ItemDataRole.UserRole)
             if row_token_id == token_id:
-                if item.checkState() != Qt.CheckState.Checked:
-                    item.setCheckState(Qt.CheckState.Checked)
+                if item.checkState(0) != Qt.CheckState.Checked:
+                    item.setCheckState(0, Qt.CheckState.Checked)
                     self._sync_scene_selection_from_checkboxes()
                     return True
                 return False
@@ -822,26 +925,83 @@ class MainWindow(QMainWindow):
         changed = False
         for index in range(self.token_list.count()):
             item = self.token_list.item(index)
-            row_token_id = item.data(Qt.ItemDataRole.UserRole)
+            row_token_id = item.data(0, Qt.ItemDataRole.UserRole)
             should_check = row_token_id == token_id
             desired = Qt.CheckState.Checked if should_check else Qt.CheckState.Unchecked
-            if item.checkState() != desired:
-                item.setCheckState(desired)
+            if item.checkState(0) != desired:
+                item.setCheckState(0, desired)
                 changed = True
         self._sync_scene_selection_from_checkboxes()
         return changed
 
-    def _on_token_list_item_changed(self, item: QListWidgetItem) -> None:
-        del item
+    def _on_token_list_item_changed(self, item: QTreeWidgetItem, column: int) -> None:
+        del column
+        if self._is_tree_check_propagating:
+            return
+
+        self._is_tree_check_propagating = True
+        try:
+            state = item.checkState(0)
+            self._set_descendants_check_state(item, state)
+            self._update_parent_check_states(item.parent())
+        finally:
+            self._is_tree_check_propagating = False
+
         self._sync_scene_selection_from_checkboxes()
+
+    def _set_descendants_check_state(self, node: QTreeWidgetItem, state: Qt.CheckState) -> None:
+        for idx in range(node.childCount()):
+            child = node.child(idx)
+            child.setCheckState(0, state)
+            self._set_descendants_check_state(child, state)
+
+    def _update_parent_check_states(self, parent: QTreeWidgetItem | None) -> None:
+        current = parent
+        while current is not None:
+            checked = 0
+            partial = 0
+            total = current.childCount()
+            for idx in range(total):
+                child_state = current.child(idx).checkState(0)
+                if child_state == Qt.CheckState.Checked:
+                    checked += 1
+                elif child_state == Qt.CheckState.PartiallyChecked:
+                    partial += 1
+
+            if checked == total and total > 0:
+                current.setCheckState(0, Qt.CheckState.Checked)
+            elif checked == 0 and partial == 0:
+                current.setCheckState(0, Qt.CheckState.Unchecked)
+            else:
+                current.setCheckState(0, Qt.CheckState.PartiallyChecked)
+            current = current.parent()
+
+    def _update_all_parent_check_states(self) -> None:
+        for idx in range(self.token_list.topLevelItemCount()):
+            top_node = self.token_list.topLevelItem(idx)
+            self._update_node_check_state_from_children(top_node)
+
+    def _update_node_check_state_from_children(self, node: QTreeWidgetItem) -> Qt.CheckState:
+        if node.childCount() <= 0:
+            return node.checkState(0)
+
+        child_states = [self._update_node_check_state_from_children(node.child(i)) for i in range(node.childCount())]
+        if all(state == Qt.CheckState.Checked for state in child_states):
+            node.setCheckState(0, Qt.CheckState.Checked)
+        elif all(state == Qt.CheckState.Unchecked for state in child_states):
+            node.setCheckState(0, Qt.CheckState.Unchecked)
+        else:
+            node.setCheckState(0, Qt.CheckState.PartiallyChecked)
+        return node.checkState(0)
 
     def _set_checkboxes_from_token_ids(self, selected_token_ids: set[str]) -> None:
         self.token_list.blockSignals(True)
         for index in range(self.token_list.count()):
             item = self.token_list.item(index)
-            row_token_id = item.data(Qt.ItemDataRole.UserRole)
+            row_token_id = item.data(0, Qt.ItemDataRole.UserRole)
             should_check = row_token_id in selected_token_ids
-            item.setCheckState(Qt.CheckState.Checked if should_check else Qt.CheckState.Unchecked)
+            item.setCheckState(0, Qt.CheckState.Checked if should_check else Qt.CheckState.Unchecked)
+        self._update_all_parent_check_states()
         self.token_list.blockSignals(False)
 
     def _sync_scene_selection_from_checkboxes(self) -> None:

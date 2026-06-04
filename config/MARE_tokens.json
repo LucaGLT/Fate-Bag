@@ -20,7 +20,9 @@
       "front_type": "IMAGE",
       "front_value": "token_fronts\\LogoyNomon_lime.PNG",
       "back_value": "token_backs\\Dio_simple_blu_Back.png",
-      "categories": [],
+      "categories": [
+        "Divinit\u00e0"
+      ],
       "tags": [
         "Dio"
       ],
@@ -39,7 +41,9 @@
       "front_type": "IMAGE",
       "front_value": "token_fronts\\Egonya_lime.png",
       "back_value": "token_backs\\Dio_simple_blu_Back.png",
-      "categories": [],
+      "categories": [
+        "Divinit\u00e0"
+      ],
       "tags": [
         "Dio"
       ],
@@ -58,7 +62,9 @@
       "front_type": "IMAGE",
       "front_value": "token_fronts\\Mnemora_lime.png",
       "back_value": "token_backs\\Dio_simple_blu_Back.png",
-      "categories": [],
+      "categories": [
+        "Divinit\u00e0"
+      ],
       "tags": [
         "Dio"
       ],
@@ -77,7 +83,9 @@
       "front_type": "IMAGE",
       "front_value": "token_fronts\\Dyresys_lime.png",
       "back_value": "token_backs\\Dio_simple_blu_Back.png",
-      "categories": [],
+      "categories": [
+        "Divinit\u00e0"
+      ],
       "tags": [
         "Dio"
       ],
@@ -96,7 +104,9 @@
       "front_type": "IMAGE",
       "front_value": "token_fronts\\Lakuna_lime.png",
       "back_value": "token_backs\\Dio_simple_blu_Back.png",
-      "categories": [],
+      "categories": [
+        "Divinit\u00e0"
+      ],
       "tags": [
         "Dio"
       ],
@@ -115,7 +125,7 @@
       "front_value": "token_fronts\\PG_Nariel_Veyr_Ligh-Gray.png",
       "back_value": "token_backs\\PG_Nariel_Veyr.PNG",
       "categories": [
-        "PG"
+        "PG>Nariel>Caratteristica"
       ],
       "tags": [
         "Nariel",
@@ -136,7 +146,7 @@
       "front_value": "token_fronts\\PG_Nariel_Veyr_Ligh-Gray.png",
       "back_value": "token_backs\\PG_Nariel_Veyr.PNG",
       "categories": [
-        "PG"
+        "PG>Nariel>Abilit\u00e0"
       ],
       "tags": [
         "Nariel",
@@ -156,7 +166,9 @@
       "front_type": "TEXT_IMAGE",
       "front_value": "token_fronts\\PG_Yedid_light-Gray.png",
       "back_value": "token_backs\\PG_Yedid.PNG",
-      "categories": [],
+      "categories": [
+        "PG>Yedid>Abilit\u00e0"
+      ],
       "tags": [
         "Yedid",
         "Abilit\u00e0"
@@ -175,7 +187,9 @@
       "front_type": "TEXT_IMAGE",
       "front_value": "token_fronts\\PG_Yedid_light-Gray.png",
       "back_value": "token_backs\\PG_Yedid.PNG",
-      "categories": [],
+      "categories": [
+        "PG>Yedid>Caratteristica"
+      ],
       "tags": [
         "Yedid",
         "Caratteristica"
@@ -188,13 +202,15 @@
       "rarity": null
     },
     {
-      "id": "d5172257-9298-46b5-9969-5a2e64048f5b",
+      "id": "d5172257-9298-46b5-9969-5a2e64048f5a",
       "name": "PERICOLO",
       "shape": "HEXAGON",
       "front_type": "IMAGE",
       "front_value": "token_fronts\\Pericolo.PNG",
       "back_value": "token_backs\\Dio_simple_red_Back.png",
-      "categories": [],
+      "categories": [
+        "Pericolo"
+      ],
       "tags": [
         "Pericolo"
       ],
@@ -212,7 +228,9 @@
       "front_type": "IMAGE",
       "front_value": "token_fronts\\Pericolo.PNG",
       "back_value": "token_backs\\Dio_simple_red_Back.png",
-      "categories": [],
+      "categories": [
+        "Pericolo"
+      ],
       "tags": [
         "Pericolo"
       ],
@@ -224,13 +242,55 @@
       "rarity": null
     },
     {
-      "id": "d5172257-9298-46b5-9969-5a2e64048f5b",
+      "id": "d5172257-9298-46b5-9969-5a2e64048f5c",
       "name": "PERICOLO",
       "shape": "HEXAGON",
       "front_type": "IMAGE",
       "front_value": "token_fronts\\Pericolo.PNG",
       "back_value": "token_backs\\Dio_simple_red_Back.png",
-      "categories": [],
+      "categories": [
+        "Pericolo"
+      ],
+      "tags": [
+        "Pericolo"
+      ],
+      "metadata": {
+        "front_text": "<PERICOLO>",
+        "tip_text": "<PERICOLO>|Evento critico!|Una minaccia incombe sul gruppo.|Agisci subito o affronta le conseguenze."
+      },
+      "weight": 1.0,
+      "rarity": null
+    },
+    {
+      "id": "d5172257-9298-46b5-9969-5a2e64048f5d",
+      "name": "PERICOLO",
+      "shape": "HEXAGON",
+      "front_type": "IMAGE",
+      "front_value": "token_fronts\\Pericolo.PNG",
+      "back_value": "token_backs\\Dio_simple_red_Back.png",
+      "categories": [
+        "Pericolo"
+      ],
+      "tags": [
+        "Pericolo"
+      ],
+      "metadata": {
+        "front_text": "<PERICOLO>",
+        "tip_text": "<PERICOLO>|Evento critico!|Una minaccia incombe sul gruppo.|Agisci subito o affronta le conseguenze."
+      },
+      "weight": 1.0,
+      "rarity": null
+    },
+    {
+      "id": "d5172257-9298-46b5-9969-5a2e64048f5e",
+      "name": "PERICOLO",
+      "shape": "HEXAGON",
+      "front_type": "IMAGE",
+      "front_value": "token_fronts\\Pericolo.PNG",
+      "back_value": "token_backs\\Dio_simple_red_Back.png",
+      "categories": [
+        "Pericolo"
+      ],
       "tags": [
         "Pericolo"
       ],
