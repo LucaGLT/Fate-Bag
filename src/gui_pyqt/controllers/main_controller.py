@@ -70,19 +70,7 @@ class MainController:
             self._tokens = tokens
             self._tokens_by_id = {token.id: token for token in tokens}
             self._token_name_by_id = {token.id: token.name for token in tokens}
-
-            session_engine = SessionEngine(tokens)
-            self._session_service = SessionService(
-                session_engine=session_engine,
-                shuffle_engine=ShuffleEngine(),
-                repository=self._session_repo,
-                event_bus=self._event_bus,
-            )
-            self._draw_service = DrawService(
-                draw_engine=DrawEngine(tokens),
-                session_repository=self._session_repo,
-                event_bus=self._event_bus,
-            )
+            self._rebuild_runtime_services()
 
             return tokens
 
@@ -101,19 +89,7 @@ class MainController:
         self._tokens = tokens
         self._tokens_by_id = {token.id: token for token in tokens}
         self._token_name_by_id = {token.id: token.name for token in tokens}
-
-        session_engine = SessionEngine(tokens)
-        self._session_service = SessionService(
-            session_engine=session_engine,
-            shuffle_engine=ShuffleEngine(),
-            repository=self._session_repo,
-            event_bus=self._event_bus,
-        )
-        self._draw_service = DrawService(
-            draw_engine=DrawEngine(tokens),
-            session_repository=self._session_repo,
-            event_bus=self._event_bus,
-        )
+        self._rebuild_runtime_services()
         self._token_repo.update_settings(settings)
 
         return tokens
@@ -167,6 +143,7 @@ class MainController:
         self._tokens.append(created)
         self._tokens_by_id[created.id] = created
         self._token_name_by_id[created.id] = created.name
+        self._rebuild_runtime_services()
         return created
 
     def delete_tokens(self, token_ids: list[UUID]) -> int:
@@ -192,6 +169,8 @@ class MainController:
             ]
             self._session_repo.save(self.current_session)
 
+        self._rebuild_runtime_services()
+
         return len(selected_ids)
 
     def duplicate_tokens(self, token_ids: list[UUID]) -> int:
@@ -216,7 +195,23 @@ class MainController:
             self._token_name_by_id[created.id] = created.name
             duplicated_count += 1
 
+        self._rebuild_runtime_services()
+
         return duplicated_count
+
+    def _rebuild_runtime_services(self) -> None:
+        session_engine = SessionEngine(self._tokens)
+        self._session_service = SessionService(
+            session_engine=session_engine,
+            shuffle_engine=ShuffleEngine(),
+            repository=self._session_repo,
+            event_bus=self._event_bus,
+        )
+        self._draw_service = DrawService(
+            draw_engine=DrawEngine(self._tokens),
+            session_repository=self._session_repo,
+            event_bus=self._event_bus,
+        )
 
     def move_tokens_to_category(self, token_ids: list[UUID], category_path: str) -> int:
         selected_ids = self._normalize_selected_token_ids(token_ids)
@@ -559,7 +554,6 @@ class MainController:
         normalized_text = text.strip()
         if not normalized_text:
             raise ValueError("Il testo front deve essere non vuoto")
-        normalized_name = self._extract_name_from_formatted_text(normalized_text)
 
         updated_count = 0
         for token_id in selected_ids:
@@ -577,8 +571,6 @@ class MainController:
                 payload["metadata"] = metadata
             else:
                 payload["front_value"] = normalized_text
-
-            payload["name"] = normalized_name
 
             updated = Token.model_validate(payload)
             self._token_service.update_token(updated)
@@ -616,6 +608,7 @@ class MainController:
         self,
         token_ids: list[UUID],
         *,
+        name: str | None,
         text: str,
         tip_text: str | None,
         tags: list[str],
@@ -627,9 +620,12 @@ class MainController:
         if not normalized_text:
             raise ValueError("Il testo token deve essere non vuoto")
 
-        normalized_name = self._extract_name_from_formatted_text(normalized_text)
-        if not normalized_name:
-            raise ValueError("Il nome token deve essere non vuoto")
+        normalized_name = None
+        if name is not None:
+            candidate_name = self._sanitize_name_text(str(name))
+            if not candidate_name:
+                raise ValueError("Il nome token deve essere non vuoto")
+            normalized_name = candidate_name
 
         normalized_tags = [tag.strip() for tag in tags if str(tag).strip()]
         normalized_tip_text = ""
@@ -643,7 +639,8 @@ class MainController:
                 raise ValueError(f"Token non trovato: {token_id}")
 
             payload = token.model_dump(mode="json")
-            payload["name"] = normalized_name
+            effective_name = normalized_name if normalized_name is not None else token.name
+            payload["name"] = effective_name
             payload["tags"] = normalized_tags
             payload["shape"] = shape.value
             metadata = dict(payload.get("metadata", {}))
@@ -651,7 +648,7 @@ class MainController:
                 metadata["tip_text"] = normalized_tip_text
             else:
                 metadata["tip_text"] = self._build_auto_tip_text(
-                    name=normalized_name,
+                    name=effective_name,
                     tags=normalized_tags,
                     front_text=normalized_text,
                 )

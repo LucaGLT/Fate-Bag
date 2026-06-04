@@ -135,8 +135,9 @@
         "Caratteristica"
       ],
       "metadata": {
-        "front_text": "<Novizio di Egonya>|",
-        "tip_text": "<Novizio di Egonya>|Caratteristica \u2014 Nariel|Conosce i riti e le leggende legate al culto di Egonya."
+        "front_text": "<Novizio di Egonya>|Riti e le leggende legate al culto di Egonya",
+        "tip_text": "<Novizio di Egonya>|Caratteristica \u2014 Nariel|Conosce i riti e le leggende legate al culto di Egonya.",
+        "front_text_color_mode": "auto"
       },
       "weight": 1.0,
       "rarity": null
@@ -178,7 +179,7 @@
       ],
       "metadata": {
         "front_text": "<Navigazione Esperta>|Naviga su imbarcazioni con tecnologia",
-        "tip_text": "<Navigazione Esperta>|Abilit\u00e0 \u2014 Yedid|Maestria nella guida di imbarcazioni con tecnologia.|Pu\u00f2 stimare distanze in mare aperto.",
+        "tip_text": "<Navigazione Esperta>|*Abilit\u00e0 \u2014 Yedid*\nMaestria nella guida di imbarcazioni con tecnologia.|Pu\u00f2 stimare distanze in mare aperto.",
         "front_text_color_mode": "auto"
       },
       "weight": 1.0,
@@ -302,28 +303,6 @@
       "metadata": {
         "front_text": "<PERICOLO>",
         "tip_text": "<Evento Critico!>\nUna minaccia incombe sul gruppo.\nAgisci subito o affronta le conseguenze."
-      },
-      "weight": 1.0,
-      "rarity": null
-    },
-    {
-      "id": "5aab78c0-ec9e-4ebe-92a0-9bb709bc9c11",
-      "name": "Navigazione",
-      "shape": "CIRCLE",
-      "front_type": "TEXT_IMAGE",
-      "front_value": "token_fronts\\PG_Yedid_light-Gray.png",
-      "back_value": "token_backs\\PG_Yedid.PNG",
-      "categories": [
-        "PG>Yedid>Abilit\u00e0"
-      ],
-      "tags": [
-        "Yedid",
-        "Abilit\u00e0"
-      ],
-      "metadata": {
-        "front_text": "<Navigazione>|Naviga su imbarcazioni con tecnologia",
-        "tip_text": "<Naviga su imbarcazioni con tecnologia>|*Yedid-Abilit\u00e0*|Naviga su imbarcazioni con tecnologia",
-        "front_text_color_mode": "auto"
       },
       "weight": 1.0,
       "rarity": null

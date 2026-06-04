@@ -65,6 +65,7 @@ class TokenEditDialog(QDialog):
     def __init__(
         self,
         *,
+        default_name: str,
         default_text: str,
         default_tip_text: str,
         default_tags: list[str],
@@ -78,6 +79,10 @@ class TokenEditDialog(QDialog):
 
         form = QFormLayout(self)
         form.setFieldGrowthPolicy(QFormLayout.FieldGrowthPolicy.ExpandingFieldsGrow)
+
+        self.name_edit = QLineEdit(default_name)
+        self.name_edit.setMinimumWidth(520)
+        form.addRow("Name:", self.name_edit)
 
         self.text_edit = QLineEdit(default_text)
         self.text_edit.setMinimumWidth(520)
@@ -119,7 +124,7 @@ class TokenEditDialog(QDialog):
         self.button_box.rejected.connect(self.reject)
         form.addRow(self.button_box)
 
-    def values(self) -> tuple[str, str, str, TokenShape, str]:
+    def values(self) -> tuple[str, str, str, str, TokenShape, str]:
         shape = self.shape_combo.currentData()
         if not isinstance(shape, TokenShape):
             shape = TokenShape.CIRCLE
@@ -127,6 +132,7 @@ class TokenEditDialog(QDialog):
         if not isinstance(mode, str):
             mode = self.MODE_TEXT_ONLY
         return (
+            self.name_edit.text(),
             self.text_edit.text(),
             self.tip_text_edit.toPlainText(),
             self.tags_edit.text(),
@@ -714,6 +720,7 @@ class MainWindow(QMainWindow):
         self,
         item: QTreeWidgetItem,
         column: int = 0,
+        name: str | None = None,
         text: str | None = None,
         tip_text: str | None = None,
         tags_text: str | None = None,
@@ -736,7 +743,8 @@ class MainWindow(QMainWindow):
 
             clicked_token = self.controller.token_for_id(clicked_uuid)
 
-            name_value = text
+            name_value = name
+            front_text_value = text
             tip_text_value = tip_text
             tags_value = tags_text
             shape_value = shape
@@ -744,6 +752,7 @@ class MainWindow(QMainWindow):
 
             if (
                 name_value is None
+                and front_text_value is None
                 and tip_text_value is None
                 and tags_value is None
                 and shape_value is None
@@ -751,6 +760,7 @@ class MainWindow(QMainWindow):
             ):
                 default_mode = self._display_mode_for_token(clicked_token)
                 dialog = TokenEditDialog(
+                    default_name=clicked_token.name,
                     default_text=self.controller.front_text_for_token(clicked_uuid),
                     default_tip_text=self.controller.tip_text_for_token(clicked_uuid),
                     default_tags=clicked_token.tags,
@@ -762,9 +772,11 @@ class MainWindow(QMainWindow):
                     self.status_label.setText("Modifica token annullata")
                     return
 
-                dialog_name, dialog_tip_text, dialog_tags, dialog_shape, dialog_mode = dialog.values()
+                dialog_name, dialog_text, dialog_tip_text, dialog_tags, dialog_shape, dialog_mode = dialog.values()
                 if name_value is None:
                     name_value = dialog_name
+                if front_text_value is None:
+                    front_text_value = dialog_text
                 if tip_text_value is None:
                     tip_text_value = dialog_tip_text
                 if tags_value is None:
@@ -776,6 +788,8 @@ class MainWindow(QMainWindow):
 
             if name_value is None:
                 name_value = clicked_token.name
+            if front_text_value is None:
+                front_text_value = self.controller.front_text_for_token(clicked_uuid)
             if tip_text_value is None:
                 tip_text_value = self.controller.tip_text_for_token(clicked_uuid)
             if tags_value is None:
@@ -790,7 +804,8 @@ class MainWindow(QMainWindow):
 
             updated_count = self.controller.apply_token_metadata_to_tokens(
                 target_ids,
-                text=name_value or clicked_token.name,
+                name=name_value,
+                text=front_text_value,
                 tip_text=tip_text_value,
                 tags=parsed_tags,
                 shape=chosen_shape,

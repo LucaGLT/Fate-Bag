@@ -15673,19 +15673,96 @@
     "created_at": "2026-06-04T10:13:56.847139Z"
   },
   {
-    "session_id": "cca7169f-fc87-418a-93b1-f60982e484b0",
+    "session_id": "fbd244c9-14a5-4f2e-b2db-09e87265e6fa",
     "seed": null,
     "table_tokens": [
       {
         "token_id": "5aab78c0-ec9e-4ebe-92a0-9bb709bc9c11",
         "state": "FACE_UP",
-        "x": 50.0,
+        "x": 38.612,
+        "y": 57.131,
+        "z": 0.0,
+        "rotation": 0.0
+      },
+      {
+        "token_id": "ebc3ae24-198c-45b3-9b93-fc63de44a4ab",
+        "state": "FACE_UP",
+        "x": 32.075,
+        "y": 23.174,
+        "z": 0.0,
+        "rotation": 0.0
+      }
+    ],
+    "draw_history": [],
+    "created_at": "2026-06-04T10:33:42.282731Z"
+  },
+  {
+    "session_id": "f0c7fd84-1eb0-47c4-b9e8-52deae20b177",
+    "seed": null,
+    "table_tokens": [
+      {
+        "token_id": "5aab78c0-ec9e-4ebe-92a0-9bb709bc9c11",
+        "state": "FACE_DOWN",
+        "x": 10.0,
+        "y": 50.0,
+        "z": 0.0,
+        "rotation": 0.0
+      },
+      {
+        "token_id": "ebc3ae24-198c-45b3-9b93-fc63de44a4ab",
+        "state": "FACE_DOWN",
+        "x": 90.0,
         "y": 50.0,
         "z": 0.0,
         "rotation": 0.0
       }
     ],
     "draw_history": [],
-    "created_at": "2026-06-04T10:30:29.570078Z"
+    "created_at": "2026-06-04T10:35:19.466477Z"
+  },
+  {
+    "session_id": "9cb98553-7ed1-4d36-8413-51ef94f667f4",
+    "seed": null,
+    "table_tokens": [
+      {
+        "token_id": "55c84d2b-d454-480a-ab55-a6817b8e5b0e",
+        "state": "FACE_UP",
+        "x": 35.322,
+        "y": 11.784,
+        "z": 0.0,
+        "rotation": 0.0
+      },
+      {
+        "token_id": "ebc3ae24-198c-45b3-9b93-fc63de44a4ab",
+        "state": "FACE_UP",
+        "x": 62.558,
+        "y": 66.876,
+        "z": 0.0,
+        "rotation": 0.0
+      },
+      {
+        "token_id": "7a1d9c31-2125-4c58-b53a-0c4cdd9edfe0",
+        "state": "FACE_UP",
+        "x": 33.722,
+        "y": 62.496,
+        "z": 0.0,
+        "rotation": 0.0
+      },
+      {
+        "token_id": "4c606014-ad43-4ebe-aa85-6b0f9a5ae405",
+        "state": "FACE_UP",
+        "x": 64.109,
+        "y": 14.448,
+        "z": 0.0,
+        "rotation": 0.0
+      }
+    ],
+    "draw_history": [
+      "4c606014-ad43-4ebe-aa85-6b0f9a5ae405",
+      "7a1d9c31-2125-4c58-b53a-0c4cdd9edfe0",
+      "55c84d2b-d454-480a-ab55-a6817b8e5b0e",
+      "ebc3ae24-198c-45b3-9b93-fc63de44a4ab"
+    ],
+    "created_at": "2026-06-04T10:45:33.220633Z"
   }
 ]

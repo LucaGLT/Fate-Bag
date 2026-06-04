@@ -164,6 +164,7 @@ def test_all_main_window_buttons_have_tooltip(window):
 
 def test_token_edit_dialog_is_wider_for_long_text(qapp):
     dialog = TokenEditDialog(
+        default_name="Token Lungo",
         default_text="<Token Lungo>|Descrizione molto lunga da vedere meglio nel popup",
         default_tip_text="<Tip>|Riga 1|Riga 2",
         default_tags=["uno", "due"],
@@ -184,6 +185,7 @@ def test_token_edit_dialog_is_wider_for_long_text(qapp):
     assert dialog.minimumWidth() >= 720
     assert dialog.text_edit.minimumWidth() >= 520
     assert dialog.tip_text_edit.toPlainText() == "<Tip>|Riga 1|Riga 2"
+    assert dialog.name_edit.text() == "Token Lungo"
 
 
 def test_flip_duration_mapping_from_speed_setting(window):
@@ -734,6 +736,7 @@ def test_token_popup_edit_updates_name_tags_shape_for_selected_tokens(window):
     clicked_item = window.token_list.item(0)
     window._on_token_list_item_double_clicked(
         clicked_item,
+        name="Token Multi Edit",
         text="Token Multi Edit",
         tags_text="alpha; beta, gamma",
         shape=TokenShape.OCTAGON,
@@ -847,6 +850,7 @@ def test_token_popup_edit_generates_auto_tip_text_when_empty(window):
     from uuid import UUID
 
     token_id = UUID(clicked_item.data(Qt.ItemDataRole.UserRole))
+    original_name = window.controller._tokens_by_id[token_id].name
     window._on_token_list_item_double_clicked(
         clicked_item,
         text="<Nariel>|da anni di pesca d'altura",
@@ -862,19 +866,20 @@ def test_token_popup_edit_generates_auto_tip_text_when_empty(window):
         "Auto tip_text when empty",
         {
             "text": "<Nariel>|da anni di pesca d'altura",
+            "name": original_name,
             "tags": ["Nariel", "Abilita"],
         },
         {
-            "starts_with": "<Nariel>|*Nariel-Abilita*|",
+            "starts_with": f"<{original_name}>|*Nariel-Abilita*|",
             "contains_front_without_name": "da anni di pesca d'altura",
-            "no_duplicate_name_title": True,
+            "name_not_changed_by_title": True,
         },
         {"tip_text": auto_tip},
     )
 
-    assert auto_tip.startswith("<Nariel>|*Nariel-Abilita*|")
+    assert auto_tip.startswith(f"<{original_name}>|*Nariel-Abilita*|")
     assert "da anni di pesca d'altura" in auto_tip
-    assert auto_tip.count("<Nariel>") == 1
+    assert auto_tip.count(f"<{original_name}>") == 1
 
 
 def test_select_and_deselect_all_buttons(window):
@@ -938,6 +943,43 @@ def test_new_and_delete_token_buttons(window):
 
     assert after_delete_count == initial_count
     assert window.status_label.text().startswith("Token eliminati")
+
+
+def test_new_token_can_be_inserted_into_bag_without_json_reload(window):
+    window._on_load_tokens()
+    window._on_new_token()
+
+    new_token_id = window.controller._tokens[-1].id
+    new_token_name = window.controller._tokens[-1].name
+
+    for index in range(window.token_list.count()):
+        window.token_list.item(index).setCheckState(Qt.CheckState.Unchecked)
+
+    for index in range(window.token_list.count()):
+        row = window.token_list.item(index)
+        if row.data(Qt.ItemDataRole.UserRole) == str(new_token_id):
+            row.setCheckState(Qt.CheckState.Checked)
+            break
+
+    window._on_create_session_from_selection()
+
+    current_ids = {
+        table_token.token_id
+        for table_token in window.controller.current_session.table_tokens
+    }
+    status = window.status_label.text()
+    _debug_case(
+        "New token is insertable into bag without JSON reload",
+        {"new_token_name": new_token_name},
+        {"status_starts_with": "Inseriti in Bag", "new_token_in_session": True},
+        {
+            "status": status,
+            "new_token_in_session": new_token_id in current_ids,
+        },
+    )
+
+    assert status.startswith("Inseriti in Bag")
+    assert new_token_id in current_ids
 
 
 def test_duplicate_selected_tokens_button(window):
@@ -1782,21 +1824,20 @@ def test_front_text_name_extraction_rules(window):
     from uuid import UUID
 
     token_uuid = UUID(token_id_raw)
+    original_name = window.controller._tokens_by_id[token_uuid].name
 
     formatted_text = "TEXT=<Nome del Token> descrizione del **token** piu *lunga*"
     window._on_front_text_edit(formatted_text)
     token = window.controller._tokens_by_id[token_uuid]
 
     _debug_case(
-        "Name extracted from <...> while front text keeps full content",
+        "Front text edit does not auto-rename from <...>",
         {"input_text": formatted_text},
-        {"name": "Nome del Token", "front_text_full": formatted_text},
+        {"name_unchanged": original_name, "front_text_full": formatted_text},
         {"name": token.name, "front_value": token.front_value},
     )
 
-    assert token.name == "Nome del Token"
-    assert "<" not in token.name
-    assert ">" not in token.name
+    assert token.name == original_name
     assert token.front_value == formatted_text
 
     row_text = None
@@ -1807,12 +1848,12 @@ def test_front_text_name_extraction_rules(window):
             break
 
     assert row_text is not None
-    assert row_text.startswith("Nome del Token |")
+    assert row_text.startswith(f"{original_name} |")
 
     plain_text = "Solo testo senza marcatori"
     window._on_front_text_edit(plain_text)
     token_plain = window.controller._tokens_by_id[token_uuid]
-    assert token_plain.name == plain_text
+    assert token_plain.name == original_name
     assert token_plain.front_value == plain_text
 
 
