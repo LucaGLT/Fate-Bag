@@ -317,9 +317,9 @@
       "id": "16d3e7d1-22f2-4c85-9aa7-c4a5cde07d4f",
       "name": "Contrabbandiera",
       "shape": "CIRCLE",
-      "front_type": "TEXT",
-      "front_value": "<Contrabbandiera>|Rotte secondarie, controlli portuali e vicoli di Velmar",
-      "back_value": ".runtime\\gui\\assets\\back.png",
+      "front_type": "TEXT_IMAGE",
+      "front_value": "token_fronts\\PG_Selene_light-Gray.png",
+      "back_value": "token_backs\\PG_Selene.PNG",
       "categories": [
         "PG>Sel\u00e9n>Caratteristica"
       ],
@@ -339,9 +339,9 @@
       "id": "5ab36b8d-107f-4a16-ae0e-e9223f7be459",
       "name": "Trattativa e Contrattazione",
       "shape": "CIRCLE",
-      "front_type": "TEXT",
-      "front_value": "<Trattativa e Contrattazione>|Prezzi, favori e accordi",
-      "back_value": ".runtime\\gui\\assets\\back.png",
+      "front_type": "TEXT_IMAGE",
+      "front_value": "token_fronts\\PG_Selene_light-Gray.png",
+      "back_value": "token_backs\\PG_Selene.PNG",
       "categories": [
         "PG>Sel\u00e9n>Caratteristica"
       ],
@@ -361,9 +361,9 @@
       "id": "a8b29eeb-e71a-4147-aeaf-c984115b3c00",
       "name": "Sopravvissuta alla Tempesta",
       "shape": "CIRCLE",
-      "front_type": "TEXT",
-      "front_value": "<Sopravvissuta alla Tempesta>|Lucidit\u00e0 nelle emergenze",
-      "back_value": ".runtime\\gui\\assets\\back.png",
+      "front_type": "TEXT_IMAGE",
+      "front_value": "token_fronts\\PG_Selene_light-Gray.png",
+      "back_value": "token_backs\\PG_Selene.PNG",
       "categories": [
         "PG>Sel\u00e9n>Caratteristica"
       ],
@@ -383,9 +383,9 @@
       "id": "7ce50fef-ffb2-4231-81ea-5792d99dc2f9",
       "name": "Custode di Mira",
       "shape": "CIRCLE",
-      "front_type": "TEXT",
-      "front_value": "<Custode di Mira>|Responsabilit\u00e0, pazienza e protezione",
-      "back_value": ".runtime\\gui\\assets\\back.png",
+      "front_type": "TEXT_IMAGE",
+      "front_value": "token_fronts\\PG_Selene_light-Gray.png",
+      "back_value": "token_backs\\PG_Selene.PNG",
       "categories": [
         "PG>Sel\u00e9n>Caratteristica"
       ],
@@ -405,9 +405,9 @@
       "id": "c115c19a-767c-46bf-9e89-4fb119edce83",
       "name": "Fiutare un Affare",
       "shape": "CIRCLE",
-      "front_type": "TEXT",
-      "front_value": "<Fiutare un Affare>|Capisce chi mente o nasconde qualcosa durante una trattativa",
-      "back_value": ".runtime\\gui\\assets\\back.png",
+      "front_type": "TEXT_IMAGE",
+      "front_value": "token_fronts\\PG_Selene_light-Gray.png",
+      "back_value": "token_backs\\PG_Selene.PNG",
       "categories": [
         "PG>Sel\u00e9n>Abilit\u00e0"
       ],
@@ -427,9 +427,9 @@
       "id": "4c31e172-bdc9-4f9f-bc42-ee63dc3a3acf",
       "name": "Conoscenza delle Erbe Marine",
       "shape": "CIRCLE",
-      "front_type": "TEXT",
-      "front_value": "<Conoscenza delle Erbe Marine>|Piante officinali, alghe rare e rimedi tradizionali",
-      "back_value": ".runtime\\gui\\assets\\back.png",
+      "front_type": "TEXT_IMAGE",
+      "front_value": "token_fronts\\PG_Selene_light-Gray.png",
+      "back_value": "token_backs\\PG_Selene.PNG",
       "categories": [
         "PG>Sel\u00e9n>Abilit\u00e0"
       ],
@@ -449,9 +449,9 @@
       "id": "cfb1c5fd-1e4d-4d4a-adef-fed9e731a0a7",
       "name": "Leggere una Rotta",
       "shape": "CIRCLE",
-      "front_type": "TEXT",
-      "front_value": "<Leggere una Rotta>|Percorsi sicuri, tempi di viaggio e pericoli marittimi",
-      "back_value": ".runtime\\gui\\assets\\back.png",
+      "front_type": "TEXT_IMAGE",
+      "front_value": "token_fronts\\PG_Selene_light-Gray.png",
+      "back_value": "token_backs\\PG_Selene.PNG",
       "categories": [
         "PG>Sel\u00e9n>Abilit\u00e0"
       ],
@@ -470,10 +470,10 @@
     {
       "id": "c2584885-3f57-49e4-866c-f3061287024f",
       "name": "Quaderno di Mira",
-      "shape": "CIRCLE",
-      "front_type": "TEXT",
-      "front_value": "<Quaderno di Mira>|Disegni, nomi ricorrenti, appunti sull'Alga d'Avorio",
-      "back_value": ".runtime\\gui\\assets\\back.png",
+      "shape": "RECTANGLE_4:3",
+      "front_type": "TEXT_IMAGE",
+      "front_value": "token_fronts\\PG_Selene_light-Gray.png",
+      "back_value": "token_backs\\PG_Selene.PNG",
       "categories": [
         "PG>Sel\u00e9n>Oggetti"
       ],
@@ -492,10 +492,10 @@
     {
       "id": "0d04e014-a8fe-4038-9026-e40643ccd8f1",
       "name": "Bussola di Edran",
-      "shape": "CIRCLE",
-      "front_type": "TEXT",
-      "front_value": "<Bussola di Edran>|Recuperata dopo il naufragio. Nessun potere, sempre con s\u00e9.",
-      "back_value": ".runtime\\gui\\assets\\back.png",
+      "shape": "RECTANGLE_4:3",
+      "front_type": "TEXT_IMAGE",
+      "front_value": "token_fronts\\PG_Selene_light-Gray.png",
+      "back_value": "token_backs\\PG_Selene.PNG",
       "categories": [
         "PG>Sel\u00e9n>Oggetti"
       ],
@@ -514,10 +514,10 @@
     {
       "id": "95d292a1-2845-4e41-860d-152acd866d2e",
       "name": "Astuccio dei Contratti",
-      "shape": "CIRCLE",
-      "front_type": "TEXT",
-      "front_value": "<Astuccio dei Contratti>|Custodia impermeabile con lettere di credito e accordi",
-      "back_value": ".runtime\\gui\\assets\\back.png",
+      "shape": "RECTANGLE_4:3",
+      "front_type": "TEXT_IMAGE",
+      "front_value": "token_fronts\\PG_Selene_light-Gray.png",
+      "back_value": "token_backs\\PG_Selene.PNG",
       "categories": [
         "PG>Sel\u00e9n>Oggetti"
       ],
@@ -536,10 +536,10 @@
     {
       "id": "d6a6282f-ecf2-447c-a1e7-d59954064c7c",
       "name": "Borsa delle Erbe Marine",
-      "shape": "CIRCLE",
-      "front_type": "TEXT",
-      "front_value": "<Borsa delle Erbe Marine>|Alghe essiccate, foglie medicinali, polveri cicatrizzanti",
-      "back_value": ".runtime\\gui\\assets\\back.png",
+      "shape": "RECTANGLE_4:3",
+      "front_type": "TEXT_IMAGE",
+      "front_value": "token_fronts\\PG_Selene_light-Gray.png",
+      "back_value": "token_backs\\PG_Selene.PNG",
       "categories": [
         "PG>Sel\u00e9n>Oggetti"
       ],
@@ -558,10 +558,10 @@
     {
       "id": "c1dbfc11-60ec-41a4-9fe5-57f1aaf1a80c",
       "name": "Borsa delle Monete Miste",
-      "shape": "CIRCLE",
-      "front_type": "TEXT",
-      "front_value": "<Borsa delle Monete Miste>|Valute di diversi arcipelaghi",
-      "back_value": ".runtime\\gui\\assets\\back.png",
+      "shape": "RECTANGLE_4:3",
+      "front_type": "TEXT_IMAGE",
+      "front_value": "token_fronts\\PG_Selene_light-Gray.png",
+      "back_value": "token_backs\\PG_Selene.PNG",
       "categories": [
         "PG>Sel\u00e9n>Oggetti"
       ],
@@ -580,10 +580,10 @@
     {
       "id": "f9b9af7a-e035-48ce-bd62-ba979bb3da81",
       "name": "Mira Margant",
-      "shape": "CIRCLE",
-      "front_type": "TEXT",
-      "front_value": "<Mira Margant>|Sua nipote. La ragione del viaggio.",
-      "back_value": ".runtime\\gui\\assets\\back.png",
+      "shape": "RECTANGLE_5:3",
+      "front_type": "TEXT_IMAGE",
+      "front_value": "token_fronts\\PG_Selene_light-Gray.png",
+      "back_value": "token_backs\\PG_Selene.PNG",
       "categories": [
         "PG>Sel\u00e9n>Contatti"
       ],
@@ -602,10 +602,10 @@
     {
       "id": "d9059545-c7aa-4cdf-84fb-29284dc1c655",
       "name": "Nessa la Grigia",
-      "shape": "CIRCLE",
-      "front_type": "TEXT",
-      "front_value": "<Nessa la Grigia>|Vecchia contrabbandiera. Porti nascosti e rotte dimenticate.",
-      "back_value": ".runtime\\gui\\assets\\back.png",
+      "shape": "RECTANGLE_5:3",
+      "front_type": "TEXT_IMAGE",
+      "front_value": "token_fronts\\PG_Selene_light-Gray.png",
+      "back_value": "token_backs\\PG_Selene.PNG",
       "categories": [
         "PG>Sel\u00e9n>Contatti"
       ],
@@ -623,11 +623,11 @@
     },
     {
       "id": "b41df6ba-839b-49cc-b436-08f3ef425003",
-      "name": "Il giorno del naufragio",
-      "shape": "CIRCLE",
-      "front_type": "TEXT",
-      "front_value": "<Il giorno del naufragio>|L'ultima discussione con Edran prima della partenza",
-      "back_value": ".runtime\\gui\\assets\\back.png",
+      "name": "Il Naufragio",
+      "shape": "OCTAGON",
+      "front_type": "TEXT_IMAGE",
+      "front_value": "token_fronts\\PG_Selene_light-Gray.png",
+      "back_value": "token_backs\\PG_Selene.PNG",
       "categories": [
         "PG>Sel\u00e9n>Ricordi"
       ],
@@ -636,7 +636,7 @@
         "Ricordi"
       ],
       "metadata": {
-        "front_text": "<Il giorno del naufragio>|L'ultima discussione con Edran prima della partenza",
+        "front_text": "<Il Naufragio>|L'ultima discussione con Edran prima della partenza",
         "tip_text": "<Il giorno del naufragio>|Ricordo \u2014 Sel\u00e9n|L'ultima discussione con Edran prima della partenza sulla scelta del contrabbando. Ancora oggi ricorda ogni parola.",
         "front_text_color_mode": "auto"
       },
@@ -646,10 +646,10 @@
     {
       "id": "3c8b9877-5ca7-40fe-9030-894529763b1e",
       "name": "Mira addormentata sulla sua spalla",
-      "shape": "CIRCLE",
-      "front_type": "TEXT",
-      "front_value": "<Mira addormentata sulla sua spalla>|Il momento in cui cap\u00ec la sua responsabilit\u00e0",
-      "back_value": ".runtime\\gui\\assets\\back.png",
+      "shape": "OCTAGON",
+      "front_type": "TEXT_IMAGE",
+      "front_value": "token_fronts\\PG_Selene_light-Gray.png",
+      "back_value": "token_backs\\PG_Selene.PNG",
       "categories": [
         "PG>Sel\u00e9n>Ricordi"
       ],
@@ -668,10 +668,10 @@
     {
       "id": "cec33cca-27c2-4255-a4b4-ba0fea764ad0",
       "name": "La bussola che esita",
-      "shape": "CIRCLE",
-      "front_type": "TEXT",
-      "front_value": "<La bussola che esita>|Oscilla senza motivo prima di ogni decisione importante",
-      "back_value": ".runtime\\gui\\assets\\back.png",
+      "shape": "OCTAGON",
+      "front_type": "TEXT_IMAGE",
+      "front_value": "token_fronts\\PG_Selene_light-Gray.png",
+      "back_value": "token_backs\\PG_Selene.PNG",
       "categories": [
         "PG>Sel\u00e9n>Eco"
       ],
@@ -689,11 +689,11 @@
     },
     {
       "id": "9e8ffac4-d786-4163-ba0b-b4da9ba59bc2",
-      "name": "Il sogno dell'acqua bianca",
-      "shape": "CIRCLE",
-      "front_type": "TEXT",
-      "front_value": "<Il sogno dell'acqua bianca>|Una laguna immobile, qualcosa di bianco e luminoso. \"Non la salver\u00e0.\"",
-      "back_value": ".runtime\\gui\\assets\\back.png",
+      "name": "Il Sogno dell'acqua bianca",
+      "shape": "OCTAGON",
+      "front_type": "TEXT_IMAGE",
+      "front_value": "token_fronts\\PG_Selene_light-Gray.png",
+      "back_value": "token_backs\\PG_Selene.PNG",
       "categories": [
         "PG>Sel\u00e9n>Eco"
       ],
@@ -702,8 +702,8 @@
         "Eco"
       ],
       "metadata": {
-        "front_text": "<Il sogno dell'acqua bianca>|Una laguna immobile, qualcosa di bianco e luminoso. \"Non la salver\u00e0.\"",
-        "tip_text": "<Il sogno dell'acqua bianca>|Eco \u2014 Sel\u00e9n|Sogna spesso una laguna immobile e sotto la superficie cresce qualcosa di bianco e luminoso. Quando cerca di raggiungerla, una voce sussurra: \"Non la salver\u00e0.\"",
+        "front_text": "**Sogna l'acqua bianca** | Una laguna immobile, qualcosa di bianco e luminoso",
+        "tip_text": "**Il sogno dell'acqua bianca**|Eco \u2014 Sel\u00e9n|Sogna spesso una laguna immobile e sotto la superficie cresce qualcosa di bianco e luminoso. Quando cerca di raggiungerla, una voce sussurra: \"Non la salver\u00e0.\"",
         "front_text_color_mode": "auto"
       },
       "weight": 1.0,
