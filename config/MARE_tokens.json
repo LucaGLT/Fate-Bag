@@ -12,7 +12,13 @@
     "auto_sort_delay_seconds": 1.5,
     "auto_shuffle_after_insert_count": 1,
     "custom_groups": [
-      "PG>Yedid>Caratteristica"
+      "PG>Yedid>Caratteristica",
+      "PG>Sel\u00e9n>Caratteristica",
+      "PG>Sel\u00e9n>Abilit\u00e0",
+      "PG>Sel\u00e9n>Oggetti",
+      "PG>Sel\u00e9n>Contatti",
+      "PG>Sel\u00e9n>Ricordi",
+      "PG>Sel\u00e9n>Eco"
     ]
   },
   "tokens": [
@@ -303,6 +309,402 @@
       "metadata": {
         "front_text": "<PERICOLO>",
         "tip_text": "<Evento Critico!>\nUna minaccia incombe sul gruppo.\nAgisci subito o affronta le conseguenze."
+      },
+      "weight": 1.0,
+      "rarity": null
+    },
+    {
+      "id": "16d3e7d1-22f2-4c85-9aa7-c4a5cde07d4f",
+      "name": "Contrabbandiera",
+      "shape": "CIRCLE",
+      "front_type": "TEXT",
+      "front_value": "<Contrabbandiera>|Rotte secondarie, controlli portuali e vicoli di Velmar",
+      "back_value": ".runtime\\gui\\assets\\back.png",
+      "categories": [
+        "PG>Sel\u00e9n>Caratteristica"
+      ],
+      "tags": [
+        "Sel\u00e9n",
+        "Caratteristica"
+      ],
+      "metadata": {
+        "front_text": "<Contrabbandiera>|Rotte secondarie, controlli portuali e vicoli di Velmar",
+        "tip_text": "<Contrabbandiera>|Caratteristica \u2014 Sel\u00e9n|Conosce rotte secondarie, controlli portuali, intermediari e i vicoli delle maggiori isole di Velmar.",
+        "front_text_color_mode": "auto"
+      },
+      "weight": 1.0,
+      "rarity": null
+    },
+    {
+      "id": "5ab36b8d-107f-4a16-ae0e-e9223f7be459",
+      "name": "Trattativa e Contrattazione",
+      "shape": "CIRCLE",
+      "front_type": "TEXT",
+      "front_value": "<Trattativa e Contrattazione>|Prezzi, favori e accordi",
+      "back_value": ".runtime\\gui\\assets\\back.png",
+      "categories": [
+        "PG>Sel\u00e9n>Caratteristica"
+      ],
+      "tags": [
+        "Sel\u00e9n",
+        "Caratteristica"
+      ],
+      "metadata": {
+        "front_text": "<Trattativa e Contrattazione>|Prezzi, favori e accordi",
+        "tip_text": "<Trattativa e Contrattazione>|Caratteristica \u2014 Sel\u00e9n|\u00c8 abituata a negoziare prezzi, favori e accordi.",
+        "front_text_color_mode": "auto"
+      },
+      "weight": 1.0,
+      "rarity": null
+    },
+    {
+      "id": "a8b29eeb-e71a-4147-aeaf-c984115b3c00",
+      "name": "Sopravvissuta alla Tempesta",
+      "shape": "CIRCLE",
+      "front_type": "TEXT",
+      "front_value": "<Sopravvissuta alla Tempesta>|Lucidit\u00e0 nelle emergenze",
+      "back_value": ".runtime\\gui\\assets\\back.png",
+      "categories": [
+        "PG>Sel\u00e9n>Caratteristica"
+      ],
+      "tags": [
+        "Sel\u00e9n",
+        "Caratteristica"
+      ],
+      "metadata": {
+        "front_text": "<Sopravvissuta alla Tempesta>|Lucidit\u00e0 nelle emergenze",
+        "tip_text": "<Sopravvissuta alla Tempesta>|Caratteristica \u2014 Sel\u00e9n|Ha vissuto il naufragio che cost\u00f2 la vita a Edran e sa mantenere lucidit\u00e0 nelle emergenze.",
+        "front_text_color_mode": "auto"
+      },
+      "weight": 1.0,
+      "rarity": null
+    },
+    {
+      "id": "7ce50fef-ffb2-4231-81ea-5792d99dc2f9",
+      "name": "Custode di Mira",
+      "shape": "CIRCLE",
+      "front_type": "TEXT",
+      "front_value": "<Custode di Mira>|Responsabilit\u00e0, pazienza e protezione",
+      "back_value": ".runtime\\gui\\assets\\back.png",
+      "categories": [
+        "PG>Sel\u00e9n>Caratteristica"
+      ],
+      "tags": [
+        "Sel\u00e9n",
+        "Caratteristica"
+      ],
+      "metadata": {
+        "front_text": "<Custode di Mira>|Responsabilit\u00e0, pazienza e protezione",
+        "tip_text": "<Custode di Mira>|Caratteristica \u2014 Sel\u00e9n|L'esperienza come tutrice le ha insegnato responsabilit\u00e0, pazienza e protezione degli altri.",
+        "front_text_color_mode": "auto"
+      },
+      "weight": 1.0,
+      "rarity": null
+    },
+    {
+      "id": "c115c19a-767c-46bf-9e89-4fb119edce83",
+      "name": "Fiutare un Affare",
+      "shape": "CIRCLE",
+      "front_type": "TEXT",
+      "front_value": "<Fiutare un Affare>|Capisce chi mente o nasconde qualcosa durante una trattativa",
+      "back_value": ".runtime\\gui\\assets\\back.png",
+      "categories": [
+        "PG>Sel\u00e9n>Abilit\u00e0"
+      ],
+      "tags": [
+        "Sel\u00e9n",
+        "Abilit\u00e0"
+      ],
+      "metadata": {
+        "front_text": "<Fiutare un Affare>|Capisce chi mente o nasconde qualcosa durante una trattativa",
+        "tip_text": "<Fiutare un Affare>|Abilit\u00e0 \u2014 Sel\u00e9n|Capisce rapidamente chi mente, chi bluffa e chi nasconde qualcosa durante una trattativa.",
+        "front_text_color_mode": "auto"
+      },
+      "weight": 1.0,
+      "rarity": null
+    },
+    {
+      "id": "4c31e172-bdc9-4f9f-bc42-ee63dc3a3acf",
+      "name": "Conoscenza delle Erbe Marine",
+      "shape": "CIRCLE",
+      "front_type": "TEXT",
+      "front_value": "<Conoscenza delle Erbe Marine>|Piante officinali, alghe rare e rimedi tradizionali",
+      "back_value": ".runtime\\gui\\assets\\back.png",
+      "categories": [
+        "PG>Sel\u00e9n>Abilit\u00e0"
+      ],
+      "tags": [
+        "Sel\u00e9n",
+        "Abilit\u00e0"
+      ],
+      "metadata": {
+        "front_text": "<Conoscenza delle Erbe Marine>|Piante officinali, alghe rare e rimedi tradizionali",
+        "tip_text": "<Conoscenza delle Erbe Marine>|Abilit\u00e0 \u2014 Sel\u00e9n|Ha raccolto informazioni su piante officinali, alghe rare e rimedi tradizionali.",
+        "front_text_color_mode": "auto"
+      },
+      "weight": 1.0,
+      "rarity": null
+    },
+    {
+      "id": "cfb1c5fd-1e4d-4d4a-adef-fed9e731a0a7",
+      "name": "Leggere una Rotta",
+      "shape": "CIRCLE",
+      "front_type": "TEXT",
+      "front_value": "<Leggere una Rotta>|Percorsi sicuri, tempi di viaggio e pericoli marittimi",
+      "back_value": ".runtime\\gui\\assets\\back.png",
+      "categories": [
+        "PG>Sel\u00e9n>Abilit\u00e0"
+      ],
+      "tags": [
+        "Sel\u00e9n",
+        "Abilit\u00e0"
+      ],
+      "metadata": {
+        "front_text": "<Leggere una Rotta>|Percorsi sicuri, tempi di viaggio e pericoli marittimi",
+        "tip_text": "<Leggere una Rotta>|Abilit\u00e0 \u2014 Sel\u00e9n|Sa stimare percorsi sicuri, tempi di viaggio e pericoli marittimi.",
+        "front_text_color_mode": "auto"
+      },
+      "weight": 1.0,
+      "rarity": null
+    },
+    {
+      "id": "c2584885-3f57-49e4-866c-f3061287024f",
+      "name": "Quaderno di Mira",
+      "shape": "CIRCLE",
+      "front_type": "TEXT",
+      "front_value": "<Quaderno di Mira>|Disegni, nomi ricorrenti, appunti sull'Alga d'Avorio",
+      "back_value": ".runtime\\gui\\assets\\back.png",
+      "categories": [
+        "PG>Sel\u00e9n>Oggetti"
+      ],
+      "tags": [
+        "Sel\u00e9n",
+        "Oggetti"
+      ],
+      "metadata": {
+        "front_text": "<Quaderno di Mira>|Disegni, nomi ricorrenti, appunti sull'Alga d'Avorio",
+        "tip_text": "<Quaderno di Mira>|Oggetto \u2014 Sel\u00e9n|Pieno di annotazioni sui sogni della nipote: disegni di luoghi sconosciuti, nomi ricorrenti, appunti sull'Alga d'Avorio e frasi pronunciate nel sonno.",
+        "front_text_color_mode": "auto"
+      },
+      "weight": 1.0,
+      "rarity": null
+    },
+    {
+      "id": "0d04e014-a8fe-4038-9026-e40643ccd8f1",
+      "name": "Bussola di Edran",
+      "shape": "CIRCLE",
+      "front_type": "TEXT",
+      "front_value": "<Bussola di Edran>|Recuperata dopo il naufragio. Nessun potere, sempre con s\u00e9.",
+      "back_value": ".runtime\\gui\\assets\\back.png",
+      "categories": [
+        "PG>Sel\u00e9n>Oggetti"
+      ],
+      "tags": [
+        "Sel\u00e9n",
+        "Oggetti"
+      ],
+      "metadata": {
+        "front_text": "<Bussola di Edran>|Recuperata dopo il naufragio. Nessun potere, sempre con s\u00e9.",
+        "tip_text": "<Bussola di Edran>|Oggetto \u2014 Sel\u00e9n|Recuperata dalla cassa ritrovata dopo il naufragio. Non ha alcun potere, ma la porta sempre con s\u00e9.",
+        "front_text_color_mode": "auto"
+      },
+      "weight": 1.0,
+      "rarity": null
+    },
+    {
+      "id": "95d292a1-2845-4e41-860d-152acd866d2e",
+      "name": "Astuccio dei Contratti",
+      "shape": "CIRCLE",
+      "front_type": "TEXT",
+      "front_value": "<Astuccio dei Contratti>|Custodia impermeabile con lettere di credito e accordi",
+      "back_value": ".runtime\\gui\\assets\\back.png",
+      "categories": [
+        "PG>Sel\u00e9n>Oggetti"
+      ],
+      "tags": [
+        "Sel\u00e9n",
+        "Oggetti"
+      ],
+      "metadata": {
+        "front_text": "<Astuccio dei Contratti>|Custodia impermeabile con lettere di credito e accordi",
+        "tip_text": "<Astuccio dei Contratti>|Oggetto \u2014 Sel\u00e9n|Custodia cilindrica impermeabile con lettere di credito, accordi commerciali, vecchi contratti e appunti personali.",
+        "front_text_color_mode": "auto"
+      },
+      "weight": 1.0,
+      "rarity": null
+    },
+    {
+      "id": "d6a6282f-ecf2-447c-a1e7-d59954064c7c",
+      "name": "Borsa delle Erbe Marine",
+      "shape": "CIRCLE",
+      "front_type": "TEXT",
+      "front_value": "<Borsa delle Erbe Marine>|Alghe essiccate, foglie medicinali, polveri cicatrizzanti",
+      "back_value": ".runtime\\gui\\assets\\back.png",
+      "categories": [
+        "PG>Sel\u00e9n>Oggetti"
+      ],
+      "tags": [
+        "Sel\u00e9n",
+        "Oggetti"
+      ],
+      "metadata": {
+        "front_text": "<Borsa delle Erbe Marine>|Alghe essiccate, foglie medicinali, polveri cicatrizzanti",
+        "tip_text": "<Borsa delle Erbe Marine>|Oggetto \u2014 Sel\u00e9n|Piccola custodia impermeabile con alghe essiccate, foglie medicinali, polveri cicatrizzanti e campioni raccolti durante i viaggi.",
+        "front_text_color_mode": "auto"
+      },
+      "weight": 1.0,
+      "rarity": null
+    },
+    {
+      "id": "c1dbfc11-60ec-41a4-9fe5-57f1aaf1a80c",
+      "name": "Borsa delle Monete Miste",
+      "shape": "CIRCLE",
+      "front_type": "TEXT",
+      "front_value": "<Borsa delle Monete Miste>|Valute di diversi arcipelaghi",
+      "back_value": ".runtime\\gui\\assets\\back.png",
+      "categories": [
+        "PG>Sel\u00e9n>Oggetti"
+      ],
+      "tags": [
+        "Sel\u00e9n",
+        "Oggetti"
+      ],
+      "metadata": {
+        "front_text": "<Borsa delle Monete Miste>|Valute di diversi arcipelaghi",
+        "tip_text": "<Borsa delle Monete Miste>|Oggetto \u2014 Sel\u00e9n|Contiene valute provenienti da diversi arcipelaghi, segno di una vita passata tra commerci e porti.",
+        "front_text_color_mode": "auto"
+      },
+      "weight": 1.0,
+      "rarity": null
+    },
+    {
+      "id": "f9b9af7a-e035-48ce-bd62-ba979bb3da81",
+      "name": "Mira Margant",
+      "shape": "CIRCLE",
+      "front_type": "TEXT",
+      "front_value": "<Mira Margant>|Sua nipote. La ragione del viaggio.",
+      "back_value": ".runtime\\gui\\assets\\back.png",
+      "categories": [
+        "PG>Sel\u00e9n>Contatti"
+      ],
+      "tags": [
+        "Sel\u00e9n",
+        "Contatti"
+      ],
+      "metadata": {
+        "front_text": "<Mira Margant>|Sua nipote. La ragione del viaggio.",
+        "tip_text": "<Mira Margant>|Contatto \u2014 Sel\u00e9n|Sua nipote. La ragione stessa del viaggio.",
+        "front_text_color_mode": "auto"
+      },
+      "weight": 1.0,
+      "rarity": null
+    },
+    {
+      "id": "d9059545-c7aa-4cdf-84fb-29284dc1c655",
+      "name": "Nessa la Grigia",
+      "shape": "CIRCLE",
+      "front_type": "TEXT",
+      "front_value": "<Nessa la Grigia>|Vecchia contrabbandiera. Porti nascosti e rotte dimenticate.",
+      "back_value": ".runtime\\gui\\assets\\back.png",
+      "categories": [
+        "PG>Sel\u00e9n>Contatti"
+      ],
+      "tags": [
+        "Sel\u00e9n",
+        "Contatti"
+      ],
+      "metadata": {
+        "front_text": "<Nessa la Grigia>|Vecchia contrabbandiera. Porti nascosti e rotte dimenticate.",
+        "tip_text": "<Nessa la Grigia>|Contatto \u2014 Sel\u00e9n|Vecchia contrabbandiera ormai in pensione. Conosce porti nascosti e rotte dimenticate. Per Sel\u00e9n \u00e8 stata una seconda madre.",
+        "front_text_color_mode": "auto"
+      },
+      "weight": 1.0,
+      "rarity": null
+    },
+    {
+      "id": "b41df6ba-839b-49cc-b436-08f3ef425003",
+      "name": "Il giorno del naufragio",
+      "shape": "CIRCLE",
+      "front_type": "TEXT",
+      "front_value": "<Il giorno del naufragio>|L'ultima discussione con Edran prima della partenza",
+      "back_value": ".runtime\\gui\\assets\\back.png",
+      "categories": [
+        "PG>Sel\u00e9n>Ricordi"
+      ],
+      "tags": [
+        "Sel\u00e9n",
+        "Ricordi"
+      ],
+      "metadata": {
+        "front_text": "<Il giorno del naufragio>|L'ultima discussione con Edran prima della partenza",
+        "tip_text": "<Il giorno del naufragio>|Ricordo \u2014 Sel\u00e9n|L'ultima discussione con Edran prima della partenza sulla scelta del contrabbando. Ancora oggi ricorda ogni parola.",
+        "front_text_color_mode": "auto"
+      },
+      "weight": 1.0,
+      "rarity": null
+    },
+    {
+      "id": "3c8b9877-5ca7-40fe-9030-894529763b1e",
+      "name": "Mira addormentata sulla sua spalla",
+      "shape": "CIRCLE",
+      "front_type": "TEXT",
+      "front_value": "<Mira addormentata sulla sua spalla>|Il momento in cui cap\u00ec la sua responsabilit\u00e0",
+      "back_value": ".runtime\\gui\\assets\\back.png",
+      "categories": [
+        "PG>Sel\u00e9n>Ricordi"
+      ],
+      "tags": [
+        "Sel\u00e9n",
+        "Ricordi"
+      ],
+      "metadata": {
+        "front_text": "<Mira addormentata sulla sua spalla>|Il momento in cui cap\u00ec la sua responsabilit\u00e0",
+        "tip_text": "<Mira addormentata sulla sua spalla>|Ricordo \u2014 Sel\u00e9n|Dopo la morte di Edran, il momento in cui comprese che ormai era sua responsabilit\u00e0.",
+        "front_text_color_mode": "auto"
+      },
+      "weight": 1.0,
+      "rarity": null
+    },
+    {
+      "id": "cec33cca-27c2-4255-a4b4-ba0fea764ad0",
+      "name": "La bussola che esita",
+      "shape": "CIRCLE",
+      "front_type": "TEXT",
+      "front_value": "<La bussola che esita>|Oscilla senza motivo prima di ogni decisione importante",
+      "back_value": ".runtime\\gui\\assets\\back.png",
+      "categories": [
+        "PG>Sel\u00e9n>Eco"
+      ],
+      "tags": [
+        "Sel\u00e9n",
+        "Eco"
+      ],
+      "metadata": {
+        "front_text": "<La bussola che esita>|Oscilla senza motivo prima di ogni decisione importante",
+        "tip_text": "<La bussola che esita>|Eco \u2014 Sel\u00e9n|A volte la Bussola di Edran oscilla per alcuni secondi senza motivo, sempre quando Sel\u00e9n sta per prendere una decisione importante.",
+        "front_text_color_mode": "auto"
+      },
+      "weight": 1.0,
+      "rarity": null
+    },
+    {
+      "id": "9e8ffac4-d786-4163-ba0b-b4da9ba59bc2",
+      "name": "Il sogno dell'acqua bianca",
+      "shape": "CIRCLE",
+      "front_type": "TEXT",
+      "front_value": "<Il sogno dell'acqua bianca>|Una laguna immobile, qualcosa di bianco e luminoso. \"Non la salver\u00e0.\"",
+      "back_value": ".runtime\\gui\\assets\\back.png",
+      "categories": [
+        "PG>Sel\u00e9n>Eco"
+      ],
+      "tags": [
+        "Sel\u00e9n",
+        "Eco"
+      ],
+      "metadata": {
+        "front_text": "<Il sogno dell'acqua bianca>|Una laguna immobile, qualcosa di bianco e luminoso. \"Non la salver\u00e0.\"",
+        "tip_text": "<Il sogno dell'acqua bianca>|Eco \u2014 Sel\u00e9n|Sogna spesso una laguna immobile e sotto la superficie cresce qualcosa di bianco e luminoso. Quando cerca di raggiungerla, una voce sussurra: \"Non la salver\u00e0.\"",
+        "front_text_color_mode": "auto"
       },
       "weight": 1.0,
       "rarity": null

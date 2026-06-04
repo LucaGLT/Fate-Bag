@@ -85,7 +85,7 @@
     },
     {
       "id": "e031e690-10d5-4a36-b1a0-f5d8f8733698",
-      "name": "Lak\u00f9na",
+      "name": "Lakùna",
       "shape": "PENTAGON",
       "front_type": "IMAGE",
       "front_value": "C:\\_GLT_\\Qt Prj\\Fate-Bag\\Fate-Bag\\assets\\images\\token_fronts\\Lakuna.png",
@@ -124,7 +124,7 @@
       "categories": [],
       "tags": [
         "Nariel",
-        "Abilit\u00e0"
+        "Abilità"
       ],
       "metadata": {},
       "weight": 1.0,
