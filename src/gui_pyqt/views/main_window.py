@@ -1296,11 +1296,10 @@ class MainWindow(QMainWindow):
         self.move(target_x, target_y)
 
     def _insert_selected_into_bag(self, selected_ids: list, *, status_prefix: str) -> None:
-        session = self.controller.create_session_from_selection(selected_ids)
-        self._last_inserted_token_ids = {
-            str(table_token.token_id)
-            for table_token in session.table_tokens
-        }
+        session = self.controller.add_tokens_to_bag_from_selection(selected_ids)
+        selected_token_ids = {str(token_id) for token_id in selected_ids}
+        session_token_ids = {str(table_token.token_id) for table_token in session.table_tokens}
+        self._last_inserted_token_ids = selected_token_ids & session_token_ids
         self._refresh_list()
 
         shuffle_count = max(0, int(self._auto_shuffle_after_insert_count))

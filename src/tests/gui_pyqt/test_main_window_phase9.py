@@ -1,6 +1,7 @@
 import os
 import json
 from pathlib import Path
+from uuid import UUID
 
 import pytest
 from PyQt6.QtCore import Qt
@@ -980,6 +981,57 @@ def test_new_token_can_be_inserted_into_bag_without_json_reload(window):
 
     assert status.startswith("Inseriti in Bag")
     assert new_token_id in current_ids
+
+
+def test_insert_into_bag_adds_selected_without_clearing_existing(window):
+    window._on_load_tokens()
+
+    for index in range(window.token_list.count()):
+        window.token_list.item(index).setCheckState(Qt.CheckState.Unchecked)
+    window.token_list.item(0).setCheckState(Qt.CheckState.Checked)
+    window.token_list.item(1).setCheckState(Qt.CheckState.Checked)
+
+    window._on_create_session_from_selection()
+    first_inserted_ids = {
+        table_token.token_id
+        for table_token in window.controller.current_session.table_tokens
+    }
+
+    for index in range(window.token_list.count()):
+        window.token_list.item(index).setCheckState(Qt.CheckState.Unchecked)
+    window.token_list.item(2).setCheckState(Qt.CheckState.Checked)
+    newly_selected_id = UUID(window.token_list.item(2).data(Qt.ItemDataRole.UserRole))
+
+    window._on_create_session_from_selection()
+    status = window.status_label.text()
+    current_ids = {
+        table_token.token_id
+        for table_token in window.controller.current_session.table_tokens
+    }
+
+    _debug_case(
+        "Insert into bag adds selected without clearing existing",
+        {
+            "first_inserted_count": len(first_inserted_ids),
+            "newly_selected_id": str(newly_selected_id),
+        },
+        {
+            "status_starts_with": "Inseriti in Bag",
+            "previous_ids_still_present": True,
+            "newly_selected_present": True,
+            "count_increased_by_one": True,
+        },
+        {
+            "status": status,
+            "first_inserted_ids": sorted(str(token_id) for token_id in first_inserted_ids),
+            "current_ids": sorted(str(token_id) for token_id in current_ids),
+        },
+    )
+
+    assert status.startswith("Inseriti in Bag")
+    assert first_inserted_ids.issubset(current_ids)
+    assert newly_selected_id in current_ids
+    assert len(current_ids) == len(first_inserted_ids) + 1
 
 
 def test_duplicate_selected_tokens_button(window):

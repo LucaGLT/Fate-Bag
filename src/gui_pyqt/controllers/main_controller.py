@@ -121,6 +121,43 @@ class MainController:
         self.current_session = self._session_service.start_session(use_token_ids=token_ids, seed=seed)
         return self.current_session
 
+    def add_tokens_to_bag_from_selection(self, token_ids: list[UUID]) -> Session:
+        selected_ids = self._normalize_selected_token_ids(token_ids)
+        self._ensure_services_ready()
+
+        if self.current_session is None:
+            return self.create_session_from_selection(selected_ids)
+
+        for token_id in selected_ids:
+            if token_id not in self._tokens_by_id:
+                raise ValueError(f"Token non trovato: {token_id}")
+
+        existing_ids = {table_token.token_id for table_token in self.current_session.table_tokens}
+        new_ids = [token_id for token_id in selected_ids if token_id not in existing_ids]
+
+        for token_id in new_ids:
+            self.current_session.table_tokens.append(
+                TableToken(
+                    token_id=token_id,
+                    state=TokenState.FACE_DOWN,
+                    x=0.0,
+                    y=0.0,
+                    z=0.0,
+                    rotation=0.0,
+                )
+            )
+
+        positions = self._generate_grid_positions(len(self.current_session.table_tokens))
+        for index, table_token in enumerate(self.current_session.table_tokens):
+            x, y = positions[index]
+            table_token.x = x
+            table_token.y = y
+            table_token.z = 0.0
+            table_token.rotation = 0.0
+
+        self._session_repo.save(self.current_session)
+        return self.current_session
+
     def create_new_token(self) -> Token:
         existing_names = {token.name for token in self._tokens}
         base_name = "Nuovo Token"
