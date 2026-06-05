@@ -127,49 +127,6 @@
       "rarity": "legendary"
     },
     {
-      "id": "55c84d2b-d454-480a-ab55-a6817b8e5b0e",
-      "name": "Novizio di Egonya",
-      "shape": "CIRCLE",
-      "front_type": "TEXT_IMAGE",
-      "front_value": "token_fronts\\PG_Nariel_Veyr_Ligh-Gray.png",
-      "back_value": "token_backs\\PG_Nariel_Veyr.PNG",
-      "categories": [
-        "PG>Nariel>Caratteristica"
-      ],
-      "tags": [
-        "Nariel",
-        "Caratteristica"
-      ],
-      "metadata": {
-        "front_text": "<Novizio di Egonya>|Riti e le leggende legate al culto di Egonya",
-        "tip_text": "<Novizio di Egonya>|Caratteristica \u2014 Nariel|Conosce i riti e le leggende legate al culto di Egonya.",
-        "front_text_color_mode": "auto"
-      },
-      "weight": 1.0,
-      "rarity": null
-    },
-    {
-      "id": "4c606014-ad43-4ebe-aa85-6b0f9a5ae405",
-      "name": "Esperienza in Mare",
-      "shape": "CIRCLE",
-      "front_type": "TEXT_IMAGE",
-      "front_value": "token_fronts\\PG_Nariel_Veyr_Ligh-Gray.png",
-      "back_value": "token_backs\\PG_Nariel_Veyr.PNG",
-      "categories": [
-        "PG>Nariel>Abilit\u00e0"
-      ],
-      "tags": [
-        "Nariel",
-        "Abilit\u00e0"
-      ],
-      "metadata": {
-        "front_text": "<Esperienza in Mare>|da anni di pesca d'altura",
-        "tip_text": "<Esperienza in Mare>|Abilit\u00e0 \u2014 Nariel|Anni di navigazione e pesca d'altura lo rendono adatto alla sopravvivenza in mare.|Riconosce correnti e tempeste."
-      },
-      "weight": 1.0,
-      "rarity": null
-    },
-    {
       "id": "ebc3ae24-198c-45b3-9b93-fc63de44a4ab",
       "name": "Navigazione Esperta",
       "shape": "CIRCLE",
@@ -1034,6 +991,328 @@
       "metadata": {
         "front_text": "<Il Nome Cancellato>|Durante il rito finale, il suo nome cancellato dal registro",
         "tip_text": "<Il Nome Cancellato>|*Yedid \u2014 Ricordo*\nDurante il rito finale trov\u00f2 il proprio nome cancellato da un antico registro sacerdotale. Al suo posto era comparsa una sola parola: \"Scegli.\"",
+        "front_text_color_mode": "auto"
+      },
+      "weight": 1.0,
+      "rarity": null
+    },
+    {
+      "id": "22222222-2222-2222-2222-222222222101",
+      "name": "Pescatore",
+      "shape": "CIRCLE",
+      "front_type": "TEXT_IMAGE",
+      "front_value": "token_fronts\\PG_Nariel_Veyr_Ligh-Gray.png",
+      "back_value": "token_backs\\PG_Nariel_Veyr.PNG",
+      "categories": [
+        "PG>N\u00e0riel>Caratteristica"
+      ],
+      "tags": [
+        "N\u00e0riel",
+        "Caratteristica"
+      ],
+      "metadata": {
+        "tip_text": "<Pescatore>|*N\u00e0riel \u2014 Caratteristica*\nConosce reti, attrezzature, navigazione e vita d'altura. Cresciuto tra le onde.",
+        "front_text": "<Pescatore>|Conosce reti, attrezzature, navigazione e vita d'altura"
+      },
+      "weight": 1.0,
+      "rarity": null
+    },
+    {
+      "id": "22222222-2222-2222-2222-222222222102",
+      "name": "Sommozzatore",
+      "shape": "CIRCLE",
+      "front_type": "TEXT_IMAGE",
+      "front_value": "token_fronts\\PG_Nariel_Veyr_Ligh-Gray.png",
+      "back_value": "token_backs\\PG_Nariel_Veyr.PNG",
+      "categories": [
+        "PG>N\u00e0riel>Caratteristica"
+      ],
+      "tags": [
+        "N\u00e0riel",
+        "Caratteristica"
+      ],
+      "metadata": {
+        "tip_text": "<Sommozzatore>|*N\u00e0riel \u2014 Caratteristica*\nHa esperienza nei fondali profondi e nelle immersioni tecniche. Conosce i segreti del Mare.",
+        "front_text": "<Sommozzatore>|Ha esperienza nei fondali profondi e nelle immersioni tecniche"
+      },
+      "weight": 1.0,
+      "rarity": null
+    },
+    {
+      "id": "22222222-2222-2222-2222-222222222103",
+      "name": "Studioso delle Leggende del Mare",
+      "shape": "CIRCLE",
+      "front_type": "TEXT_IMAGE",
+      "front_value": "token_fronts\\PG_Nariel_Veyr_Ligh-Gray.png",
+      "back_value": "token_backs\\PG_Nariel_Veyr.PNG",
+      "categories": [
+        "PG>N\u00e0riel>Caratteristica"
+      ],
+      "tags": [
+        "N\u00e0riel",
+        "Caratteristica"
+      ],
+      "metadata": {
+        "tip_text": "<Studioso delle Leggende del Mare>|*N\u00e0riel \u2014 Caratteristica*\nLe storie raccontate da Lyris gli hanno lasciato conoscenze insolite sulle citt\u00e0 sommerse.",
+        "front_text": "<Studioso delle Leggende del Mare>|Le storie di Lyris gli hanno lasciato conoscenze insospettate",
+        "front_text_color_mode": "auto"
+      },
+      "weight": 1.0,
+      "rarity": null
+    },
+    {
+      "id": "22222222-2222-2222-2222-222222222104",
+      "name": "Novizio del Culto di Egonya",
+      "shape": "CIRCLE",
+      "front_type": "TEXT_IMAGE",
+      "front_value": "token_fronts\\PG_Nariel_Veyr_Ligh-Gray.png",
+      "back_value": "token_backs\\PG_Nariel_Veyr.PNG",
+      "categories": [
+        "PG>N\u00e0riel>Caratteristica"
+      ],
+      "tags": [
+        "N\u00e0riel",
+        "Caratteristica"
+      ],
+      "metadata": {
+        "tip_text": "<Novizio del Culto di Egonya>|*N\u00e0riel \u2014 Caratteristica*\nConosce riti, simboli e pratiche della Cattedrale della Prima Eco. Cerca risposte nel riflessivo.",
+        "front_text": "<Novizio del Culto di Egonya>|Conosce riti, simboli e pratiche della Cattedrale della Prima Eco"
+      },
+      "weight": 1.0,
+      "rarity": null
+    },
+    {
+      "id": "22222222-2222-2222-2222-222222222201",
+      "name": "Conoscenza Istintiva del Mare",
+      "shape": "CIRCLE",
+      "front_type": "TEXT_IMAGE",
+      "front_value": "token_fronts\\PG_Nariel_Veyr_Ligh-Gray.png",
+      "back_value": "token_backs\\PG_Nariel_Veyr.PNG",
+      "categories": [
+        "PG>N\u00e0riel>Abilit\u00e0"
+      ],
+      "tags": [
+        "N\u00e0riel",
+        "Abilit\u00e0"
+      ],
+      "metadata": {
+        "tip_text": "<Conoscenza Istintiva del Mare>|*N\u00e0riel \u2014 Abilit\u00e0*\nAnni di pesca gli hanno insegnato a leggere il Mare come altri leggono un volto.",
+        "front_text": "<Conoscenza Istintiva del Mare>|Legge il Mare come altri leggono un volto"
+      },
+      "weight": 1.0,
+      "rarity": null
+    },
+    {
+      "id": "22222222-2222-2222-2222-222222222202",
+      "name": "Orientamento",
+      "shape": "CIRCLE",
+      "front_type": "TEXT_IMAGE",
+      "front_value": "token_fronts\\PG_Nariel_Veyr_Ligh-Gray.png",
+      "back_value": "token_backs\\PG_Nariel_Veyr.PNG",
+      "categories": [
+        "PG>N\u00e0riel>Abilit\u00e0"
+      ],
+      "tags": [
+        "N\u00e0riel",
+        "Abilit\u00e0"
+      ],
+      "metadata": {
+        "tip_text": "<Orientamento>|*N\u00e0riel \u2014 Abilit\u00e0*\nSa mantenere la rotta e leggere riferimenti naturali, anche nelle tempeste.",
+        "front_text": "<Orientamento>|Sa mantenere la rotta e leggere riferimenti naturali"
+      },
+      "weight": 1.0,
+      "rarity": null
+    },
+    {
+      "id": "22222222-2222-2222-2222-222222222203",
+      "name": "Primo Soccorso in Mare",
+      "shape": "CIRCLE",
+      "front_type": "TEXT_IMAGE",
+      "front_value": "token_fronts\\PG_Nariel_Veyr_Ligh-Gray.png",
+      "back_value": "token_backs\\PG_Nariel_Veyr.PNG",
+      "categories": [
+        "PG>N\u00e0riel>Abilit\u00e0"
+      ],
+      "tags": [
+        "N\u00e0riel",
+        "Abilit\u00e0"
+      ],
+      "metadata": {
+        "tip_text": "<Primo Soccorso in Mare>|*N\u00e0riel \u2014 Abilit\u00e0*\nSa intervenire in emergenza. Addestrato a salvare chi affonda.",
+        "front_text": "<Primo Soccorso in Mare>|Sa intervenire nelle emergenze d'altura"
+      },
+      "weight": 1.0,
+      "rarity": null
+    },
+    {
+      "id": "22222222-2222-2222-2222-222222222301",
+      "name": "Equipaggiamento per Immersione",
+      "shape": "RECTANGLE_4:3",
+      "front_type": "TEXT_IMAGE",
+      "front_value": "token_fronts\\PG_Nariel_Veyr_Ligh-Gray.png",
+      "back_value": "token_backs\\PG_Nariel_Veyr.PNG",
+      "categories": [
+        "PG>N\u00e0riel>Oggetti"
+      ],
+      "tags": [
+        "N\u00e0riel",
+        "Oggetti"
+      ],
+      "metadata": {
+        "tip_text": "<Equipaggiamento per Immersione>|*N\u00e0riel \u2014 Oggetto*\nMaschera, zavorre, cime e attrezzi da discesa.\nTutto ci\u00f2 che serve per scendere in profondit\u00e0.",
+        "front_text": "<Equipaggiamento per Immersione>|Maschera, zavorre, cime, attrezzi da discesa",
+        "front_text_color_mode": "auto"
+      },
+      "weight": 1.0,
+      "rarity": null
+    },
+    {
+      "id": "22222222-2222-2222-2222-222222222302",
+      "name": "Fucile a Fiocina e Arpione",
+      "shape": "RECTANGLE_4:3",
+      "front_type": "TEXT_IMAGE",
+      "front_value": "token_fronts\\PG_Nariel_Veyr_Ligh-Gray.png",
+      "back_value": "token_backs\\PG_Nariel_Veyr.PNG",
+      "categories": [
+        "PG>N\u00e0riel>Oggetti"
+      ],
+      "tags": [
+        "N\u00e0riel",
+        "Oggetti"
+      ],
+      "metadata": {
+        "tip_text": "<Fucile a Fiocina e Arpione>|*N\u00e0riel \u2014 Oggetto*\nFucile a fiocina e arpione, per pesca e difesa. \nAffidabile e letale.",
+        "front_text": "<Fucile a Fiocina e Arpione>|Per pesca e difesa sott'acqua",
+        "front_text_color_mode": "auto"
+      },
+      "weight": 1.0,
+      "rarity": null
+    },
+    {
+      "id": "22222222-2222-2222-2222-222222222303",
+      "name": "Strumenti da Pesca",
+      "shape": "RECTANGLE_4:3",
+      "front_type": "TEXT_IMAGE",
+      "front_value": "token_fronts\\PG_Nariel_Veyr_Ligh-Gray.png",
+      "back_value": "token_backs\\PG_Nariel_Veyr.PNG",
+      "categories": [
+        "PG>N\u00e0riel>Oggetti"
+      ],
+      "tags": [
+        "N\u00e0riel",
+        "Oggetti"
+      ],
+      "metadata": {
+        "tip_text": "<Strumenti da Pesca>|*N\u00e0riel \u2014 Oggetto*\nReti, ami, coltelli e corde. \nGli attrezzi del mestiere di pescatore.",
+        "front_text": "<Strumenti da Pesca>|Reti, ami, coltelli e corde",
+        "front_text_color_mode": "auto"
+      },
+      "weight": 1.0,
+      "rarity": null
+    },
+    {
+      "id": "22222222-2222-2222-2222-222222222304",
+      "name": "Kit di Primo Soccorso",
+      "shape": "RECTANGLE_4:3",
+      "front_type": "TEXT_IMAGE",
+      "front_value": "token_fronts\\PG_Nariel_Veyr_Ligh-Gray.png",
+      "back_value": "token_backs\\PG_Nariel_Veyr.PNG",
+      "categories": [
+        "PG>N\u00e0riel>Oggetti"
+      ],
+      "tags": [
+        "N\u00e0riel",
+        "Oggetti"
+      ],
+      "metadata": {
+        "tip_text": "<Kit di Primo Soccorso>|*N\u00e0riel \u2014 Oggetto*\n|Kit preparato per incidenti di mare. Medicamenti, bende, lacci.",
+        "front_text": "<Kit di Primo Soccorso>|Preparato per incidenti di mare"
+      },
+      "weight": 1.0,
+      "rarity": null
+    },
+    {
+      "id": "22222222-2222-2222-2222-222222222305",
+      "name": "Diario di Lyris",
+      "shape": "RECTANGLE_4:3",
+      "front_type": "TEXT_IMAGE",
+      "front_value": "token_fronts\\PG_Nariel_Veyr_Ligh-Gray.png",
+      "back_value": "token_backs\\PG_Nariel_Veyr.PNG",
+      "categories": [
+        "PG>N\u00e0riel>Oggetti"
+      ],
+      "tags": [
+        "N\u00e0riel",
+        "Oggetti"
+      ],
+      "metadata": {
+        "tip_text": "<Diario di Lyris>|*N\u00e0riel \u2014 Oggetto*\nTaccuino consunto pieno di annotazioni, miti trascritti, \nriferimenti a siti sommersi. \nL'unica cosa che il Mare gli ha restituito.",
+        "front_text": "<Diario di Lyris>|Taccuino consunto pieno di annotazioni e riferimenti a siti sommersi",
+        "front_text_color_mode": "auto"
+      },
+      "weight": 1.0,
+      "rarity": null
+    },
+    {
+      "id": "22222222-2222-2222-2222-222222222401",
+      "name": "Lyris Veyr",
+      "shape": "RECTANGLE_5:3",
+      "front_type": "TEXT_IMAGE",
+      "front_value": "token_fronts\\PG_Nariel_Veyr_Ligh-Gray.png",
+      "back_value": "token_backs\\PG_Nariel_Veyr.PNG",
+      "categories": [
+        "PG>N\u00e0riel>Contatti"
+      ],
+      "tags": [
+        "N\u00e0riel",
+        "Contatti"
+      ],
+      "metadata": {
+        "tip_text": "<Lyris Veyr>|*N\u00e0riel \u2014 Contatto*\nSorella maggiore, studiosa delle leggende antiche, devota a Logoy-Nom\u00f2n. Cercava le citt\u00e0 sommerse. Non torn\u00f2 dalla sua ultima spedizione.",
+        "front_text": "<Lyris Veyr>|Sorella maggiore. Scomparsa negli abissi."
+      },
+      "weight": 1.0,
+      "rarity": null
+    },
+    {
+      "id": "22222222-2222-2222-2222-222222222501",
+      "name": "La Voce dal Riflesso",
+      "shape": "OCTAGON",
+      "front_type": "TEXT_IMAGE",
+      "front_value": "token_fronts\\PG_Nariel_Veyr_Ligh-Gray.png",
+      "back_value": "token_backs\\PG_Nariel_Veyr.PNG",
+      "categories": [
+        "PG>N\u00e0riel>Eco"
+      ],
+      "tags": [
+        "N\u00e0riel",
+        "Eco"
+      ],
+      "metadata": {
+        "tip_text": "**La Voce dal Riflesso**|*N\u00e0riel \u2014 Eco*\nDa mesi ode una voce provenire |dagli specchi d'acqua immobili. \nUna voce identica a quella di Lyris. \nNessun altro la sente.",
+        "front_text": "**La Voce dal Riflesso** | Una voce identica a quella di Lyris negli specchi d'acqua",
+        "front_text_color_mode": "auto"
+      },
+      "weight": 1.0,
+      "rarity": null
+    },
+    {
+      "id": "22222222-2222-2222-2222-222222222601",
+      "name": "Il Mare Che Non Restituisce",
+      "shape": "OCTAGON",
+      "front_type": "TEXT_IMAGE",
+      "front_value": "token_fronts\\PG_Nariel_Veyr_Ligh-Gray.png",
+      "back_value": "token_backs\\PG_Nariel_Veyr.PNG",
+      "categories": [
+        "PG>N\u00e0riel>Ricordi"
+      ],
+      "tags": [
+        "N\u00e0riel",
+        "Ricordi"
+      ],
+      "metadata": {
+        "tip_text": "<Il Mare Che Non Restituisce>|*N\u00e0riel \u2014 Ricordo*\nGiorni dopo che Lyris part\u00ec, il Mare restitu\u00ec il relitto \ndella sua piccola imbarcazione. \nDentro vi era soltanto il suo diario. \nDa allora N\u00e0riel non \u00e8 pi\u00f9 sceso sott'acqua.",
+        "front_text": "<Il Mare Che Non Restituisce>|La barca di Lyris torn\u00f2 con solo il suo diario",
         "front_text_color_mode": "auto"
       },
       "weight": 1.0,
