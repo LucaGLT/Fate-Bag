@@ -364,6 +364,7 @@ class MainWindow(QMainWindow):
 
         self.token_list = TokenTreeWidget()
         self.token_list.setObjectName("token_list")
+        self.token_list.setContextMenuPolicy(Qt.ContextMenuPolicy.CustomContextMenu)
         self.content_splitter.addWidget(self.token_list)
 
         self.table_scene = TokenTableScene()
@@ -409,6 +410,7 @@ class MainWindow(QMainWindow):
 
         self.token_list.itemDoubleClicked.connect(self._on_token_list_item_double_clicked)
         self.token_list.itemChanged.connect(self._on_token_list_item_changed)
+        self.token_list.customContextMenuRequested.connect(self._on_token_list_context_menu)
 
     def _on_load_tokens(self, token_file: str | bool | None = None) -> None:
         try:
@@ -739,10 +741,16 @@ class MainWindow(QMainWindow):
             from uuid import UUID
 
             clicked_uuid = UUID(clicked_token_id)
-            if item.checkState(0) != Qt.CheckState.Checked:
-                item.setCheckState(0, Qt.CheckState.Checked)
-            selected_ids = list(self._checked_token_ids_from_ui())
-            target_ids = selected_ids if selected_ids else [clicked_uuid]
+            
+            self.token_list.blockSignals(True)
+            for index in range(self.token_list.count()):
+                self.token_list.item(index).setCheckState(0, Qt.CheckState.Unchecked)
+            item.setCheckState(0, Qt.CheckState.Checked)
+            self.token_list.blockSignals(False)
+            self._update_all_parent_check_states()
+            self._sync_scene_selection_from_checkboxes()
+            
+            target_ids = [clicked_uuid]
 
             clicked_token = self.controller.token_for_id(clicked_uuid)
 
@@ -818,6 +826,61 @@ class MainWindow(QMainWindow):
             self._refresh_list()
         except Exception as exc:
             self.status_label.setText(f"Errore edit lista: {exc}")
+
+    def _on_token_list_context_menu(self, pos) -> None:
+        try:
+            item = self.token_list.itemAt(pos)
+            if item is None:
+                return
+
+            clicked_token_id = item.data(0, Qt.ItemDataRole.UserRole)
+            if not clicked_token_id:
+                return
+
+            from uuid import UUID
+
+            clicked_uuid = UUID(clicked_token_id)
+            
+            selected_ids = list(self._checked_token_ids_from_ui())
+            if not selected_ids:
+                selected_ids = [clicked_uuid]
+            elif clicked_uuid not in selected_ids:
+                selected_ids.append(clicked_uuid)
+
+            clicked_token = self.controller.token_for_id(clicked_uuid)
+
+            default_mode = self._display_mode_for_token(clicked_token)
+            dialog = TokenEditDialog(
+                default_name=clicked_token.name,
+                default_text=self.controller.front_text_for_token(clicked_uuid),
+                default_tip_text=self.controller.tip_text_for_token(clicked_uuid),
+                default_tags=clicked_token.tags,
+                default_shape=clicked_token.shape,
+                default_mode=default_mode,
+                parent=self,
+            )
+            if dialog.exec() != QDialog.DialogCode.Accepted:
+                self.status_label.setText("Modifica token annullata")
+                return
+
+            dialog_name, dialog_text, dialog_tip_text, dialog_tags, dialog_shape, dialog_mode = dialog.values()
+
+            parsed_tags = self._parse_tags_input(dialog_tags or "")
+            chosen_shape = dialog_shape if isinstance(dialog_shape, TokenShape) else clicked_token.shape
+
+            updated_count = self.controller.apply_token_metadata_to_tokens(
+                selected_ids,
+                name=dialog_name,
+                text=dialog_text,
+                tip_text=dialog_tip_text,
+                tags=parsed_tags,
+                shape=chosen_shape,
+                display_mode=dialog_mode,
+            )
+            self.status_label.setText(f"Token aggiornati da context menu su {updated_count} token")
+            self._refresh_list()
+        except Exception as exc:
+            self.status_label.setText(f"Errore context menu: {exc}")
 
     def _on_reveal_all(self) -> None:
         try:

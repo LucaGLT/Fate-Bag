@@ -664,12 +664,12 @@ def test_front_text_edit_updates_text_in_text_and_text_image_modes(window, tmp_p
 
 
 def test_front_text_edit_directly_from_checkbox_list(window):
+    """Double-click selects ONLY the double-clicked token."""
     window._on_load_tokens()
 
     for index in range(window.token_list.count()):
         window.token_list.item(index).setCheckState(Qt.CheckState.Unchecked)
 
-    # Token 0 starts unchecked on purpose to verify auto-select on double click.
     window.token_list.item(1).setCheckState(Qt.CheckState.Checked)
 
     from uuid import UUID
@@ -686,7 +686,7 @@ def test_front_text_edit_directly_from_checkbox_list(window):
     token2 = window.controller._tokens_by_id[token2_id]
 
     _debug_case(
-        "Front text edited directly from checkbox list",
+        "Double-click selects ONLY that token",
         {
             "checked_tokens_before": [str(token1_id)],
             "double_clicked_row": str(token0_id),
@@ -694,9 +694,8 @@ def test_front_text_edit_directly_from_checkbox_list(window):
         },
         {
             "status_starts_with": "Token aggiornati da lista",
-            "double_clicked_auto_selected": True,
-            "checked_tokens_updated": True,
-            "unchecked_token_unchanged": True,
+            "only_double_clicked_modified": True,
+            "others_unchanged": True,
         },
         {
             "status": window.status_label.text(),
@@ -725,17 +724,12 @@ def test_front_text_edit_directly_from_checkbox_list(window):
         token0.front_value == "Testo Da Lista"
         or token0.metadata.get("front_text") == "Testo Da Lista"
     )
-    assert (
-        token1.front_value == "Testo Da Lista"
-        or token1.metadata.get("front_text") == "Testo Da Lista"
-    )
-    assert (
-        token2.front_value != "Testo Da Lista"
-        and token2.metadata.get("front_text") != "Testo Da Lista"
-    )
+    assert token1.front_value != "Testo Da Lista" and token1.metadata.get("front_text") != "Testo Da Lista"
+    assert token2.front_value != "Testo Da Lista" and token2.metadata.get("front_text") != "Testo Da Lista"
 
 
 def test_token_popup_edit_updates_name_tags_shape_for_selected_tokens(window):
+    """Double-click selects ONLY that token, regardless of previous selection."""
     window._on_load_tokens()
 
     for index in range(window.token_list.count()):
@@ -764,9 +758,10 @@ def test_token_popup_edit_updates_name_tags_shape_for_selected_tokens(window):
     token2 = window.controller._tokens_by_id[token2_id]
 
     _debug_case(
-        "Popup token edit updates selected tokens",
+        "Double-click deselects others and updates ONLY the double-clicked token",
         {
-            "selected_count": 2,
+            "selected_before": [str(token0_id), str(token1_id)],
+            "double_clicked": str(token0_id),
             "name": "Token Multi Edit",
             "tags": ["alpha", "beta", "gamma"],
             "shape": TokenShape.OCTAGON.value,
@@ -774,7 +769,7 @@ def test_token_popup_edit_updates_name_tags_shape_for_selected_tokens(window):
         {
             "status_starts_with": "Token aggiornati da lista",
             "token0_updated": True,
-            "token1_updated": True,
+            "token1_unchanged": True,
             "token2_unchanged": True,
         },
         {
@@ -799,15 +794,14 @@ def test_token_popup_edit_updates_name_tags_shape_for_selected_tokens(window):
 
     assert window.status_label.text().startswith("Token aggiornati da lista")
     assert token0.name == "Token Multi Edit"
-    assert token1.name == "Token Multi Edit"
     assert token0.tags == ["alpha", "beta", "gamma"]
-    assert token1.tags == ["alpha", "beta", "gamma"]
     assert token0.shape == TokenShape.OCTAGON
-    assert token1.shape == TokenShape.OCTAGON
+    assert token1.name != "Token Multi Edit"
     assert token2.name != "Token Multi Edit"
 
 
 def test_token_popup_edit_updates_tip_text_for_selected_tokens(window):
+    """Double-click selects ONLY that token, regardless of previous selection."""
     window._on_load_tokens()
 
     for index in range(window.token_list.count()):
@@ -836,11 +830,15 @@ def test_token_popup_edit_updates_tip_text_for_selected_tokens(window):
     token2 = window.controller._tokens_by_id[token2_id]
 
     _debug_case(
-        "Popup token edit updates tip_text metadata",
-        {"selected_count": 2, "tip_text": "<Dettagli>|riga uno|riga due"},
+        "Double-click updates ONLY that token's tip_text metadata",
+        {
+            "selected_before": [str(token0_id), str(token1_id)],
+            "double_clicked": str(token0_id),
+            "tip_text": "<Dettagli>|riga uno|riga due",
+        },
         {
             "token0_tip_text": "<Dettagli>|riga uno|riga due",
-            "token1_tip_text": "<Dettagli>|riga uno|riga due",
+            "token1_tip_text_unchanged": True,
             "token2_tip_text_unchanged": True,
         },
         {
@@ -851,7 +849,7 @@ def test_token_popup_edit_updates_tip_text_for_selected_tokens(window):
     )
 
     assert token0.metadata.get("tip_text") == "<Dettagli>|riga uno|riga due"
-    assert token1.metadata.get("tip_text") == "<Dettagli>|riga uno|riga due"
+    assert token1.metadata.get("tip_text") != "<Dettagli>|riga uno|riga due"
     assert token2.metadata.get("tip_text") != "<Dettagli>|riga uno|riga due"
 
 
