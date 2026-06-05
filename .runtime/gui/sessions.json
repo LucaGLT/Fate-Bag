@@ -16383,5 +16383,172 @@
       "cec33cca-27c2-4255-a4b4-ba0fea764ad0"
     ],
     "created_at": "2026-06-04T15:15:51.161211Z"
+  },
+  {
+    "session_id": "b33e37bb-d2e6-470e-88e1-d9ebfcc00965",
+    "seed": null,
+    "table_tokens": [
+      {
+        "token_id": "7ce50fef-ffb2-4231-81ea-5792d99dc2f9",
+        "state": "FACE_UP",
+        "x": 10.0,
+        "y": 10.0,
+        "z": 0.0,
+        "rotation": 0.0
+      },
+      {
+        "token_id": "7a1d9c31-2125-4c58-b53a-0c4cdd9edfe0",
+        "state": "FACE_UP",
+        "x": 50.0,
+        "y": 10.0,
+        "z": 0.0,
+        "rotation": 0.0
+      },
+      {
+        "token_id": "16d3e7d1-22f2-4c85-9aa7-c4a5cde07d4f",
+        "state": "FACE_UP",
+        "x": 90.0,
+        "y": 10.0,
+        "z": 0.0,
+        "rotation": 0.0
+      },
+      {
+        "token_id": "5ab36b8d-107f-4a16-ae0e-e9223f7be459",
+        "state": "FACE_UP",
+        "x": 10.0,
+        "y": 90.0,
+        "z": 0.0,
+        "rotation": 0.0
+      },
+      {
+        "token_id": "ebc3ae24-198c-45b3-9b93-fc63de44a4ab",
+        "state": "FACE_UP",
+        "x": 50.0,
+        "y": 90.0,
+        "z": 0.0,
+        "rotation": 0.0
+      },
+      {
+        "token_id": "a8b29eeb-e71a-4147-aeaf-c984115b3c00",
+        "state": "FACE_UP",
+        "x": 90.0,
+        "y": 90.0,
+        "z": 0.0,
+        "rotation": 0.0
+      }
+    ],
+    "draw_history": [
+      "5ab36b8d-107f-4a16-ae0e-e9223f7be459",
+      "ebc3ae24-198c-45b3-9b93-fc63de44a4ab",
+      "7ce50fef-ffb2-4231-81ea-5792d99dc2f9",
+      "a8b29eeb-e71a-4147-aeaf-c984115b3c00",
+      "7a1d9c31-2125-4c58-b53a-0c4cdd9edfe0",
+      "ebc3ae24-198c-45b3-9b93-fc63de44a4ab"
+    ],
+    "created_at": "2026-06-05T16:24:56.410164Z"
+  },
+  {
+    "session_id": "98ad2e2c-d237-457d-85d5-283d8f78cede",
+    "seed": null,
+    "table_tokens": [
+      {
+        "token_id": "7ce50fef-ffb2-4231-81ea-5792d99dc2f9",
+        "state": "FACE_DOWN",
+        "x": 10.0,
+        "y": 10.0,
+        "z": 0.0,
+        "rotation": 0.0
+      },
+      {
+        "token_id": "c115c19a-767c-46bf-9e89-4fb119edce83",
+        "state": "FACE_DOWN",
+        "x": 50.0,
+        "y": 10.0,
+        "z": 0.0,
+        "rotation": 0.0
+      },
+      {
+        "token_id": "4c31e172-bdc9-4f9f-bc42-ee63dc3a3acf",
+        "state": "FACE_DOWN",
+        "x": 90.0,
+        "y": 10.0,
+        "z": 0.0,
+        "rotation": 0.0
+      },
+      {
+        "token_id": "16d3e7d1-22f2-4c85-9aa7-c4a5cde07d4f",
+        "state": "FACE_DOWN",
+        "x": 10.0,
+        "y": 50.0,
+        "z": 0.0,
+        "rotation": 0.0
+      },
+      {
+        "token_id": "5ab36b8d-107f-4a16-ae0e-e9223f7be459",
+        "state": "FACE_DOWN",
+        "x": 50.0,
+        "y": 50.0,
+        "z": 0.0,
+        "rotation": 0.0
+      },
+      {
+        "token_id": "a8b29eeb-e71a-4147-aeaf-c984115b3c00",
+        "state": "FACE_DOWN",
+        "x": 90.0,
+        "y": 50.0,
+        "z": 0.0,
+        "rotation": 0.0
+      },
+      {
+        "token_id": "cfb1c5fd-1e4d-4d4a-adef-fed9e731a0a7",
+        "state": "FACE_DOWN",
+        "x": 10.0,
+        "y": 90.0,
+        "z": 0.0,
+        "rotation": 0.0
+      }
+    ],
+    "draw_history": [],
+    "created_at": "2026-06-05T17:31:40.092438Z"
+  },
+  {
+    "session_id": "d9f93d3a-7ad6-4b46-995c-d7929ffee3be",
+    "seed": null,
+    "table_tokens": [
+      {
+        "token_id": "16d3e7d1-22f2-4c85-9aa7-c4a5cde07d4f",
+        "state": "FACE_UP",
+        "x": 10.0,
+        "y": 10.0,
+        "z": 0.0,
+        "rotation": 0.0
+      },
+      {
+        "token_id": "a8b29eeb-e71a-4147-aeaf-c984115b3c00",
+        "state": "FACE_UP",
+        "x": 90.0,
+        "y": 10.0,
+        "z": 0.0,
+        "rotation": 0.0
+      },
+      {
+        "token_id": "5ab36b8d-107f-4a16-ae0e-e9223f7be459",
+        "state": "FACE_UP",
+        "x": 10.0,
+        "y": 90.0,
+        "z": 0.0,
+        "rotation": 0.0
+      },
+      {
+        "token_id": "7ce50fef-ffb2-4231-81ea-5792d99dc2f9",
+        "state": "FACE_UP",
+        "x": 90.0,
+        "y": 90.0,
+        "z": 0.0,
+        "rotation": 0.0
+      }
+    ],
+    "draw_history": [],
+    "created_at": "2026-06-05T17:34:58.147765Z"
   }
 ]

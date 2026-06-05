@@ -345,9 +345,9 @@ class MainWindow(QMainWindow):
         self.reinsert_bag_btn.setToolTip("Reinserisce l'ultimo insieme inserito")
         self.controls_grid.addWidget(self.reinsert_bag_btn, 0, 9)
 
-        self.reset_btn = QPushButton("Svuota Bag")
+        self.reset_btn = QPushButton("Togli dalla Bag")
         self.reset_btn.setObjectName("reset_btn")
-        self.reset_btn.setToolTip("Svuota completamente la Bag")
+        self.reset_btn.setToolTip("Rimuove dalla Bag i token selezionati (o tutti se nessuno selezionato)")
         self.controls_grid.addWidget(self.reset_btn, 1, 9)
 
         layout.addLayout(self.controls_grid)
@@ -371,6 +371,7 @@ class MainWindow(QMainWindow):
         self.table_view.setObjectName("table_view")
         self.table_view.setRenderHint(QPainter.RenderHint.Antialiasing, True)
         self.table_view.setRenderHint(QPainter.RenderHint.SmoothPixmapTransform, True)
+        self.table_view.setDragMode(QGraphicsView.DragMode.RubberBandDrag)
         self.content_splitter.addWidget(self.table_view)
 
         self.content_splitter.setStretchFactor(0, 1)
@@ -834,15 +835,20 @@ class MainWindow(QMainWindow):
 
     def _on_reset(self) -> None:
         try:
-            self.controller.clear_bag()
+            selected_ids = list(self._checked_token_ids_from_ui())
+            if selected_ids:
+                removed = self.controller.remove_tokens_from_bag(selected_ids)
+                self.status_label.setText(f"Tolti dalla Bag: {removed}")
+            else:
+                self.controller.clear_bag()
+                self.status_label.setText("Bag svuotata")
             self.token_list.blockSignals(True)
             for index in range(self.token_list.count()):
                 self.token_list.item(index).setCheckState(0, Qt.CheckState.Unchecked)
             self.token_list.blockSignals(False)
-            self.status_label.setText("Bag svuotato")
             self._refresh_list()
         except Exception as exc:
-            self.status_label.setText(f"Errore reset: {exc}")
+            self.status_label.setText(f"Errore togli da bag: {exc}")
 
     def _on_scene_token_flip(self, token_id: str) -> None:
         try:

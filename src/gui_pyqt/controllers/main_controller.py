@@ -406,6 +406,21 @@ class MainController:
         self._session_service.close_session(self.current_session.session_id)
         self.current_session = None
 
+    def remove_tokens_from_bag(self, token_ids: list[UUID]) -> int:
+        self._ensure_session_ready()
+        selected_set = set(token_ids)
+        before = len(self.current_session.table_tokens)
+        self.current_session.table_tokens = [
+            tt for tt in self.current_session.table_tokens if tt.token_id not in selected_set
+        ]
+        removed = before - len(self.current_session.table_tokens)
+        if self.current_session.table_tokens:
+            self._session_repo.save(self.current_session)
+        else:
+            self._session_service.close_session(self.current_session.session_id)
+            self.current_session = None
+        return removed
+
     def table_rows(self) -> list[str]:
         entries = self.token_status_entries()
         return [f"{entry['name']} | {entry['status']}" for entry in entries]

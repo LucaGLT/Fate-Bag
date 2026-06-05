@@ -411,16 +411,27 @@ class TokenGraphicsItem(QGraphicsObject):
             return f"<{name}>|*{tags_part}*|{front_text}"
         return f"<{name}>|*{tags_part}*"
 
+    def _face_down_tooltip_text(self) -> str:
+        tags = [str(tag).strip() for tag in self.token.tags if str(tag).strip()]
+        if tags:
+            return " - ".join(tags)
+        return ""
+
     def _tip_overlay_rect(self) -> QRectF | None:
         if not self._hover_preview_enabled or not self._hover_preview_active:
             return None
 
-        tip_text = self._tip_text()
-        if not tip_text:
+        from src.core.models.enums import TokenState as _TS
+        if self.table_token.state == _TS.FACE_DOWN:
+            display_text = self._face_down_tooltip_text()
+        else:
+            display_text = self._tip_text()
+
+        if not display_text:
             return None
 
         document = self._create_text_document(
-            tip_text,
+            display_text,
             color="#f4f7fb",
             width=max(180.0, self.size * 2.75),
             font_px=self._tip_text_font_px,
@@ -437,7 +448,11 @@ class TokenGraphicsItem(QGraphicsObject):
         if overlay_rect is None:
             return
 
-        tip_text = self._tip_text().replace("|", "\n")
+        from src.core.models.enums import TokenState as _TS
+        if self.table_token.state == _TS.FACE_DOWN:
+            tip_text = self._face_down_tooltip_text()
+        else:
+            tip_text = self._tip_text().replace("|", "\n")
         inner_rect = overlay_rect.adjusted(10.0, 9.0, -10.0, -9.0)
         document = self._create_text_document(
             tip_text,

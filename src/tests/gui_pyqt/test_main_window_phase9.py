@@ -95,7 +95,7 @@ def test_main_window_has_required_controls(window):
                 "Front-Img Delete",
                 "Back-Img Upload",
                 "Back-Img Delete",
-                "Svuota Bag",
+                "Togli dalla Bag",
             ]
         },
         controls,
@@ -125,7 +125,7 @@ def test_main_window_has_required_controls(window):
     assert controls["front_img_delete_btn"] == "Front-Img Delete"
     assert controls["back_img_upload_btn"] == "Back-Img Upload"
     assert controls["back_img_delete_btn"] == "Back-Img Delete"
-    assert controls["reset_btn"] == "Svuota Bag"
+    assert controls["reset_btn"] == "Togli dalla Bag"
 
 
 def test_all_main_window_buttons_have_tooltip(window):
