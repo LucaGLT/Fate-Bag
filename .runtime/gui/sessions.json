@@ -16550,5 +16550,174 @@
     ],
     "draw_history": [],
     "created_at": "2026-06-05T17:34:58.147765Z"
+  },
+  {
+    "session_id": "cad412ed-f41c-4714-9e4a-58839a997972",
+    "seed": null,
+    "table_tokens": [
+      {
+        "token_id": "7ce50fef-ffb2-4231-81ea-5792d99dc2f9",
+        "state": "FACE_UP",
+        "x": 10.0,
+        "y": 10.0,
+        "z": 0.0,
+        "rotation": 0.0
+      },
+      {
+        "token_id": "4c31e172-bdc9-4f9f-bc42-ee63dc3a3acf",
+        "state": "FACE_DOWN",
+        "x": 25.96,
+        "y": 34.278,
+        "z": 0.0,
+        "rotation": 0.0
+      },
+      {
+        "token_id": "b41df6ba-839b-49cc-b436-08f3ef425003",
+        "state": "FACE_DOWN",
+        "x": 50.0,
+        "y": 10.0,
+        "z": 0.0,
+        "rotation": 0.0
+      },
+      {
+        "token_id": "5ab36b8d-107f-4a16-ae0e-e9223f7be459",
+        "state": "FACE_DOWN",
+        "x": 40.216,
+        "y": 59.915,
+        "z": 0.0,
+        "rotation": 0.0
+      },
+      {
+        "token_id": "c115c19a-767c-46bf-9e89-4fb119edce83",
+        "state": "FACE_DOWN",
+        "x": 50.0,
+        "y": 36.667,
+        "z": 0.0,
+        "rotation": 0.0
+      },
+      {
+        "token_id": "cec33cca-27c2-4255-a4b4-ba0fea764ad0",
+        "state": "FACE_DOWN",
+        "x": 90.0,
+        "y": 36.667,
+        "z": 0.0,
+        "rotation": 0.0
+      },
+      {
+        "token_id": "3c8b9877-5ca7-40fe-9030-894529763b1e",
+        "state": "FACE_DOWN",
+        "x": 16.003,
+        "y": 58.409,
+        "z": 0.0,
+        "rotation": 0.0
+      },
+      {
+        "token_id": "cfb1c5fd-1e4d-4d4a-adef-fed9e731a0a7",
+        "state": "FACE_DOWN",
+        "x": 70.0,
+        "y": 63.333,
+        "z": 0.0,
+        "rotation": 0.0
+      },
+      {
+        "token_id": "9e8ffac4-d786-4163-ba0b-b4da9ba59bc2",
+        "state": "FACE_DOWN",
+        "x": 90.0,
+        "y": 63.333,
+        "z": 0.0,
+        "rotation": 0.0
+      },
+      {
+        "token_id": "a8b29eeb-e71a-4147-aeaf-c984115b3c00",
+        "state": "FACE_DOWN",
+        "x": 10.0,
+        "y": 90.0,
+        "z": 0.0,
+        "rotation": 0.0
+      },
+      {
+        "token_id": "16d3e7d1-22f2-4c85-9aa7-c4a5cde07d4f",
+        "state": "FACE_UP",
+        "x": 50.0,
+        "y": 90.0,
+        "z": 0.0,
+        "rotation": 0.0
+      }
+    ],
+    "draw_history": [],
+    "created_at": "2026-06-05T18:01:14.309655Z"
+  },
+  {
+    "session_id": "190b25e9-914e-4a4d-9b03-9cd4dd264c96",
+    "seed": null,
+    "table_tokens": [
+      {
+        "token_id": "c115c19a-767c-46bf-9e89-4fb119edce83",
+        "state": "FACE_UP",
+        "x": 10.0,
+        "y": 10.0,
+        "z": 0.0,
+        "rotation": 0.0
+      },
+      {
+        "token_id": "4c31e172-bdc9-4f9f-bc42-ee63dc3a3acf",
+        "state": "FACE_UP",
+        "x": 50.0,
+        "y": 10.0,
+        "z": 0.0,
+        "rotation": 0.0
+      },
+      {
+        "token_id": "a8b29eeb-e71a-4147-aeaf-c984115b3c00",
+        "state": "FACE_UP",
+        "x": 90.0,
+        "y": 10.0,
+        "z": 0.0,
+        "rotation": 0.0
+      },
+      {
+        "token_id": "7ce50fef-ffb2-4231-81ea-5792d99dc2f9",
+        "state": "FACE_UP",
+        "x": 10.0,
+        "y": 50.0,
+        "z": 0.0,
+        "rotation": 0.0
+      },
+      {
+        "token_id": "16d3e7d1-22f2-4c85-9aa7-c4a5cde07d4f",
+        "state": "FACE_DOWN",
+        "x": 50.0,
+        "y": 50.0,
+        "z": 0.0,
+        "rotation": 0.0
+      },
+      {
+        "token_id": "5ab36b8d-107f-4a16-ae0e-e9223f7be459",
+        "state": "FACE_DOWN",
+        "x": 90.0,
+        "y": 50.0,
+        "z": 0.0,
+        "rotation": 0.0
+      },
+      {
+        "token_id": "cfb1c5fd-1e4d-4d4a-adef-fed9e731a0a7",
+        "state": "FACE_DOWN",
+        "x": 10.0,
+        "y": 90.0,
+        "z": 0.0,
+        "rotation": 0.0
+      }
+    ],
+    "draw_history": [
+      "4c31e172-bdc9-4f9f-bc42-ee63dc3a3acf",
+      "7ce50fef-ffb2-4231-81ea-5792d99dc2f9",
+      "c115c19a-767c-46bf-9e89-4fb119edce83",
+      "5ab36b8d-107f-4a16-ae0e-e9223f7be459",
+      "7ce50fef-ffb2-4231-81ea-5792d99dc2f9",
+      "5ab36b8d-107f-4a16-ae0e-e9223f7be459",
+      "7ce50fef-ffb2-4231-81ea-5792d99dc2f9",
+      "a8b29eeb-e71a-4147-aeaf-c984115b3c00"
+    ],
+    "created_at": "2026-06-05T18:09:22.424107Z"
   }
 ]

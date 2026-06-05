@@ -9,7 +9,7 @@ from PyQt6.QtGui import QImage, QColor
 from PyQt6.QtCore import QRect
 from PyQt6.QtWidgets import QApplication, QFileDialog, QInputDialog
 
-from src.core.models.enums import TokenFrontType, TokenShape
+from src.core.models.enums import TokenFrontType, TokenShape, TokenState
 from src.gui_pyqt.controllers.main_controller import MainController
 from src.gui_pyqt.views.main_window import MainWindow
 from src.gui_pyqt.views.main_window import TokenEditDialog
@@ -358,57 +358,73 @@ def test_load_tokens_ignores_clicked_bool_argument(window):
     assert status.startswith("Token caricati")
 
 
-def test_reinsert_bag_restores_previous_inserted_selection(window):
+def test_reinsert_bag_hides_selected_tokens(window):
+    """Rimetti in Bag con selezione → FACE_DOWN solo i token selezionati"""
     window._on_load_tokens()
+    window._on_select_all_tokens()
+    window._on_create_session_from_selection()
+    window.controller.reveal_all()
 
-    for index in range(window.token_list.count()):
-        window.token_list.item(index).setCheckState(Qt.CheckState.Unchecked)
-
+    window._on_deselect_all_tokens()
     window.token_list.item(0).setCheckState(Qt.CheckState.Checked)
     window.token_list.item(1).setCheckState(Qt.CheckState.Checked)
-    window.token_list.item(2).setCheckState(Qt.CheckState.Checked)
 
-    window._on_create_session_from_selection()
-    first_inserted_ids = {
-        str(token.id)
-        for token, _ in window.controller.scene_entries()
-    }
-
-    for index in range(window.token_list.count()):
-        window.token_list.item(index).setCheckState(Qt.CheckState.Unchecked)
-    window.token_list.item(5).setCheckState(Qt.CheckState.Checked)
-
-    window._on_reinsert_bag()
-
-    checked_ids = {
+    selected_ids = {
         window.token_list.item(i).data(Qt.ItemDataRole.UserRole)
         for i in range(window.token_list.count())
         if window.token_list.item(i).checkState() == Qt.CheckState.Checked
     }
-    reinserted_ids = {
-        str(token.id)
-        for token, _ in window.controller.scene_entries()
+
+    window._on_reinsert_bag()
+
+    face_down_ids = {
+        str(table_token.token_id)
+        for _, table_token in window.controller.scene_entries()
+        if table_token.state == TokenState.FACE_DOWN
     }
 
     _debug_case(
-        "Rimetti in Bag restores previous inserted set",
-        {"initial_inserted_count": 3},
-        {
-            "status_starts_with": "Rimessi in Bag",
-            "checked_ids_equal_first_inserted": True,
-            "session_ids_equal_first_inserted": True,
-        },
-        {
-            "status": window.status_label.text(),
-            "first_inserted_ids": sorted(first_inserted_ids),
-            "checked_ids": sorted(checked_ids),
-            "reinserted_ids": sorted(reinserted_ids),
-        },
+        "Rimetti in Bag hides only selected tokens",
+        {"selected_count": 2},
+        {"face_down_ids_equal_selected": True, "status_starts_with": "Rimessi in Bag"},
+        {"status": window.status_label.text(), "face_down_ids": sorted(face_down_ids)},
     )
 
     assert window.status_label.text().startswith("Rimessi in Bag")
-    assert checked_ids == first_inserted_ids
-    assert reinserted_ids == first_inserted_ids
+    assert face_down_ids == selected_ids
+
+
+def test_reinsert_bag_hides_all_when_none_selected(window):
+    """Rimetti in Bag senza selezione → FACE_DOWN tutti i token sul tavolo"""
+    window._on_load_tokens()
+    window._on_select_all_tokens()
+    window._on_create_session_from_selection()
+    window.controller.reveal_all()
+
+    window._on_deselect_all_tokens()
+    window._on_reinsert_bag()
+
+    face_up_ids = {
+        str(table_token.token_id)
+        for _, table_token in window.controller.scene_entries()
+        if table_token.state == TokenState.FACE_UP
+    }
+    face_down_count = sum(
+        1
+        for _, table_token in window.controller.scene_entries()
+        if table_token.state == TokenState.FACE_DOWN
+    )
+
+    _debug_case(
+        "Rimetti in Bag hides all tokens when none selected",
+        {"selected_count": 0},
+        {"face_up_count": 0, "status_starts_with": "Rimessi in Bag"},
+        {"status": window.status_label.text(), "face_up_remaining": len(face_up_ids), "face_down_count": face_down_count},
+    )
+
+    assert window.status_label.text().startswith("Rimessi in Bag")
+    assert len(face_up_ids) == 0
+    assert face_down_count > 0
 
 
 def test_draw_n_handles_invalid_request(window):

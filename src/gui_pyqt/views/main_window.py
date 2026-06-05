@@ -342,7 +342,7 @@ class MainWindow(QMainWindow):
 
         self.reinsert_bag_btn = QPushButton("Rimetti in Bag")
         self.reinsert_bag_btn.setObjectName("reinsert_bag_btn")
-        self.reinsert_bag_btn.setToolTip("Reinserisce l'ultimo insieme inserito")
+        self.reinsert_bag_btn.setToolTip("Mette FACE_DOWN i token selezionati (o tutti se nessuno selezionato)")
         self.controls_grid.addWidget(self.reinsert_bag_btn, 0, 9)
 
         self.reset_btn = QPushButton("Togli dalla Bag")
@@ -472,13 +472,15 @@ class MainWindow(QMainWindow):
 
     def _on_reinsert_bag(self) -> None:
         try:
-            if not self._last_inserted_token_ids:
-                raise ValueError("Nessun inserimento precedente da rimettere")
-
-            self._set_checkboxes_from_token_ids(self._last_inserted_token_ids)
-            self._sync_scene_selection_from_checkboxes()
             selected_ids = list(self._checked_token_ids_from_ui())
-            self._insert_selected_into_bag(selected_ids, status_prefix="Rimessi in Bag")
+            if selected_ids:
+                hidden_ids = self.controller.hide_tokens(selected_ids)
+                status = f"Rimessi in Bag: {len(hidden_ids)} token selezionati"
+            else:
+                hidden_ids = self.controller.hide_all()
+                status = f"Rimessi in Bag (tutti): {len(hidden_ids)} token"
+            self._refresh_list()
+            self._animate_tokens_flip_visual([str(i) for i in hidden_ids], status_text=status)
         except Exception as exc:
             self.status_label.setText(f"Errore rimetti in bag: {exc}")
 

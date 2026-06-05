@@ -370,6 +370,7 @@ class MainController:
         self.current_session.table_tokens.sort(
             key=lambda table_token: (
                 priority.get(table_token.state, 2),
+                table_token.y,
                 self._token_name_by_id.get(table_token.token_id, ""),
             )
         )
@@ -392,6 +393,11 @@ class MainController:
     def hide_all(self) -> list[str]:
         self._ensure_session_ready()
         return self._draw_service.hide_tokens(self.current_session)
+
+    def hide_tokens(self, token_ids: list) -> list[str]:
+        self._ensure_session_ready()
+        str_ids = [str(t) for t in token_ids]
+        return self._draw_service.hide_tokens(self.current_session, str_ids)
 
     def reset(self) -> Session:
         self._ensure_session_ready()
