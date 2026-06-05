@@ -185,29 +185,7 @@
       ],
       "metadata": {
         "front_text": "<Navigazione Esperta>|Naviga su imbarcazioni con tecnologia",
-        "tip_text": "<Navigazione Esperta>|*Abilit\u00e0 \u2014 Yedid*\nMaestria nella guida di imbarcazioni con tecnologia.|Pu\u00f2 stimare distanze in mare aperto.",
-        "front_text_color_mode": "auto"
-      },
-      "weight": 1.0,
-      "rarity": null
-    },
-    {
-      "id": "7a1d9c31-2125-4c58-b53a-0c4cdd9edfe0",
-      "name": "Ex Novizio della Manta",
-      "shape": "CIRCLE",
-      "front_type": "TEXT_IMAGE",
-      "front_value": "token_fronts\\PG_Yedid_light-Gray.png",
-      "back_value": "token_backs\\PG_Yedid.PNG",
-      "categories": [
-        "PG>Yedid>Caratteristica"
-      ],
-      "tags": [
-        "Yedid",
-        "Caratteristica"
-      ],
-      "metadata": {
-        "front_text": "<Ex Novizio della Manta>|Riti e segreti dell'ordine",
-        "tip_text": "<Ex Novizio della Manta>|Caratteristica \u2014 Yedid|Ex appartenente all'ordine della Manta.|Conosce riti e segreti dell'ordine.|Talvolta il passato torna a reclamare.",
+        "tip_text": "<Navigazione Esperta>|*Yedid \u2014 Abilit\u00e0*\nMaestria nella guida di imbarcazioni con tecnologia.|Pu\u00f2 stimare distanze in mare aperto.",
         "front_text_color_mode": "auto"
       },
       "weight": 1.0,
@@ -329,7 +307,7 @@
       ],
       "metadata": {
         "front_text": "<Contrabbandiera>|Rotte secondarie, controlli portuali e vicoli di Velmar",
-        "tip_text": "<Contrabbandiera>|Caratteristica \u2014 Sel\u00e9n|Conosce rotte secondarie, controlli portuali, intermediari e i vicoli delle maggiori isole di Velmar.",
+        "tip_text": "<Contrabbandiera>|*Sel\u00e9n \u2014 Caratteristica*\nConosce rotte secondarie, controlli portuali, intermediari e i vicoli delle maggiori isole di Velmar.",
         "front_text_color_mode": "auto"
       },
       "weight": 1.0,
@@ -351,7 +329,7 @@
       ],
       "metadata": {
         "front_text": "<Trattativa e Contrattazione>|Prezzi, favori e accordi",
-        "tip_text": "<Trattativa e Contrattazione>|Caratteristica \u2014 Sel\u00e9n|\u00c8 abituata a negoziare prezzi, favori e accordi.",
+        "tip_text": "<Trattativa e Contrattazione>|*Sel\u00e9n \u2014 Caratteristica*\n\u00c8 abituata a negoziare prezzi, favori e accordi.",
         "front_text_color_mode": "auto"
       },
       "weight": 1.0,
@@ -373,7 +351,7 @@
       ],
       "metadata": {
         "front_text": "<Sopravvissuta alla Tempesta>|Lucidit\u00e0 nelle emergenze",
-        "tip_text": "<Sopravvissuta alla Tempesta>|Caratteristica \u2014 Sel\u00e9n|Ha vissuto il naufragio che cost\u00f2 la vita a Edran e sa mantenere lucidit\u00e0 nelle emergenze.",
+        "tip_text": "<Sopravvissuta alla Tempesta>|*Sel\u00e9n \u2014 Caratteristica*\nHa vissuto il naufragio che cost\u00f2 la vita a Edran e sa mantenere lucidit\u00e0 nelle emergenze.",
         "front_text_color_mode": "auto"
       },
       "weight": 1.0,
@@ -395,7 +373,7 @@
       ],
       "metadata": {
         "front_text": "<Custode di Mira>|Responsabilit\u00e0, pazienza e protezione",
-        "tip_text": "<Custode di Mira>|Caratteristica \u2014 Sel\u00e9n|L'esperienza come tutrice le ha insegnato responsabilit\u00e0, pazienza e protezione degli altri.",
+        "tip_text": "<Custode di Mira>|*Sel\u00e9n \u2014 Caratteristica*\nL'esperienza come tutrice le ha insegnato responsabilit\u00e0, pazienza e protezione degli altri.",
         "front_text_color_mode": "auto"
       },
       "weight": 1.0,
@@ -417,7 +395,7 @@
       ],
       "metadata": {
         "front_text": "<Fiutare un Affare>|Capisce chi mente o nasconde qualcosa durante una trattativa",
-        "tip_text": "<Fiutare un Affare>|Abilit\u00e0 \u2014 Sel\u00e9n|Capisce rapidamente chi mente, chi bluffa e chi nasconde qualcosa durante una trattativa.",
+        "tip_text": "<Fiutare un Affare>|*Sel\u00e9n \u2014 Abilit\u00e0*\nCapisce rapidamente chi mente, chi bluffa e chi nasconde qualcosa durante una trattativa.",
         "front_text_color_mode": "auto"
       },
       "weight": 1.0,
@@ -439,7 +417,7 @@
       ],
       "metadata": {
         "front_text": "<Conoscenza delle Erbe Marine>|Piante officinali, alghe rare e rimedi tradizionali",
-        "tip_text": "<Conoscenza delle Erbe Marine>|Abilit\u00e0 \u2014 Sel\u00e9n|Ha raccolto informazioni su piante officinali, alghe rare e rimedi tradizionali.",
+        "tip_text": "<Conoscenza delle Erbe Marine>|*Sel\u00e9n \u2014 Abilit\u00e0*\nHa raccolto informazioni su piante officinali, alghe rare e rimedi tradizionali.",
         "front_text_color_mode": "auto"
       },
       "weight": 1.0,
@@ -461,7 +439,7 @@
       ],
       "metadata": {
         "front_text": "<Leggere una Rotta>|Percorsi sicuri, tempi di viaggio e pericoli marittimi",
-        "tip_text": "<Leggere una Rotta>|Abilit\u00e0 \u2014 Sel\u00e9n|Sa stimare percorsi sicuri, tempi di viaggio e pericoli marittimi.",
+        "tip_text": "<Leggere una Rotta>|*Sel\u00e9n \u2014 Abilit\u00e0*\nSa stimare percorsi sicuri, tempi di viaggio e pericoli marittimi.",
         "front_text_color_mode": "auto"
       },
       "weight": 1.0,
@@ -483,7 +461,7 @@
       ],
       "metadata": {
         "front_text": "<Quaderno di Mira>|Disegni, nomi ricorrenti, appunti sull'Alga d'Avorio",
-        "tip_text": "<Quaderno di Mira>|Oggetto \u2014 Sel\u00e9n|Pieno di annotazioni sui sogni della nipote: disegni di luoghi sconosciuti, nomi ricorrenti, appunti sull'Alga d'Avorio e frasi pronunciate nel sonno.",
+        "tip_text": "<Quaderno di Mira>|*Sel\u00e9n \u2014 Oggetto*\nPieno di annotazioni sui sogni della nipote: disegni di luoghi sconosciuti, nomi ricorrenti, appunti sull'Alga d'Avorio e frasi pronunciate nel sonno.",
         "front_text_color_mode": "auto"
       },
       "weight": 1.0,
@@ -505,7 +483,7 @@
       ],
       "metadata": {
         "front_text": "<Bussola di Edran>|Recuperata dopo il naufragio. Nessun potere, sempre con s\u00e9.",
-        "tip_text": "<Bussola di Edran>|Oggetto \u2014 Sel\u00e9n|Recuperata dalla cassa ritrovata dopo il naufragio. Non ha alcun potere, ma la porta sempre con s\u00e9.",
+        "tip_text": "<Bussola di Edran>|*Sel\u00e9n \u2014 Oggetto*\nRecuperata dalla cassa ritrovata dopo il naufragio. Non ha alcun potere, ma la porta sempre con s\u00e9.",
         "front_text_color_mode": "auto"
       },
       "weight": 1.0,
@@ -527,7 +505,7 @@
       ],
       "metadata": {
         "front_text": "<Astuccio dei Contratti>|Custodia impermeabile con lettere di credito e accordi",
-        "tip_text": "<Astuccio dei Contratti>|Oggetto \u2014 Sel\u00e9n|Custodia cilindrica impermeabile con lettere di credito, accordi commerciali, vecchi contratti e appunti personali.",
+        "tip_text": "<Astuccio dei Contratti>|*Sel\u00e9n \u2014 Oggetto*\nCustodia cilindrica impermeabile con lettere di credito, accordi commerciali, vecchi contratti e appunti personali.",
         "front_text_color_mode": "auto"
       },
       "weight": 1.0,
@@ -549,7 +527,7 @@
       ],
       "metadata": {
         "front_text": "<Borsa delle Erbe Marine>|Alghe essiccate, foglie medicinali, polveri cicatrizzanti",
-        "tip_text": "<Borsa delle Erbe Marine>|Oggetto \u2014 Sel\u00e9n|Piccola custodia impermeabile con alghe essiccate, foglie medicinali, polveri cicatrizzanti e campioni raccolti durante i viaggi.",
+        "tip_text": "<Borsa delle Erbe Marine>|*Sel\u00e9n \u2014 Oggetto*\nPiccola custodia impermeabile con alghe essiccate, foglie medicinali, polveri cicatrizzanti e campioni raccolti durante i viaggi.",
         "front_text_color_mode": "auto"
       },
       "weight": 1.0,
@@ -571,7 +549,7 @@
       ],
       "metadata": {
         "front_text": "<Borsa delle Monete Miste>|Valute di diversi arcipelaghi",
-        "tip_text": "<Borsa delle Monete Miste>|Oggetto \u2014 Sel\u00e9n|Contiene valute provenienti da diversi arcipelaghi, segno di una vita passata tra commerci e porti.",
+        "tip_text": "<Borsa delle Monete Miste>|*Sel\u00e9n \u2014 Oggetto*\nContiene valute provenienti da diversi arcipelaghi, segno di una vita passata tra commerci e porti.",
         "front_text_color_mode": "auto"
       },
       "weight": 1.0,
@@ -593,7 +571,7 @@
       ],
       "metadata": {
         "front_text": "<Mira Margant>|Sua nipote. La ragione del viaggio.",
-        "tip_text": "<Mira Margant>|Contatto \u2014 Sel\u00e9n|Sua nipote. La ragione stessa del viaggio.",
+        "tip_text": "<Mira Margant>|*Sel\u00e9n \u2014 Contatto*\nSua nipote. La ragione stessa del viaggio.",
         "front_text_color_mode": "auto"
       },
       "weight": 1.0,
@@ -615,7 +593,7 @@
       ],
       "metadata": {
         "front_text": "<Nessa la Grigia>|Vecchia contrabbandiera. Porti nascosti e rotte dimenticate.",
-        "tip_text": "<Nessa la Grigia>|Contatto \u2014 Sel\u00e9n|Vecchia contrabbandiera ormai in pensione. Conosce porti nascosti e rotte dimenticate. Per Sel\u00e9n \u00e8 stata una seconda madre.",
+        "tip_text": "<Nessa la Grigia>|*Sel\u00e9n \u2014 Contatto*\nVecchia contrabbandiera ormai in pensione. Conosce porti nascosti e rotte dimenticate. Per Sel\u00e9n \u00e8 stata una seconda madre.",
         "front_text_color_mode": "auto"
       },
       "weight": 1.0,
@@ -637,7 +615,7 @@
       ],
       "metadata": {
         "front_text": "<Il Naufragio>|L'ultima discussione con Edran prima della partenza",
-        "tip_text": "<Il giorno del naufragio>|Ricordo \u2014 Sel\u00e9n|L'ultima discussione con Edran prima della partenza sulla scelta del contrabbando. Ancora oggi ricorda ogni parola.",
+        "tip_text": "<Il giorno del naufragio>|*Sel\u00e9n \u2014 Ricordo*\nL'ultima discussione con Edran prima della partenza sulla scelta del contrabbando. Ancora oggi ricorda ogni parola.",
         "front_text_color_mode": "auto"
       },
       "weight": 1.0,
@@ -659,7 +637,7 @@
       ],
       "metadata": {
         "front_text": "<Mira addormentata sulla sua spalla>|Il momento in cui cap\u00ec la sua responsabilit\u00e0",
-        "tip_text": "<Mira addormentata sulla sua spalla>|Ricordo \u2014 Sel\u00e9n|Dopo la morte di Edran, il momento in cui comprese che ormai era sua responsabilit\u00e0.",
+        "tip_text": "<Mira addormentata sulla sua spalla>|*Sel\u00e9n \u2014 Ricordo*\nDopo la morte di Edran, il momento in cui comprese che ormai era sua responsabilit\u00e0.",
         "front_text_color_mode": "auto"
       },
       "weight": 1.0,
@@ -681,7 +659,7 @@
       ],
       "metadata": {
         "front_text": "<La bussola che esita>|Oscilla senza motivo prima di ogni decisione importante",
-        "tip_text": "<La bussola che esita>|Eco \u2014 Sel\u00e9n|A volte la Bussola di Edran oscilla per alcuni secondi senza motivo, sempre quando Sel\u00e9n sta per prendere una decisione importante.",
+        "tip_text": "<La bussola che esita>|*Sel\u00e9n \u2014 Eco*\nA volte la Bussola di Edran oscilla per alcuni secondi senza motivo, sempre quando Sel\u00e9n sta per prendere una decisione importante.",
         "front_text_color_mode": "auto"
       },
       "weight": 1.0,
@@ -703,7 +681,359 @@
       ],
       "metadata": {
         "front_text": "**Sogna l'acqua bianca** | Una laguna immobile, qualcosa di bianco e luminoso",
-        "tip_text": "**Il sogno dell'acqua bianca**|Eco \u2014 Sel\u00e9n|Sogna spesso una laguna immobile e sotto la superficie cresce qualcosa di bianco e luminoso. Quando cerca di raggiungerla, una voce sussurra: \"Non la salver\u00e0.\"",
+        "tip_text": "**Il sogno dell'acqua bianca**|*Sel\u00e9n \u2014 Eco*\nSogna spesso una laguna immobile e sotto la superficie cresce qualcosa di bianco e luminoso. Quando cerca di raggiungerla, una voce sussurra: \"Non la salver\u00e0.\"",
+        "front_text_color_mode": "auto"
+      },
+      "weight": 1.0,
+      "rarity": null
+    },
+    {
+      "id": "11111111-1111-1111-1111-111111111101",
+      "name": "Ex Novizio della Grande Manta",
+      "shape": "CIRCLE",
+      "front_type": "TEXT_IMAGE",
+      "front_value": "token_fronts\\PG_Yedid_light-Gray.png",
+      "back_value": "token_backs\\PG_Yedid.PNG",
+      "categories": [
+        "PG>Yedid>Caratteristica"
+      ],
+      "tags": [
+        "Yedid",
+        "Caratteristica"
+      ],
+      "metadata": {
+        "front_text": "<Ex Novizio della Grande Manta>|Conosce rituali, simboli, gerarchie della Cattedrale",
+        "tip_text": "<Ex Novizio della Grande Manta>|*Yedid \u2014 Caratteristica*\nConosce rituali, simboli, gerarchie e dottrina della Cattedrale di Logoy-Nom\u00f2n.",
+        "front_text_color_mode": "auto"
+      },
+      "weight": 1.0,
+      "rarity": null
+    },
+    {
+      "id": "11111111-1111-1111-1111-111111111102",
+      "name": "Ingegnere Nautico",
+      "shape": "CIRCLE",
+      "front_type": "TEXT_IMAGE",
+      "front_value": "token_fronts\\PG_Yedid_light-Gray.png",
+      "back_value": "token_backs\\PG_Yedid.PNG",
+      "categories": [
+        "PG>Yedid>Caratteristica"
+      ],
+      "tags": [
+        "Yedid",
+        "Caratteristica"
+      ],
+      "metadata": {
+        "front_text": "<Ingegnere Nautico>|Comprende funzionamento di navi, meccanismi e apparati marini",
+        "tip_text": "<Ingegnere Nautico>|*Yedid \u2014 Caratteristica*\nComprende il funzionamento di navi, meccanismi, |strumenti e apparati marini.",
+        "front_text_color_mode": "auto"
+      },
+      "weight": 1.0,
+      "rarity": null
+    },
+    {
+      "id": "11111111-1111-1111-1111-111111111103",
+      "name": "Cartografo delle Rotte",
+      "shape": "CIRCLE",
+      "front_type": "TEXT_IMAGE",
+      "front_value": "token_fronts\\PG_Yedid_light-Gray.png",
+      "back_value": "token_backs\\PG_Yedid.PNG",
+      "categories": [
+        "PG>Yedid>Caratteristica"
+      ],
+      "tags": [
+        "Yedid",
+        "Caratteristica"
+      ],
+      "metadata": {
+        "front_text": "<Cartografo delle Rotte>|Sa disegnare mappe anche in territori inesplorati",
+        "tip_text": "<Cartografo delle Rotte>|*Yedid \u2014 Caratteristica*\nSa interpretare, correggere e disegnare |mappe anche in territori inesplorati.",
+        "front_text_color_mode": "auto"
+      },
+      "weight": 1.0,
+      "rarity": null
+    },
+    {
+      "id": "11111111-1111-1111-1111-111111111104",
+      "name": "Studioso delle Correnti Sacre",
+      "shape": "CIRCLE",
+      "front_type": "TEXT_IMAGE",
+      "front_value": "token_fronts\\PG_Yedid_light-Gray.png",
+      "back_value": "token_backs\\PG_Yedid.PNG",
+      "categories": [
+        "PG>Yedid>Caratteristica"
+      ],
+      "tags": [
+        "Yedid",
+        "Caratteristica"
+      ],
+      "metadata": {
+        "front_text": "<Studioso Correnti Sacre>|Ha dedicato anni allo studio delle correnti divine",
+        "tip_text": "<Studioso delle Correnti Sacre>|*Yedid \u2014 Caratteristica*\nHa dedicato anni allo studio delle correnti |e delle tradizioni che le collegano alle divinit\u00e0.",
+        "front_text_color_mode": "auto"
+      },
+      "weight": 1.0,
+      "rarity": null
+    },
+    {
+      "id": "11111111-1111-1111-1111-111111111105",
+      "name": "Cercatore della Corrente Prima",
+      "shape": "CIRCLE",
+      "front_type": "TEXT_IMAGE",
+      "front_value": "token_fronts\\PG_Yedid_light-Gray.png",
+      "back_value": "token_backs\\PG_Yedid.PNG",
+      "categories": [
+        "PG>Yedid>Caratteristica"
+      ],
+      "tags": [
+        "Yedid",
+        "Caratteristica"
+      ],
+      "metadata": {
+        "front_text": "<Cercatore della Corrente Prima>|Sensibilit\u00e0 ossessiva verso rotte anomale e dimenticate",
+        "tip_text": "<Cercatore della Corrente Prima>|*Yedid \u2014 Caratteristica*\nHa sviluppato una sensibilit\u00e0 ossessiva verso |rotte anomale, deviazioni e percorsi dimenticati.",
+        "front_text_color_mode": "auto"
+      },
+      "weight": 1.0,
+      "rarity": null
+    },
+    {
+      "id": "11111111-1111-1111-1111-111111111202",
+      "name": "Riparazioni Meccaniche",
+      "shape": "CIRCLE",
+      "front_type": "TEXT_IMAGE",
+      "front_value": "token_fronts\\PG_Yedid_light-Gray.png",
+      "back_value": "token_backs\\PG_Yedid.PNG",
+      "categories": [
+        "PG>Yedid>Abilit\u00e0"
+      ],
+      "tags": [
+        "Yedid",
+        "Abilit\u00e0"
+      ],
+      "metadata": {
+        "front_text": "<Riparazioni Meccaniche>|Ripara strumenti, apparati nautici e meccanismi danneggiati",
+        "tip_text": "<Riparazioni Meccaniche>|*Yedid \u2014 Abilit\u00e0*\nPu\u00f2 riparare strumenti, apparati nautici e |meccanismi danneggiati con rapidit\u00e0.",
+        "front_text_color_mode": "auto"
+      },
+      "weight": 1.0,
+      "rarity": null
+    },
+    {
+      "id": "11111111-1111-1111-1111-111111111203",
+      "name": "Lettura Cartografica",
+      "shape": "CIRCLE",
+      "front_type": "TEXT_IMAGE",
+      "front_value": "token_fronts\\PG_Yedid_light-Gray.png",
+      "back_value": "token_backs\\PG_Yedid.PNG",
+      "categories": [
+        "PG>Yedid>Abilit\u00e0"
+      ],
+      "tags": [
+        "Yedid",
+        "Abilit\u00e0"
+      ],
+      "metadata": {
+        "front_text": "<Lettura Cartografica>|Riconosce incongruenze, errori e significati nascosti nelle mappe",
+        "tip_text": "<Lettura Cartografica>|*Yedid \u2014 Abilit\u00e0*\nRiconosce incongruenze, errori e significati nascosti nelle mappe.",
+        "front_text_color_mode": "auto"
+      },
+      "weight": 1.0,
+      "rarity": null
+    },
+    {
+      "id": "11111111-1111-1111-1111-111111111301",
+      "name": "Sestante Liturgico di Famiglia",
+      "shape": "RECTANGLE_4:3",
+      "front_type": "TEXT_IMAGE",
+      "front_value": "token_fronts\\PG_Yedid_light-Gray.png",
+      "back_value": "token_backs\\PG_Yedid.PNG",
+      "categories": [
+        "PG>Yedid>Oggetti"
+      ],
+      "tags": [
+        "Yedid",
+        "Oggetti"
+      ],
+      "metadata": {
+        "front_text": "<Sestante Liturgico di Famiglia>|Antico strumento con le nervature della Grande Manta",
+        "tip_text": "<Sestante Liturgico di Famiglia>|*Yedid \u2014 Oggetto*\nAntico strumento di famiglia |inciso con le nervature della Grande Manta.",
+        "front_text_color_mode": "auto"
+      },
+      "weight": 1.0,
+      "rarity": null
+    },
+    {
+      "id": "11111111-1111-1111-1111-111111111302",
+      "name": "Taccuino delle Rotte Devianti",
+      "shape": "RECTANGLE_4:3",
+      "front_type": "TEXT_IMAGE",
+      "front_value": "token_fronts\\PG_Yedid_light-Gray.png",
+      "back_value": "token_backs\\PG_Yedid.PNG",
+      "categories": [
+        "PG>Yedid>Oggetti"
+      ],
+      "tags": [
+        "Yedid",
+        "Oggetti"
+      ],
+      "metadata": {
+        "front_text": "<Taccuino delle Rotte Devianti>|Quaderno con appunti, mappe annotate e rotte impossibili",
+        "tip_text": "<Taccuino delle Rotte Devianti>|*Yedid \u2014 Oggetto*\nQuaderno colmo di appunti, mappe annotate e rotte impossibili. La ricerca della Corrente Prima.",
+        "front_text_color_mode": "auto"
+      },
+      "weight": 1.0,
+      "rarity": null
+    },
+    {
+      "id": "11111111-1111-1111-1111-111111111303",
+      "name": "Occhiali da Tempesta",
+      "shape": "RECTANGLE_4:3",
+      "front_type": "TEXT_IMAGE",
+      "front_value": "token_fronts\\PG_Yedid_light-Gray.png",
+      "back_value": "token_backs\\PG_Yedid.PNG",
+      "categories": [
+        "PG>Yedid>Oggetti"
+      ],
+      "tags": [
+        "Yedid",
+        "Oggetti"
+      ],
+      "metadata": {
+        "front_text": "<Occhiali da Tempesta>|Lenti protettive usate durante nebbia, |pioggia e mare agitato",
+        "tip_text": "<Occhiali da Tempesta>|*Yedid \u2014 Oggetto*\nLenti protettive rinforzate usate durante |nebbia, pioggia e mare agitato.",
+        "front_text_color_mode": "auto"
+      },
+      "weight": 1.0,
+      "rarity": null
+    },
+    {
+      "id": "11111111-1111-1111-1111-111111111304",
+      "name": "Chiave Multiuso",
+      "shape": "RECTANGLE_4:3",
+      "front_type": "TEXT_IMAGE",
+      "front_value": "token_fronts\\PG_Yedid_light-Gray.png",
+      "back_value": "token_backs\\PG_Yedid.PNG",
+      "categories": [
+        "PG>Yedid>Oggetti"
+      ],
+      "tags": [
+        "Yedid",
+        "Oggetti"
+      ],
+      "metadata": {
+        "front_text": "<Chiave Multiuso>|Strumento progettato da lui per interventi tecnici rapidi",
+        "tip_text": "<Chiave Multiuso>|*Yedid \u2014 Oggetto*\nStrumento multifunzionale progettato da lui per interventi tecnici rapidi su navi.",
+        "front_text_color_mode": "auto"
+      },
+      "weight": 1.0,
+      "rarity": null
+    },
+    {
+      "id": "11111111-1111-1111-1111-111111111305",
+      "name": "Guanti Cerati",
+      "shape": "RECTANGLE_4:3",
+      "front_type": "TEXT_IMAGE",
+      "front_value": "token_fronts\\PG_Yedid_light-Gray.png",
+      "back_value": "token_backs\\PG_Yedid.PNG",
+      "categories": [
+        "PG>Yedid>Oggetti"
+      ],
+      "tags": [
+        "Yedid",
+        "Oggetti"
+      ],
+      "metadata": {
+        "front_text": "<Guanti Cerati>|Guanti rinforzati per lavoro nautico e manutenzione",
+        "tip_text": "<Guanti Cerati>|*Yedid \u2014 Oggetto*\nGuanti rinforzati e cerati |per lavoro nautico e manutenzione.",
+        "front_text_color_mode": "auto"
+      },
+      "weight": 1.0,
+      "rarity": null
+    },
+    {
+      "id": "11111111-1111-1111-1111-111111111401",
+      "name": "Capitano Rhaegar Voss",
+      "shape": "RECTANGLE_5:3",
+      "front_type": "TEXT_IMAGE",
+      "front_value": "token_fronts\\PG_Yedid_light-Gray.png",
+      "back_value": "token_backs\\PG_Yedid.PNG",
+      "categories": [
+        "PG>Yedid>Contatti"
+      ],
+      "tags": [
+        "Yedid",
+        "Contatti"
+      ],
+      "metadata": {
+        "front_text": "<Capitano Rhaegar Voss>|Vecchio navigatore. Figura paterna che ha scelto.",
+        "tip_text": "<Capitano Rhaegar Voss>|*Yedid \u2014 Contatto*\nVecchio navigatore che lo accolse a bordo |quando lasci\u00f2 la Cattedrale. |La figura paterna che Yedid ha scelto.",
+        "front_text_color_mode": "auto"
+      },
+      "weight": 1.0,
+      "rarity": null
+    },
+    {
+      "id": "11111111-1111-1111-1111-111111111402",
+      "name": "Maestro Seraphel dei Sette Livelli",
+      "shape": "RECTANGLE_5:3",
+      "front_type": "TEXT_IMAGE",
+      "front_value": "token_fronts\\PG_Yedid_light-Gray.png",
+      "back_value": "token_backs\\PG_Yedid.PNG",
+      "categories": [
+        "PG>Yedid>Contatti"
+      ],
+      "tags": [
+        "Yedid",
+        "Contatti"
+      ],
+      "metadata": {
+        "front_text": "<Maestro Seraphel dei Sette Livelli>|Sacerdote della Manta. Non gli ha concesso perdono.",
+        "tip_text": "<Maestro Seraphel dei Sette Livelli>|*Yedid \u2014 Contatto*\nSacerdote che segu\u00ec la sua formazione fin dall'infanzia. |Non gli ha mai concesso il perdono.",
+        "front_text_color_mode": "auto"
+      },
+      "weight": 1.0,
+      "rarity": null
+    },
+    {
+      "id": "11111111-1111-1111-1111-111111111501",
+      "name": "La Rotta Luminosa",
+      "shape": "OCTAGON",
+      "front_type": "TEXT_IMAGE",
+      "front_value": "token_fronts\\PG_Yedid_light-Gray.png",
+      "back_value": "token_backs\\PG_Yedid.PNG",
+      "categories": [
+        "PG>Yedid>Eco"
+      ],
+      "tags": [
+        "Yedid",
+        "Eco"
+      ],
+      "metadata": {
+        "front_text": "<La Rotta Luminosa> | Una linea luminsa sul mare",
+        "tip_text": "**La Rotta Luminosa**|*Yedid \u2014 Eco*\nQuando consulta i suoi strumenti durante le tempeste, appare una linea luminosa. |Nessun altro la vede.",
+        "front_text_color_mode": "auto"
+      },
+      "weight": 1.0,
+      "rarity": null
+    },
+    {
+      "id": "11111111-1111-1111-1111-111111111601",
+      "name": "Il Nome Cancellato",
+      "shape": "OCTAGON",
+      "front_type": "TEXT_IMAGE",
+      "front_value": "token_fronts\\PG_Yedid_light-Gray.png",
+      "back_value": "token_backs\\PG_Yedid.PNG",
+      "categories": [
+        "PG>Yedid>Ricordi"
+      ],
+      "tags": [
+        "Yedid",
+        "Ricordi"
+      ],
+      "metadata": {
+        "front_text": "<Il Nome Cancellato>|Durante il rito finale, il suo nome cancellato dal registro",
+        "tip_text": "<Il Nome Cancellato>|*Yedid \u2014 Ricordo*\nDurante il rito finale trov\u00f2 il proprio nome cancellato da un antico registro sacerdotale. Al suo posto era comparsa una sola parola: \"Scegli.\"",
         "front_text_color_mode": "auto"
       },
       "weight": 1.0,
