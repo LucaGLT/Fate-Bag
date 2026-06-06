@@ -733,28 +733,6 @@
       "rarity": null
     },
     {
-      "id": "11111111-1111-1111-1111-111111111105",
-      "name": "Cercatore della Corrente Prima",
-      "shape": "CIRCLE",
-      "front_type": "TEXT_IMAGE",
-      "front_value": "token_fronts\\PG_Yedid_light-Gray.png",
-      "back_value": "token_backs\\PG_Yedid.PNG",
-      "categories": [
-        "PG>Yedid>Caratteristica"
-      ],
-      "tags": [
-        "Yedid",
-        "Caratteristica"
-      ],
-      "metadata": {
-        "front_text": "<Cercatore della Corrente Prima>|Sensibilit\u00e0 ossessiva verso rotte anomale e dimenticate",
-        "tip_text": "<Cercatore della Corrente Prima>|*Yedid \u2014 Caratteristica*\nHa sviluppato una sensibilit\u00e0 ossessiva verso |rotte anomale, deviazioni e percorsi dimenticati.",
-        "front_text_color_mode": "auto"
-      },
-      "weight": 1.0,
-      "rarity": null
-    },
-    {
       "id": "11111111-1111-1111-1111-111111111202",
       "name": "Riparazioni Meccaniche",
       "shape": "CIRCLE",
