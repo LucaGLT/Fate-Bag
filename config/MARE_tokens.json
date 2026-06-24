@@ -1295,6 +1295,25 @@
       },
       "weight": 1.0,
       "rarity": null
+    },
+    {
+      "id": "889d9896-4fde-4832-9719-fa49d830a229",
+      "name": "\"Li ho Visti\"",
+      "shape": "EPTAGON",
+      "front_type": "TEXT",
+      "front_value": "<Li ho Visti>|Qualcuni vi ha visti correre fra i vicoli",
+      "back_value": "token_backs\\Purple_Back.PNG",
+      "categories": [
+        "NERO"
+      ],
+      "tags": [
+        "NERO"
+      ],
+      "metadata": {
+        "tip_text": "<Li ho Visti>|*NERO*|Qualcuni vi ha visti correre fra i vicoli"
+      },
+      "weight": 1.0,
+      "rarity": null
     }
   ]
 }

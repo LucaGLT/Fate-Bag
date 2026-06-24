@@ -1,0 +1,1300 @@
+{
+  "settings": {
+    "assets_root_path": "C:\\_GLT_\\Qt Prj\\Fate-Bag\\Fate-Bag\\assets\\images",
+    "table_background_file": "token_backs\\Table_BG.PNG",
+    "token_radius_px": 70,
+    "table_grid_margin_px": 40,
+    "hover_preview_enabled": true,
+    "front_text_font_px": 10,
+    "tip_text_font_px": 14,
+    "flip_speed": 40,
+    "move_speed": 3,
+    "auto_sort_delay_seconds": 1.5,
+    "auto_shuffle_after_insert_count": 1,
+    "custom_groups": [
+      "PG>Yedid>Caratteristica",
+      "PG>Sel\u00e9n>Caratteristica",
+      "PG>Sel\u00e9n>Abilit\u00e0",
+      "PG>Sel\u00e9n>Oggetti",
+      "PG>Sel\u00e9n>Contatti",
+      "PG>Sel\u00e9n>Ricordi",
+      "PG>Sel\u00e9n>Eco"
+    ]
+  },
+  "tokens": [
+    {
+      "id": "8c969662-3147-4227-a1a1-7e6f8855593b",
+      "name": "Logoy-Nomon",
+      "shape": "PENTAGON",
+      "front_type": "IMAGE",
+      "front_value": "token_fronts\\LogoyNomon_lime.PNG",
+      "back_value": "token_backs\\Dio_simple_blu_Back.png",
+      "categories": [
+        "Divinit\u00e0"
+      ],
+      "tags": [
+        "Divinit\u00e0"
+      ],
+      "metadata": {
+        "source": "bootstrap",
+        "front_text": "<Logoy-Nomon>|Ordine, Legge, Processo",
+        "tip_text": "<Logoy-Nomon>|*Dio dell'Ordine e della Legge*\nGoverna i processi e le strutture del mondo.|Ogni schema ha una sua ragione."
+      },
+      "weight": 1.0,
+      "rarity": "legendary"
+    },
+    {
+      "id": "ac27022d-9449-4bdf-9503-4f54d1559041",
+      "name": "Egonya",
+      "shape": "PENTAGON",
+      "front_type": "IMAGE",
+      "front_value": "token_fronts\\Egonya_lime.png",
+      "back_value": "token_backs\\Dio_simple_blu_Back.png",
+      "categories": [
+        "Divinit\u00e0"
+      ],
+      "tags": [
+        "Divinit\u00e0"
+      ],
+      "metadata": {
+        "source": "bootstrap",
+        "front_text": "<Egonya>|Consapevolezza del S\u00e9",
+        "tip_text": "<Egonya>|*Dea della Consapevolezza del S\u00e9*\nRisveglia la coscienza nascosta.|Chi la invoca si guarda dentro."
+      },
+      "weight": 1.0,
+      "rarity": "legendary"
+    },
+    {
+      "id": "54b4796e-a514-49df-8e1b-cd0d58455e2e",
+      "name": "Mnemora",
+      "shape": "PENTAGON",
+      "front_type": "IMAGE",
+      "front_value": "token_fronts\\Mnemora_lime.png",
+      "back_value": "token_backs\\Dio_simple_blu_Back.png",
+      "categories": [
+        "Divinit\u00e0"
+      ],
+      "tags": [
+        "Divinit\u00e0"
+      ],
+      "metadata": {
+        "source": "bootstrap",
+        "front_text": "<Mnemora>|Conservazione, Ricordo",
+        "tip_text": "<Mnemora>|*Dea della Memoria*\nCustodisce ci\u00f2 che \u00e8 stato.|Il passato non scompare, si trasforma."
+      },
+      "weight": 1.0,
+      "rarity": "legendary"
+    },
+    {
+      "id": "36269690-0e31-4ad2-86d4-d178a260f62c",
+      "name": "Dyresys",
+      "shape": "PENTAGON",
+      "front_type": "IMAGE",
+      "front_value": "token_fronts\\Dyresys_lime.png",
+      "back_value": "token_backs\\Dio_simple_blu_Back.png",
+      "categories": [
+        "Divinit\u00e0"
+      ],
+      "tags": [
+        "Divinit\u00e0"
+      ],
+      "metadata": {
+        "source": "bootstrap",
+        "front_text": "<Dyresys>|Scelta, Deviazione, Anomalia",
+        "tip_text": "<Dyresys>|*Dio della Scelta*\nIncarna ogni imprevisto, deviazione, anomalia."
+      },
+      "weight": 1.0,
+      "rarity": "legendary"
+    },
+    {
+      "id": "e031e690-10d5-4a36-b1a0-f5d8f8733698",
+      "name": "Lak\u00fcna",
+      "shape": "PENTAGON",
+      "front_type": "IMAGE",
+      "front_value": "token_fronts\\Lakuna_lime.png",
+      "back_value": "token_backs\\Dio_simple_blu_Back.png",
+      "categories": [
+        "Divinit\u00e0"
+      ],
+      "tags": [
+        "Divinit\u00e0"
+      ],
+      "metadata": {
+        "front_text": "<Lak\u00fcna>|Dimenticanza, Oblio",
+        "tip_text": "<Lak\u00fcna>|*Dea dell'Oblio*\nPorta con s\u00e9 ci\u00f2 che \u00e8 stato dimenticato.\nLa sua presenza cancella le tracce."
+      },
+      "weight": 1.0,
+      "rarity": "legendary"
+    },
+    {
+      "id": "ebc3ae24-198c-45b3-9b93-fc63de44a4ab",
+      "name": "Navigazione Esperta",
+      "shape": "CIRCLE",
+      "front_type": "TEXT_IMAGE",
+      "front_value": "token_fronts\\PG_Yedid_light-Gray.png",
+      "back_value": "token_backs\\PG_Yedid.PNG",
+      "categories": [
+        "PG>Yedid>Abilit\u00e0"
+      ],
+      "tags": [
+        "Yedid",
+        "Abilit\u00e0"
+      ],
+      "metadata": {
+        "front_text": "<Navigazione Esperta>|Naviga su imbarcazioni con tecnologia",
+        "tip_text": "<Navigazione Esperta>|*Yedid \u2014 Abilit\u00e0*\nMaestria nella guida di imbarcazioni con tecnologia.|Pu\u00f2 stimare distanze in mare aperto.",
+        "front_text_color_mode": "auto"
+      },
+      "weight": 1.0,
+      "rarity": null
+    },
+    {
+      "id": "d5172257-9298-46b5-9969-5a2e64048f5a",
+      "name": "PERICOLO",
+      "shape": "EPTAGON",
+      "front_type": "IMAGE",
+      "front_value": "token_fronts\\Pericolo.PNG",
+      "back_value": "token_backs\\Dio_simple_red_Back.png",
+      "categories": [
+        "Pericolo"
+      ],
+      "tags": [
+        "Pericolo"
+      ],
+      "metadata": {
+        "front_text": "<PERICOLO>",
+        "tip_text": "<Evento Critico!>\nUna minaccia incombe sul gruppo.\nAgisci subito o affronta le conseguenze."
+      },
+      "weight": 1.0,
+      "rarity": null
+    },
+    {
+      "id": "d5172257-9298-46b5-9969-5a2e64048f5b",
+      "name": "PERICOLO",
+      "shape": "EPTAGON",
+      "front_type": "IMAGE",
+      "front_value": "token_fronts\\Pericolo.PNG",
+      "back_value": "token_backs\\Dio_simple_red_Back.png",
+      "categories": [
+        "Pericolo"
+      ],
+      "tags": [
+        "Pericolo"
+      ],
+      "metadata": {
+        "front_text": "<PERICOLO>",
+        "tip_text": "<Evento Critico!>\nUna minaccia incombe sul gruppo.\nAgisci subito o affronta le conseguenze."
+      },
+      "weight": 1.0,
+      "rarity": null
+    },
+    {
+      "id": "d5172257-9298-46b5-9969-5a2e64048f5c",
+      "name": "PERICOLO",
+      "shape": "EPTAGON",
+      "front_type": "IMAGE",
+      "front_value": "token_fronts\\Pericolo.PNG",
+      "back_value": "token_backs\\Dio_simple_red_Back.png",
+      "categories": [
+        "Pericolo"
+      ],
+      "tags": [
+        "Pericolo"
+      ],
+      "metadata": {
+        "front_text": "<PERICOLO>",
+        "tip_text": "<Evento Critico!>\nUna minaccia incombe sul gruppo.\nAgisci subito o affronta le conseguenze."
+      },
+      "weight": 1.0,
+      "rarity": null
+    },
+    {
+      "id": "d5172257-9298-46b5-9969-5a2e64048f5d",
+      "name": "PERICOLO",
+      "shape": "EPTAGON",
+      "front_type": "IMAGE",
+      "front_value": "token_fronts\\Pericolo.PNG",
+      "back_value": "token_backs\\Dio_simple_red_Back.png",
+      "categories": [
+        "Pericolo"
+      ],
+      "tags": [
+        "Pericolo"
+      ],
+      "metadata": {
+        "front_text": "<PERICOLO>",
+        "tip_text": "<Evento Critico!>\nUna minaccia incombe sul gruppo.\nAgisci subito o affronta le conseguenze."
+      },
+      "weight": 1.0,
+      "rarity": null
+    },
+    {
+      "id": "d5172257-9298-46b5-9969-5a2e64048f5e",
+      "name": "PERICOLO",
+      "shape": "EPTAGON",
+      "front_type": "IMAGE",
+      "front_value": "token_fronts\\Pericolo.PNG",
+      "back_value": "token_backs\\Dio_simple_red_Back.png",
+      "categories": [
+        "Pericolo"
+      ],
+      "tags": [
+        "Pericolo"
+      ],
+      "metadata": {
+        "front_text": "<PERICOLO>",
+        "tip_text": "<Evento Critico!>\nUna minaccia incombe sul gruppo.\nAgisci subito o affronta le conseguenze."
+      },
+      "weight": 1.0,
+      "rarity": null
+    },
+    {
+      "id": "16d3e7d1-22f2-4c85-9aa7-c4a5cde07d4f",
+      "name": "Contrabbandiera",
+      "shape": "CIRCLE",
+      "front_type": "TEXT_IMAGE",
+      "front_value": "token_fronts\\PG_Selene_light-Gray.png",
+      "back_value": "token_backs\\PG_Selene.PNG",
+      "categories": [
+        "PG>Sel\u00e9n>Caratteristica"
+      ],
+      "tags": [
+        "Sel\u00e9n",
+        "Caratteristica"
+      ],
+      "metadata": {
+        "front_text": "<Contrabbandiera>|Rotte secondarie, controlli portuali e vicoli di Velmar",
+        "tip_text": "<Contrabbandiera>|*Sel\u00e9n \u2014 Caratteristica*\nConosce rotte secondarie, controlli portuali, intermediari e i vicoli delle maggiori isole di Velmar.",
+        "front_text_color_mode": "auto"
+      },
+      "weight": 1.0,
+      "rarity": null
+    },
+    {
+      "id": "5ab36b8d-107f-4a16-ae0e-e9223f7be459",
+      "name": "Trattativa e Contrattazione",
+      "shape": "CIRCLE",
+      "front_type": "TEXT_IMAGE",
+      "front_value": "token_fronts\\PG_Selene_light-Gray.png",
+      "back_value": "token_backs\\PG_Selene.PNG",
+      "categories": [
+        "PG>Sel\u00e9n>Caratteristica"
+      ],
+      "tags": [
+        "Sel\u00e9n",
+        "Caratteristica"
+      ],
+      "metadata": {
+        "front_text": "<Trattativa e Contrattazione>|Prezzi, favori e accordi",
+        "tip_text": "<Trattativa e Contrattazione>|*Sel\u00e9n \u2014 Caratteristica*\n\u00c8 abituata a negoziare prezzi, favori e accordi.",
+        "front_text_color_mode": "auto"
+      },
+      "weight": 1.0,
+      "rarity": null
+    },
+    {
+      "id": "a8b29eeb-e71a-4147-aeaf-c984115b3c00",
+      "name": "Sopravvissuta alla Tempesta",
+      "shape": "CIRCLE",
+      "front_type": "TEXT_IMAGE",
+      "front_value": "token_fronts\\PG_Selene_light-Gray.png",
+      "back_value": "token_backs\\PG_Selene.PNG",
+      "categories": [
+        "PG>Sel\u00e9n>Caratteristica"
+      ],
+      "tags": [
+        "Sel\u00e9n",
+        "Caratteristica"
+      ],
+      "metadata": {
+        "front_text": "<Sopravvissuta alla Tempesta>|Lucidit\u00e0 nelle emergenze",
+        "tip_text": "<Sopravvissuta alla Tempesta>|*Sel\u00e9n \u2014 Caratteristica*\nHa vissuto il naufragio che cost\u00f2 la vita a Edran e sa mantenere lucidit\u00e0 nelle emergenze.",
+        "front_text_color_mode": "auto"
+      },
+      "weight": 1.0,
+      "rarity": null
+    },
+    {
+      "id": "7ce50fef-ffb2-4231-81ea-5792d99dc2f9",
+      "name": "Custode di Mira",
+      "shape": "CIRCLE",
+      "front_type": "TEXT_IMAGE",
+      "front_value": "token_fronts\\PG_Selene_light-Gray.png",
+      "back_value": "token_backs\\PG_Selene.PNG",
+      "categories": [
+        "PG>Sel\u00e9n>Caratteristica"
+      ],
+      "tags": [
+        "Sel\u00e9n",
+        "Caratteristica"
+      ],
+      "metadata": {
+        "front_text": "<Custode di Mira>|Responsabilit\u00e0, pazienza e protezione",
+        "tip_text": "<Custode di Mira>|*Sel\u00e9n \u2014 Caratteristica*\nL'esperienza come tutrice le ha insegnato responsabilit\u00e0, pazienza e protezione degli altri.",
+        "front_text_color_mode": "auto"
+      },
+      "weight": 1.0,
+      "rarity": null
+    },
+    {
+      "id": "c115c19a-767c-46bf-9e89-4fb119edce83",
+      "name": "Fiutare un Affare",
+      "shape": "CIRCLE",
+      "front_type": "TEXT_IMAGE",
+      "front_value": "token_fronts\\PG_Selene_light-Gray.png",
+      "back_value": "token_backs\\PG_Selene.PNG",
+      "categories": [
+        "PG>Sel\u00e9n>Abilit\u00e0"
+      ],
+      "tags": [
+        "Sel\u00e9n",
+        "Abilit\u00e0"
+      ],
+      "metadata": {
+        "front_text": "<Fiutare un Affare>|Capisce chi mente o nasconde qualcosa durante una trattativa",
+        "tip_text": "<Fiutare un Affare>|*Sel\u00e9n \u2014 Abilit\u00e0*\nCapisce rapidamente chi mente, chi bluffa e chi nasconde qualcosa durante una trattativa.",
+        "front_text_color_mode": "auto"
+      },
+      "weight": 1.0,
+      "rarity": null
+    },
+    {
+      "id": "4c31e172-bdc9-4f9f-bc42-ee63dc3a3acf",
+      "name": "Conoscenza delle Erbe Marine",
+      "shape": "CIRCLE",
+      "front_type": "TEXT_IMAGE",
+      "front_value": "token_fronts\\PG_Selene_light-Gray.png",
+      "back_value": "token_backs\\PG_Selene.PNG",
+      "categories": [
+        "PG>Sel\u00e9n>Abilit\u00e0"
+      ],
+      "tags": [
+        "Sel\u00e9n",
+        "Abilit\u00e0"
+      ],
+      "metadata": {
+        "front_text": "<Conoscenza delle Erbe Marine>|Piante officinali, alghe rare e rimedi tradizionali",
+        "tip_text": "<Conoscenza delle Erbe Marine>|*Sel\u00e9n \u2014 Abilit\u00e0*\nHa raccolto informazioni su piante officinali, alghe rare e rimedi tradizionali.",
+        "front_text_color_mode": "auto"
+      },
+      "weight": 1.0,
+      "rarity": null
+    },
+    {
+      "id": "cfb1c5fd-1e4d-4d4a-adef-fed9e731a0a7",
+      "name": "Leggere una Rotta",
+      "shape": "CIRCLE",
+      "front_type": "TEXT_IMAGE",
+      "front_value": "token_fronts\\PG_Selene_light-Gray.png",
+      "back_value": "token_backs\\PG_Selene.PNG",
+      "categories": [
+        "PG>Sel\u00e9n>Abilit\u00e0"
+      ],
+      "tags": [
+        "Sel\u00e9n",
+        "Abilit\u00e0"
+      ],
+      "metadata": {
+        "front_text": "<Leggere una Rotta>|Percorsi sicuri, tempi di viaggio e pericoli marittimi",
+        "tip_text": "<Leggere una Rotta>|*Sel\u00e9n \u2014 Abilit\u00e0*\nSa stimare percorsi sicuri, tempi di viaggio e pericoli marittimi.",
+        "front_text_color_mode": "auto"
+      },
+      "weight": 1.0,
+      "rarity": null
+    },
+    {
+      "id": "c2584885-3f57-49e4-866c-f3061287024f",
+      "name": "Quaderno di Mira",
+      "shape": "RECTANGLE_4:3",
+      "front_type": "TEXT_IMAGE",
+      "front_value": "token_fronts\\PG_Selene_light-Gray.png",
+      "back_value": "token_backs\\PG_Selene.PNG",
+      "categories": [
+        "PG>Sel\u00e9n>Oggetti"
+      ],
+      "tags": [
+        "Sel\u00e9n",
+        "Oggetti"
+      ],
+      "metadata": {
+        "front_text": "<Quaderno di Mira>|Disegni, nomi ricorrenti, appunti sull'Alga d'Avorio",
+        "tip_text": "<Quaderno di Mira>|*Sel\u00e9n \u2014 Oggetto*\nPieno di annotazioni sui sogni della nipote: disegni di luoghi sconosciuti, nomi ricorrenti, appunti sull'Alga d'Avorio e frasi pronunciate nel sonno.",
+        "front_text_color_mode": "auto"
+      },
+      "weight": 1.0,
+      "rarity": null
+    },
+    {
+      "id": "0d04e014-a8fe-4038-9026-e40643ccd8f1",
+      "name": "Bussola di Edran",
+      "shape": "RECTANGLE_4:3",
+      "front_type": "TEXT_IMAGE",
+      "front_value": "token_fronts\\PG_Selene_light-Gray.png",
+      "back_value": "token_backs\\PG_Selene.PNG",
+      "categories": [
+        "PG>Sel\u00e9n>Oggetti"
+      ],
+      "tags": [
+        "Sel\u00e9n",
+        "Oggetti"
+      ],
+      "metadata": {
+        "front_text": "<Bussola di Edran>|Recuperata dopo il naufragio. Nessun potere, sempre con s\u00e9.",
+        "tip_text": "<Bussola di Edran>|*Sel\u00e9n \u2014 Oggetto*\nRecuperata dalla cassa ritrovata dopo il naufragio. Non ha alcun potere, ma la porta sempre con s\u00e9.",
+        "front_text_color_mode": "auto"
+      },
+      "weight": 1.0,
+      "rarity": null
+    },
+    {
+      "id": "95d292a1-2845-4e41-860d-152acd866d2e",
+      "name": "Astuccio dei Contratti",
+      "shape": "RECTANGLE_4:3",
+      "front_type": "TEXT_IMAGE",
+      "front_value": "token_fronts\\PG_Selene_light-Gray.png",
+      "back_value": "token_backs\\PG_Selene.PNG",
+      "categories": [
+        "PG>Sel\u00e9n>Oggetti"
+      ],
+      "tags": [
+        "Sel\u00e9n",
+        "Oggetti"
+      ],
+      "metadata": {
+        "front_text": "<Astuccio dei Contratti>|Custodia impermeabile con lettere di credito e accordi",
+        "tip_text": "<Astuccio dei Contratti>|*Sel\u00e9n \u2014 Oggetto*\nCustodia cilindrica impermeabile con lettere di credito, accordi commerciali, vecchi contratti e appunti personali.",
+        "front_text_color_mode": "auto"
+      },
+      "weight": 1.0,
+      "rarity": null
+    },
+    {
+      "id": "d6a6282f-ecf2-447c-a1e7-d59954064c7c",
+      "name": "Borsa delle Erbe Marine",
+      "shape": "RECTANGLE_4:3",
+      "front_type": "TEXT_IMAGE",
+      "front_value": "token_fronts\\PG_Selene_light-Gray.png",
+      "back_value": "token_backs\\PG_Selene.PNG",
+      "categories": [
+        "PG>Sel\u00e9n>Oggetti"
+      ],
+      "tags": [
+        "Sel\u00e9n",
+        "Oggetti"
+      ],
+      "metadata": {
+        "front_text": "<Borsa delle Erbe Marine>|Alghe essiccate, foglie medicinali, polveri cicatrizzanti",
+        "tip_text": "<Borsa delle Erbe Marine>|*Sel\u00e9n \u2014 Oggetto*\nPiccola custodia impermeabile con alghe essiccate, foglie medicinali, polveri cicatrizzanti e campioni raccolti durante i viaggi.",
+        "front_text_color_mode": "auto"
+      },
+      "weight": 1.0,
+      "rarity": null
+    },
+    {
+      "id": "c1dbfc11-60ec-41a4-9fe5-57f1aaf1a80c",
+      "name": "Borsa delle Monete Miste",
+      "shape": "RECTANGLE_4:3",
+      "front_type": "TEXT_IMAGE",
+      "front_value": "token_fronts\\PG_Selene_light-Gray.png",
+      "back_value": "token_backs\\PG_Selene.PNG",
+      "categories": [
+        "PG>Sel\u00e9n>Oggetti"
+      ],
+      "tags": [
+        "Sel\u00e9n",
+        "Oggetti"
+      ],
+      "metadata": {
+        "front_text": "<Borsa delle Monete Miste>|Valute di diversi arcipelaghi",
+        "tip_text": "<Borsa delle Monete Miste>|*Sel\u00e9n \u2014 Oggetto*\nContiene valute provenienti da diversi arcipelaghi, segno di una vita passata tra commerci e porti.",
+        "front_text_color_mode": "auto"
+      },
+      "weight": 1.0,
+      "rarity": null
+    },
+    {
+      "id": "f9b9af7a-e035-48ce-bd62-ba979bb3da81",
+      "name": "Mira Margant",
+      "shape": "RECTANGLE_5:3",
+      "front_type": "TEXT_IMAGE",
+      "front_value": "token_fronts\\PG_Selene_light-Gray.png",
+      "back_value": "token_backs\\PG_Selene.PNG",
+      "categories": [
+        "PG>Sel\u00e9n>Contatti"
+      ],
+      "tags": [
+        "Sel\u00e9n",
+        "Contatti"
+      ],
+      "metadata": {
+        "front_text": "<Mira Margant>|Sua nipote. La ragione del viaggio.",
+        "tip_text": "<Mira Margant>|*Sel\u00e9n \u2014 Contatto*\nSua nipote. La ragione stessa del viaggio.",
+        "front_text_color_mode": "auto"
+      },
+      "weight": 1.0,
+      "rarity": null
+    },
+    {
+      "id": "d9059545-c7aa-4cdf-84fb-29284dc1c655",
+      "name": "Nessa la Grigia",
+      "shape": "RECTANGLE_5:3",
+      "front_type": "TEXT_IMAGE",
+      "front_value": "token_fronts\\PG_Selene_light-Gray.png",
+      "back_value": "token_backs\\PG_Selene.PNG",
+      "categories": [
+        "PG>Sel\u00e9n>Contatti"
+      ],
+      "tags": [
+        "Sel\u00e9n",
+        "Contatti"
+      ],
+      "metadata": {
+        "front_text": "<Nessa la Grigia>|Vecchia contrabbandiera. Porti nascosti e rotte dimenticate.",
+        "tip_text": "<Nessa la Grigia>|*Sel\u00e9n \u2014 Contatto*\nVecchia contrabbandiera ormai in pensione. Conosce porti nascosti e rotte dimenticate. Per Sel\u00e9n \u00e8 stata una seconda madre.",
+        "front_text_color_mode": "auto"
+      },
+      "weight": 1.0,
+      "rarity": null
+    },
+    {
+      "id": "b41df6ba-839b-49cc-b436-08f3ef425003",
+      "name": "Il Naufragio",
+      "shape": "OCTAGON",
+      "front_type": "TEXT_IMAGE",
+      "front_value": "token_fronts\\PG_Selene_light-Gray.png",
+      "back_value": "token_backs\\PG_Selene.PNG",
+      "categories": [
+        "PG>Sel\u00e9n>Ricordi"
+      ],
+      "tags": [
+        "Sel\u00e9n",
+        "Ricordi"
+      ],
+      "metadata": {
+        "front_text": "<Il Naufragio>|L'ultima discussione con Edran prima della partenza",
+        "tip_text": "<Il giorno del naufragio>|*Sel\u00e9n \u2014 Ricordo*\nL'ultima discussione con Edran prima della partenza sulla scelta del contrabbando. Ancora oggi ricorda ogni parola.",
+        "front_text_color_mode": "auto"
+      },
+      "weight": 1.0,
+      "rarity": null
+    },
+    {
+      "id": "3c8b9877-5ca7-40fe-9030-894529763b1e",
+      "name": "Mira addormentata sulla sua spalla",
+      "shape": "OCTAGON",
+      "front_type": "TEXT_IMAGE",
+      "front_value": "token_fronts\\PG_Selene_light-Gray.png",
+      "back_value": "token_backs\\PG_Selene.PNG",
+      "categories": [
+        "PG>Sel\u00e9n>Ricordi"
+      ],
+      "tags": [
+        "Sel\u00e9n",
+        "Ricordi"
+      ],
+      "metadata": {
+        "front_text": "<Mira addormentata sulla sua spalla>|Il momento in cui cap\u00ec la sua responsabilit\u00e0",
+        "tip_text": "<Mira addormentata sulla sua spalla>|*Sel\u00e9n \u2014 Ricordo*\nDopo la morte di Edran, il momento in cui comprese che ormai era sua responsabilit\u00e0.",
+        "front_text_color_mode": "auto"
+      },
+      "weight": 1.0,
+      "rarity": null
+    },
+    {
+      "id": "cec33cca-27c2-4255-a4b4-ba0fea764ad0",
+      "name": "La bussola che esita",
+      "shape": "OCTAGON",
+      "front_type": "TEXT_IMAGE",
+      "front_value": "token_fronts\\PG_Selene_light-Gray.png",
+      "back_value": "token_backs\\PG_Selene.PNG",
+      "categories": [
+        "PG>Sel\u00e9n>Eco"
+      ],
+      "tags": [
+        "Sel\u00e9n",
+        "Eco"
+      ],
+      "metadata": {
+        "front_text": "<La bussola che esita>|Oscilla senza motivo prima di ogni decisione importante",
+        "tip_text": "<La bussola che esita>|*Sel\u00e9n \u2014 Eco*\nA volte la Bussola di Edran oscilla per alcuni secondi senza motivo, sempre quando Sel\u00e9n sta per prendere una decisione importante.",
+        "front_text_color_mode": "auto"
+      },
+      "weight": 1.0,
+      "rarity": null
+    },
+    {
+      "id": "9e8ffac4-d786-4163-ba0b-b4da9ba59bc2",
+      "name": "Il Sogno dell'acqua bianca",
+      "shape": "OCTAGON",
+      "front_type": "TEXT_IMAGE",
+      "front_value": "token_fronts\\PG_Selene_light-Gray.png",
+      "back_value": "token_backs\\PG_Selene.PNG",
+      "categories": [
+        "PG>Sel\u00e9n>Eco"
+      ],
+      "tags": [
+        "Sel\u00e9n",
+        "Eco"
+      ],
+      "metadata": {
+        "front_text": "**Sogna l'acqua bianca** | Una laguna immobile, qualcosa di bianco e luminoso",
+        "tip_text": "**Il sogno dell'acqua bianca**|*Sel\u00e9n \u2014 Eco*\nSogna spesso una laguna immobile e sotto la superficie cresce qualcosa di bianco e luminoso. Quando cerca di raggiungerla, una voce sussurra: \"Non la salver\u00e0.\"",
+        "front_text_color_mode": "auto"
+      },
+      "weight": 1.0,
+      "rarity": null
+    },
+    {
+      "id": "11111111-1111-1111-1111-111111111101",
+      "name": "Ex Novizio della Grande Manta",
+      "shape": "CIRCLE",
+      "front_type": "TEXT_IMAGE",
+      "front_value": "token_fronts\\PG_Yedid_light-Gray.png",
+      "back_value": "token_backs\\PG_Yedid.PNG",
+      "categories": [
+        "PG>Yedid>Caratteristica"
+      ],
+      "tags": [
+        "Yedid",
+        "Caratteristica"
+      ],
+      "metadata": {
+        "front_text": "<Ex Novizio della Grande Manta>|Conosce rituali, simboli, gerarchie della Cattedrale",
+        "tip_text": "<Ex Novizio della Grande Manta>|*Yedid \u2014 Caratteristica*\nConosce rituali, simboli, gerarchie e dottrina della Cattedrale di Logoy-Nom\u00f2n.",
+        "front_text_color_mode": "auto"
+      },
+      "weight": 1.0,
+      "rarity": null
+    },
+    {
+      "id": "11111111-1111-1111-1111-111111111102",
+      "name": "Ingegnere Nautico",
+      "shape": "CIRCLE",
+      "front_type": "TEXT_IMAGE",
+      "front_value": "token_fronts\\PG_Yedid_light-Gray.png",
+      "back_value": "token_backs\\PG_Yedid.PNG",
+      "categories": [
+        "PG>Yedid>Caratteristica"
+      ],
+      "tags": [
+        "Yedid",
+        "Caratteristica"
+      ],
+      "metadata": {
+        "front_text": "<Ingegnere Nautico>|Comprende funzionamento di navi, meccanismi e apparati marini",
+        "tip_text": "<Ingegnere Nautico>|*Yedid \u2014 Caratteristica*\nComprende il funzionamento di navi, meccanismi, |strumenti e apparati marini.",
+        "front_text_color_mode": "auto"
+      },
+      "weight": 1.0,
+      "rarity": null
+    },
+    {
+      "id": "11111111-1111-1111-1111-111111111103",
+      "name": "Cartografo delle Rotte",
+      "shape": "CIRCLE",
+      "front_type": "TEXT_IMAGE",
+      "front_value": "token_fronts\\PG_Yedid_light-Gray.png",
+      "back_value": "token_backs\\PG_Yedid.PNG",
+      "categories": [
+        "PG>Yedid>Caratteristica"
+      ],
+      "tags": [
+        "Yedid",
+        "Caratteristica"
+      ],
+      "metadata": {
+        "front_text": "<Cartografo delle Rotte>|Sa disegnare mappe anche in territori inesplorati",
+        "tip_text": "<Cartografo delle Rotte>|*Yedid \u2014 Caratteristica*\nSa interpretare, correggere e disegnare |mappe anche in territori inesplorati.",
+        "front_text_color_mode": "auto"
+      },
+      "weight": 1.0,
+      "rarity": null
+    },
+    {
+      "id": "11111111-1111-1111-1111-111111111104",
+      "name": "Studioso delle Correnti Sacre",
+      "shape": "CIRCLE",
+      "front_type": "TEXT_IMAGE",
+      "front_value": "token_fronts\\PG_Yedid_light-Gray.png",
+      "back_value": "token_backs\\PG_Yedid.PNG",
+      "categories": [
+        "PG>Yedid>Caratteristica"
+      ],
+      "tags": [
+        "Yedid",
+        "Caratteristica"
+      ],
+      "metadata": {
+        "front_text": "<Studioso Correnti Sacre>|Ha dedicato anni allo studio delle correnti divine",
+        "tip_text": "<Studioso delle Correnti Sacre>|*Yedid \u2014 Caratteristica*\nHa dedicato anni allo studio delle correnti |e delle tradizioni che le collegano alle divinit\u00e0.",
+        "front_text_color_mode": "auto"
+      },
+      "weight": 1.0,
+      "rarity": null
+    },
+    {
+      "id": "11111111-1111-1111-1111-111111111202",
+      "name": "Riparazioni Meccaniche",
+      "shape": "CIRCLE",
+      "front_type": "TEXT_IMAGE",
+      "front_value": "token_fronts\\PG_Yedid_light-Gray.png",
+      "back_value": "token_backs\\PG_Yedid.PNG",
+      "categories": [
+        "PG>Yedid>Abilit\u00e0"
+      ],
+      "tags": [
+        "Yedid",
+        "Abilit\u00e0"
+      ],
+      "metadata": {
+        "front_text": "<Riparazioni Meccaniche>|Ripara strumenti, apparati nautici e meccanismi danneggiati",
+        "tip_text": "<Riparazioni Meccaniche>|*Yedid \u2014 Abilit\u00e0*\nPu\u00f2 riparare strumenti, apparati nautici e |meccanismi danneggiati con rapidit\u00e0.",
+        "front_text_color_mode": "auto"
+      },
+      "weight": 1.0,
+      "rarity": null
+    },
+    {
+      "id": "11111111-1111-1111-1111-111111111203",
+      "name": "Lettura Cartografica",
+      "shape": "CIRCLE",
+      "front_type": "TEXT_IMAGE",
+      "front_value": "token_fronts\\PG_Yedid_light-Gray.png",
+      "back_value": "token_backs\\PG_Yedid.PNG",
+      "categories": [
+        "PG>Yedid>Abilit\u00e0"
+      ],
+      "tags": [
+        "Yedid",
+        "Abilit\u00e0"
+      ],
+      "metadata": {
+        "front_text": "<Lettura Cartografica>|Riconosce incongruenze, errori e significati nascosti nelle mappe",
+        "tip_text": "<Lettura Cartografica>|*Yedid \u2014 Abilit\u00e0*\nRiconosce incongruenze, errori e significati nascosti nelle mappe.",
+        "front_text_color_mode": "auto"
+      },
+      "weight": 1.0,
+      "rarity": null
+    },
+    {
+      "id": "11111111-1111-1111-1111-111111111301",
+      "name": "Sestante Liturgico di Famiglia",
+      "shape": "RECTANGLE_4:3",
+      "front_type": "TEXT_IMAGE",
+      "front_value": "token_fronts\\PG_Yedid_light-Gray.png",
+      "back_value": "token_backs\\PG_Yedid.PNG",
+      "categories": [
+        "PG>Yedid>Oggetti"
+      ],
+      "tags": [
+        "Yedid",
+        "Oggetti"
+      ],
+      "metadata": {
+        "front_text": "<Sestante Liturgico di Famiglia>|Antico strumento con le nervature della Grande Manta",
+        "tip_text": "<Sestante Liturgico di Famiglia>|*Yedid \u2014 Oggetto*\nAntico strumento di famiglia |inciso con le nervature della Grande Manta.",
+        "front_text_color_mode": "auto"
+      },
+      "weight": 1.0,
+      "rarity": null
+    },
+    {
+      "id": "11111111-1111-1111-1111-111111111302",
+      "name": "Taccuino delle Rotte Devianti",
+      "shape": "RECTANGLE_4:3",
+      "front_type": "TEXT_IMAGE",
+      "front_value": "token_fronts\\PG_Yedid_light-Gray.png",
+      "back_value": "token_backs\\PG_Yedid.PNG",
+      "categories": [
+        "PG>Yedid>Oggetti"
+      ],
+      "tags": [
+        "Yedid",
+        "Oggetti"
+      ],
+      "metadata": {
+        "front_text": "<Taccuino delle Rotte Devianti>|Quaderno con appunti, mappe annotate e rotte impossibili",
+        "tip_text": "<Taccuino delle Rotte Devianti>|*Yedid \u2014 Oggetto*\nQuaderno colmo di appunti, mappe annotate e rotte impossibili. La ricerca della Corrente Prima.",
+        "front_text_color_mode": "auto"
+      },
+      "weight": 1.0,
+      "rarity": null
+    },
+    {
+      "id": "11111111-1111-1111-1111-111111111303",
+      "name": "Occhiali da Tempesta",
+      "shape": "RECTANGLE_4:3",
+      "front_type": "TEXT_IMAGE",
+      "front_value": "token_fronts\\PG_Yedid_light-Gray.png",
+      "back_value": "token_backs\\PG_Yedid.PNG",
+      "categories": [
+        "PG>Yedid>Oggetti"
+      ],
+      "tags": [
+        "Yedid",
+        "Oggetti"
+      ],
+      "metadata": {
+        "front_text": "<Occhiali da Tempesta>|Lenti protettive usate durante nebbia, |pioggia e mare agitato",
+        "tip_text": "<Occhiali da Tempesta>|*Yedid \u2014 Oggetto*\nLenti protettive rinforzate usate durante |nebbia, pioggia e mare agitato.",
+        "front_text_color_mode": "auto"
+      },
+      "weight": 1.0,
+      "rarity": null
+    },
+    {
+      "id": "11111111-1111-1111-1111-111111111304",
+      "name": "Chiave Multiuso",
+      "shape": "RECTANGLE_4:3",
+      "front_type": "TEXT_IMAGE",
+      "front_value": "token_fronts\\PG_Yedid_light-Gray.png",
+      "back_value": "token_backs\\PG_Yedid.PNG",
+      "categories": [
+        "PG>Yedid>Oggetti"
+      ],
+      "tags": [
+        "Yedid",
+        "Oggetti"
+      ],
+      "metadata": {
+        "front_text": "<Chiave Multiuso>|Strumento progettato da lui per interventi tecnici rapidi",
+        "tip_text": "<Chiave Multiuso>|*Yedid \u2014 Oggetto*\nStrumento multifunzionale progettato da lui per interventi tecnici rapidi su navi.",
+        "front_text_color_mode": "auto"
+      },
+      "weight": 1.0,
+      "rarity": null
+    },
+    {
+      "id": "11111111-1111-1111-1111-111111111305",
+      "name": "Guanti Cerati",
+      "shape": "RECTANGLE_4:3",
+      "front_type": "TEXT_IMAGE",
+      "front_value": "token_fronts\\PG_Yedid_light-Gray.png",
+      "back_value": "token_backs\\PG_Yedid.PNG",
+      "categories": [
+        "PG>Yedid>Oggetti"
+      ],
+      "tags": [
+        "Yedid",
+        "Oggetti"
+      ],
+      "metadata": {
+        "front_text": "<Guanti Cerati>|Guanti rinforzati per lavoro nautico e manutenzione",
+        "tip_text": "<Guanti Cerati>|*Yedid \u2014 Oggetto*\nGuanti rinforzati e cerati |per lavoro nautico e manutenzione.",
+        "front_text_color_mode": "auto"
+      },
+      "weight": 1.0,
+      "rarity": null
+    },
+    {
+      "id": "11111111-1111-1111-1111-111111111401",
+      "name": "Capitano Rhaegar Voss",
+      "shape": "RECTANGLE_5:3",
+      "front_type": "TEXT_IMAGE",
+      "front_value": "token_fronts\\PG_Yedid_light-Gray.png",
+      "back_value": "token_backs\\PG_Yedid.PNG",
+      "categories": [
+        "PG>Yedid>Contatti"
+      ],
+      "tags": [
+        "Yedid",
+        "Contatti"
+      ],
+      "metadata": {
+        "front_text": "<Capitano Rhaegar Voss>|Vecchio navigatore. Figura paterna che ha scelto.",
+        "tip_text": "<Capitano Rhaegar Voss>|*Yedid \u2014 Contatto*\nVecchio navigatore che lo accolse a bordo |quando lasci\u00f2 la Cattedrale. |La figura paterna che Yedid ha scelto.",
+        "front_text_color_mode": "auto"
+      },
+      "weight": 1.0,
+      "rarity": null
+    },
+    {
+      "id": "11111111-1111-1111-1111-111111111402",
+      "name": "Maestro Seraphel dei Sette Livelli",
+      "shape": "RECTANGLE_5:3",
+      "front_type": "TEXT_IMAGE",
+      "front_value": "token_fronts\\PG_Yedid_light-Gray.png",
+      "back_value": "token_backs\\PG_Yedid.PNG",
+      "categories": [
+        "PG>Yedid>Contatti"
+      ],
+      "tags": [
+        "Yedid",
+        "Contatti"
+      ],
+      "metadata": {
+        "front_text": "<Maestro Seraphel dei Sette Livelli>|Sacerdote della Manta. Non gli ha concesso perdono.",
+        "tip_text": "<Maestro Seraphel dei Sette Livelli>|*Yedid \u2014 Contatto*\nSacerdote che segu\u00ec la sua formazione fin dall'infanzia. |Non gli ha mai concesso il perdono.",
+        "front_text_color_mode": "auto"
+      },
+      "weight": 1.0,
+      "rarity": null
+    },
+    {
+      "id": "11111111-1111-1111-1111-111111111501",
+      "name": "La Rotta Luminosa",
+      "shape": "OCTAGON",
+      "front_type": "TEXT_IMAGE",
+      "front_value": "token_fronts\\PG_Yedid_light-Gray.png",
+      "back_value": "token_backs\\PG_Yedid.PNG",
+      "categories": [
+        "PG>Yedid>Eco"
+      ],
+      "tags": [
+        "Yedid",
+        "Eco"
+      ],
+      "metadata": {
+        "front_text": "<La Rotta Luminosa> | Una linea luminsa sul mare",
+        "tip_text": "**La Rotta Luminosa**|*Yedid \u2014 Eco*\nQuando consulta i suoi strumenti durante le tempeste, appare una linea luminosa. |Nessun altro la vede.",
+        "front_text_color_mode": "auto"
+      },
+      "weight": 1.0,
+      "rarity": null
+    },
+    {
+      "id": "11111111-1111-1111-1111-111111111601",
+      "name": "Il Nome Cancellato",
+      "shape": "OCTAGON",
+      "front_type": "TEXT_IMAGE",
+      "front_value": "token_fronts\\PG_Yedid_light-Gray.png",
+      "back_value": "token_backs\\PG_Yedid.PNG",
+      "categories": [
+        "PG>Yedid>Ricordi"
+      ],
+      "tags": [
+        "Yedid",
+        "Ricordi"
+      ],
+      "metadata": {
+        "front_text": "<Il Nome Cancellato>|Durante il rito finale, il suo nome cancellato dal registro",
+        "tip_text": "<Il Nome Cancellato>|*Yedid \u2014 Ricordo*\nDurante il rito finale trov\u00f2 il proprio nome cancellato da un antico registro sacerdotale. Al suo posto era comparsa una sola parola: \"Scegli.\"",
+        "front_text_color_mode": "auto"
+      },
+      "weight": 1.0,
+      "rarity": null
+    },
+    {
+      "id": "22222222-2222-2222-2222-222222222101",
+      "name": "Pescatore",
+      "shape": "CIRCLE",
+      "front_type": "TEXT_IMAGE",
+      "front_value": "token_fronts\\PG_Nariel_Veyr_Ligh-Gray.png",
+      "back_value": "token_backs\\PG_Nariel_Veyr.PNG",
+      "categories": [
+        "PG>N\u00e0riel>Caratteristica"
+      ],
+      "tags": [
+        "N\u00e0riel",
+        "Caratteristica"
+      ],
+      "metadata": {
+        "tip_text": "<Pescatore>|*N\u00e0riel \u2014 Caratteristica*\nConosce reti, attrezzature, navigazione e vita d'altura. Cresciuto tra le onde.",
+        "front_text": "<Pescatore>|Conosce reti, attrezzature, navigazione e vita d'altura"
+      },
+      "weight": 1.0,
+      "rarity": null
+    },
+    {
+      "id": "22222222-2222-2222-2222-222222222102",
+      "name": "Sommozzatore",
+      "shape": "CIRCLE",
+      "front_type": "TEXT_IMAGE",
+      "front_value": "token_fronts\\PG_Nariel_Veyr_Ligh-Gray.png",
+      "back_value": "token_backs\\PG_Nariel_Veyr.PNG",
+      "categories": [
+        "PG>N\u00e0riel>Caratteristica"
+      ],
+      "tags": [
+        "N\u00e0riel",
+        "Caratteristica"
+      ],
+      "metadata": {
+        "tip_text": "<Sommozzatore>|*N\u00e0riel \u2014 Caratteristica*\nHa esperienza nei fondali profondi e nelle immersioni tecniche. Conosce i segreti del Mare.",
+        "front_text": "<Sommozzatore>|Ha esperienza nei fondali profondi e nelle immersioni tecniche"
+      },
+      "weight": 1.0,
+      "rarity": null
+    },
+    {
+      "id": "22222222-2222-2222-2222-222222222103",
+      "name": "Studioso delle Leggende del Mare",
+      "shape": "CIRCLE",
+      "front_type": "TEXT_IMAGE",
+      "front_value": "token_fronts\\PG_Nariel_Veyr_Ligh-Gray.png",
+      "back_value": "token_backs\\PG_Nariel_Veyr.PNG",
+      "categories": [
+        "PG>N\u00e0riel>Caratteristica"
+      ],
+      "tags": [
+        "N\u00e0riel",
+        "Caratteristica"
+      ],
+      "metadata": {
+        "tip_text": "<Studioso delle Leggende del Mare>|*N\u00e0riel \u2014 Caratteristica*\nLe storie raccontate da Lyris gli hanno lasciato conoscenze insolite sulle citt\u00e0 sommerse.",
+        "front_text": "<Studioso delle Leggende del Mare>|Le storie di Lyris gli hanno lasciato conoscenze insospettate",
+        "front_text_color_mode": "auto"
+      },
+      "weight": 1.0,
+      "rarity": null
+    },
+    {
+      "id": "22222222-2222-2222-2222-222222222104",
+      "name": "Novizio del Culto di Egonya",
+      "shape": "CIRCLE",
+      "front_type": "TEXT_IMAGE",
+      "front_value": "token_fronts\\PG_Nariel_Veyr_Ligh-Gray.png",
+      "back_value": "token_backs\\PG_Nariel_Veyr.PNG",
+      "categories": [
+        "PG>N\u00e0riel>Caratteristica"
+      ],
+      "tags": [
+        "N\u00e0riel",
+        "Caratteristica"
+      ],
+      "metadata": {
+        "tip_text": "<Novizio del Culto di Egonya>|*N\u00e0riel \u2014 Caratteristica*\nConosce riti, simboli e pratiche della Cattedrale della Prima Eco. Cerca risposte nel riflessivo.",
+        "front_text": "<Novizio del Culto di Egonya>|Conosce riti, simboli e pratiche della Cattedrale della Prima Eco"
+      },
+      "weight": 1.0,
+      "rarity": null
+    },
+    {
+      "id": "22222222-2222-2222-2222-222222222201",
+      "name": "Conoscenza Istintiva del Mare",
+      "shape": "CIRCLE",
+      "front_type": "TEXT_IMAGE",
+      "front_value": "token_fronts\\PG_Nariel_Veyr_Ligh-Gray.png",
+      "back_value": "token_backs\\PG_Nariel_Veyr.PNG",
+      "categories": [
+        "PG>N\u00e0riel>Abilit\u00e0"
+      ],
+      "tags": [
+        "N\u00e0riel",
+        "Abilit\u00e0"
+      ],
+      "metadata": {
+        "tip_text": "<Conoscenza Istintiva del Mare>|*N\u00e0riel \u2014 Abilit\u00e0*\nAnni di pesca gli hanno insegnato a leggere il Mare come altri leggono un volto.",
+        "front_text": "<Conoscenza Istintiva del Mare>|Legge il Mare come altri leggono un volto"
+      },
+      "weight": 1.0,
+      "rarity": null
+    },
+    {
+      "id": "22222222-2222-2222-2222-222222222202",
+      "name": "Orientamento",
+      "shape": "CIRCLE",
+      "front_type": "TEXT_IMAGE",
+      "front_value": "token_fronts\\PG_Nariel_Veyr_Ligh-Gray.png",
+      "back_value": "token_backs\\PG_Nariel_Veyr.PNG",
+      "categories": [
+        "PG>N\u00e0riel>Abilit\u00e0"
+      ],
+      "tags": [
+        "N\u00e0riel",
+        "Abilit\u00e0"
+      ],
+      "metadata": {
+        "tip_text": "<Orientamento>|*N\u00e0riel \u2014 Abilit\u00e0*\nSa mantenere la rotta e leggere riferimenti naturali, anche nelle tempeste.",
+        "front_text": "<Orientamento>|Sa mantenere la rotta e leggere riferimenti naturali"
+      },
+      "weight": 1.0,
+      "rarity": null
+    },
+    {
+      "id": "22222222-2222-2222-2222-222222222203",
+      "name": "Primo Soccorso in Mare",
+      "shape": "CIRCLE",
+      "front_type": "TEXT_IMAGE",
+      "front_value": "token_fronts\\PG_Nariel_Veyr_Ligh-Gray.png",
+      "back_value": "token_backs\\PG_Nariel_Veyr.PNG",
+      "categories": [
+        "PG>N\u00e0riel>Abilit\u00e0"
+      ],
+      "tags": [
+        "N\u00e0riel",
+        "Abilit\u00e0"
+      ],
+      "metadata": {
+        "tip_text": "<Primo Soccorso in Mare>|*N\u00e0riel \u2014 Abilit\u00e0*\nSa intervenire in emergenza. Addestrato a salvare chi affonda.",
+        "front_text": "<Primo Soccorso in Mare>|Sa intervenire nelle emergenze d'altura"
+      },
+      "weight": 1.0,
+      "rarity": null
+    },
+    {
+      "id": "22222222-2222-2222-2222-222222222301",
+      "name": "Equipaggiamento per Immersione",
+      "shape": "RECTANGLE_4:3",
+      "front_type": "TEXT_IMAGE",
+      "front_value": "token_fronts\\PG_Nariel_Veyr_Ligh-Gray.png",
+      "back_value": "token_backs\\PG_Nariel_Veyr.PNG",
+      "categories": [
+        "PG>N\u00e0riel>Oggetti"
+      ],
+      "tags": [
+        "N\u00e0riel",
+        "Oggetti"
+      ],
+      "metadata": {
+        "tip_text": "<Equipaggiamento per Immersione>|*N\u00e0riel \u2014 Oggetto*\nMaschera, zavorre, cime e attrezzi da discesa.\nTutto ci\u00f2 che serve per scendere in profondit\u00e0.",
+        "front_text": "<Equipaggiamento per Immersione>|Maschera, zavorre, cime, attrezzi da discesa",
+        "front_text_color_mode": "auto"
+      },
+      "weight": 1.0,
+      "rarity": null
+    },
+    {
+      "id": "22222222-2222-2222-2222-222222222302",
+      "name": "Fucile a Fiocina e Arpione",
+      "shape": "RECTANGLE_4:3",
+      "front_type": "TEXT_IMAGE",
+      "front_value": "token_fronts\\PG_Nariel_Veyr_Ligh-Gray.png",
+      "back_value": "token_backs\\PG_Nariel_Veyr.PNG",
+      "categories": [
+        "PG>N\u00e0riel>Oggetti"
+      ],
+      "tags": [
+        "N\u00e0riel",
+        "Oggetti"
+      ],
+      "metadata": {
+        "tip_text": "<Fucile a Fiocina e Arpione>|*N\u00e0riel \u2014 Oggetto*\nFucile a fiocina e arpione, per pesca e difesa. \nAffidabile e letale.",
+        "front_text": "<Fucile a Fiocina e Arpione>|Per pesca e difesa sott'acqua",
+        "front_text_color_mode": "auto"
+      },
+      "weight": 1.0,
+      "rarity": null
+    },
+    {
+      "id": "22222222-2222-2222-2222-222222222303",
+      "name": "Strumenti da Pesca",
+      "shape": "RECTANGLE_4:3",
+      "front_type": "TEXT_IMAGE",
+      "front_value": "token_fronts\\PG_Nariel_Veyr_Ligh-Gray.png",
+      "back_value": "token_backs\\PG_Nariel_Veyr.PNG",
+      "categories": [
+        "PG>N\u00e0riel>Oggetti"
+      ],
+      "tags": [
+        "N\u00e0riel",
+        "Oggetti"
+      ],
+      "metadata": {
+        "tip_text": "<Strumenti da Pesca>|*N\u00e0riel \u2014 Oggetto*\nReti, ami, coltelli e corde. \nGli attrezzi del mestiere di pescatore.",
+        "front_text": "<Strumenti da Pesca>|Reti, ami, coltelli e corde",
+        "front_text_color_mode": "auto"
+      },
+      "weight": 1.0,
+      "rarity": null
+    },
+    {
+      "id": "22222222-2222-2222-2222-222222222304",
+      "name": "Kit di Primo Soccorso",
+      "shape": "RECTANGLE_4:3",
+      "front_type": "TEXT_IMAGE",
+      "front_value": "token_fronts\\PG_Nariel_Veyr_Ligh-Gray.png",
+      "back_value": "token_backs\\PG_Nariel_Veyr.PNG",
+      "categories": [
+        "PG>N\u00e0riel>Oggetti"
+      ],
+      "tags": [
+        "N\u00e0riel",
+        "Oggetti"
+      ],
+      "metadata": {
+        "tip_text": "<Kit di Primo Soccorso>|*N\u00e0riel \u2014 Oggetto*\n|Kit preparato per incidenti di mare. Medicamenti, bende, lacci.",
+        "front_text": "<Kit di Primo Soccorso>|Preparato per incidenti di mare"
+      },
+      "weight": 1.0,
+      "rarity": null
+    },
+    {
+      "id": "22222222-2222-2222-2222-222222222305",
+      "name": "Diario di Lyris",
+      "shape": "RECTANGLE_4:3",
+      "front_type": "TEXT_IMAGE",
+      "front_value": "token_fronts\\PG_Nariel_Veyr_Ligh-Gray.png",
+      "back_value": "token_backs\\PG_Nariel_Veyr.PNG",
+      "categories": [
+        "PG>N\u00e0riel>Oggetti"
+      ],
+      "tags": [
+        "N\u00e0riel",
+        "Oggetti"
+      ],
+      "metadata": {
+        "tip_text": "<Diario di Lyris>|*N\u00e0riel \u2014 Oggetto*\nTaccuino consunto pieno di annotazioni, miti trascritti, \nriferimenti a siti sommersi. \nL'unica cosa che il Mare gli ha restituito.",
+        "front_text": "<Diario di Lyris>|Taccuino consunto pieno di annotazioni e riferimenti a siti sommersi",
+        "front_text_color_mode": "auto"
+      },
+      "weight": 1.0,
+      "rarity": null
+    },
+    {
+      "id": "22222222-2222-2222-2222-222222222401",
+      "name": "Lyris Veyr",
+      "shape": "RECTANGLE_5:3",
+      "front_type": "TEXT_IMAGE",
+      "front_value": "token_fronts\\PG_Nariel_Veyr_Ligh-Gray.png",
+      "back_value": "token_backs\\PG_Nariel_Veyr.PNG",
+      "categories": [
+        "PG>N\u00e0riel>Contatti"
+      ],
+      "tags": [
+        "N\u00e0riel",
+        "Contatti"
+      ],
+      "metadata": {
+        "tip_text": "<Lyris Veyr>|*N\u00e0riel \u2014 Contatto*\nSorella maggiore, studiosa delle leggende antiche, devota a Logoy-Nom\u00f2n. Cercava le citt\u00e0 sommerse. Non torn\u00f2 dalla sua ultima spedizione.",
+        "front_text": "<Lyris Veyr>|Sorella maggiore. Scomparsa negli abissi."
+      },
+      "weight": 1.0,
+      "rarity": null
+    },
+    {
+      "id": "22222222-2222-2222-2222-222222222501",
+      "name": "La Voce dal Riflesso",
+      "shape": "OCTAGON",
+      "front_type": "TEXT_IMAGE",
+      "front_value": "token_fronts\\PG_Nariel_Veyr_Ligh-Gray.png",
+      "back_value": "token_backs\\PG_Nariel_Veyr.PNG",
+      "categories": [
+        "PG>N\u00e0riel>Eco"
+      ],
+      "tags": [
+        "N\u00e0riel",
+        "Eco"
+      ],
+      "metadata": {
+        "tip_text": "**La Voce dal Riflesso**|*N\u00e0riel \u2014 Eco*\nDa mesi ode una voce provenire |dagli specchi d'acqua immobili. \nUna voce identica a quella di Lyris. \nNessun altro la sente.",
+        "front_text": "**La Voce dal Riflesso** | Una voce identica a quella di Lyris negli specchi d'acqua",
+        "front_text_color_mode": "auto"
+      },
+      "weight": 1.0,
+      "rarity": null
+    },
+    {
+      "id": "22222222-2222-2222-2222-222222222601",
+      "name": "Il Mare Che Non Restituisce",
+      "shape": "OCTAGON",
+      "front_type": "TEXT_IMAGE",
+      "front_value": "token_fronts\\PG_Nariel_Veyr_Ligh-Gray.png",
+      "back_value": "token_backs\\PG_Nariel_Veyr.PNG",
+      "categories": [
+        "PG>N\u00e0riel>Ricordi"
+      ],
+      "tags": [
+        "N\u00e0riel",
+        "Ricordi"
+      ],
+      "metadata": {
+        "tip_text": "<Il Mare Che Non Restituisce>|*N\u00e0riel \u2014 Ricordo*\nGiorni dopo che Lyris part\u00ec, il Mare restitu\u00ec il relitto \ndella sua piccola imbarcazione. \nDentro vi era soltanto il suo diario. \nDa allora N\u00e0riel non \u00e8 pi\u00f9 sceso sott'acqua.",
+        "front_text": "<Il Mare Che Non Restituisce>|La barca di Lyris torn\u00f2 con solo il suo diario",
+        "front_text_color_mode": "auto"
+      },
+      "weight": 1.0,
+      "rarity": null
+    }
+  ]
+}
